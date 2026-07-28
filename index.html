@@ -1189,7 +1189,8 @@ td.acc{white-space:nowrap; text-align:right; padding-right:0}
     <div class="tabla-env" style="max-height:46vh;overflow-y:auto">
       <table>
         <thead><tr><th>Elemento</th><th class="num">Pend.</th><th style="min-width:150px">Unidad de stock</th>
-          <th class="num" style="width:96px">Entregar</th><th class="num">Disp.</th></tr></thead>
+          <th class="num" style="width:88px">Entregar</th><th class="num">Disp.</th>
+          <th style="min-width:170px">Si la talla difiere</th></tr></thead>
         <tbody id="tbEntrega"></tbody>
       </table>
     </div>
@@ -1304,7 +1305,7 @@ td.acc{white-space:nowrap; text-align:right; padding-right:0}
 <script>
 'use strict';
 
-const VERSION = 'v7.0 · 28-07-2026';
+const VERSION = 'v7.1 · 28-07-2026';
 
 const API_URL  = 'https://script.google.com/macros/s/AKfycbzF3x9Yios2SX2F2EkRgdYcRMTiOZD6csPlCyfHJchMyAy5G9UAaTjmRqq_2x_D2HY/exec';
 const LOGO_URL = 'data:image/png;base64,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';
@@ -1563,6 +1564,8 @@ function pintarPanel() {
     { n:R.cert_faltantes || 0, r:'Compras sin certificado', clase:'grave', ir:'compras' },
     { n:R.cert_vencidos || 0, r:'Certificados vencidos', clase:'aviso', ir:'compras' },
     { n:R.cert_regularizar || 0, r:'Certificados por regularizar', clase:'aviso', ir:'compras' },
+    { n:R.sin_talla || 0, r:'Sin talla registrada', clase:'aviso', ir:'dotacion' },
+    { n:R.sustituciones || 0, r:'Entregas con talla sustituida', clase:'aviso' },
     { n:((est.tomas || []).filter(function (t) { return t.estado === 'ABIERTA' || t.estado === 'CONTADA'; })).length,
       r:'Tomas en curso', clase:'aviso', ir:'inventario' },
     { n:(est.tomas || []).reduce(function (a, t) { return a + (t.retenidas || 0); }, 0),
@@ -1974,7 +1977,9 @@ function pintarPersonas() {
       '<td>' + esc(i ? i.nombre : '—') + '</td>' +
       '<td class="opc">' + esc(empresaDe(p.instalacion_id)) + '</td>' +
       '<td class="opc">' + esc(nombreSupervisor(p.supervisor_id)) + '</td>' +
-      '<td class="opc" style="font-size:11.5px">' + esc(tallas) + '</td>' +
+      '<td class="opc" style="font-size:11.5px">' + esc(tallas) +
+        (p.estado === 'Activo' && (!String(p.talla_ropa || '').trim() || !String(p.talla_calzado || '').trim())
+          ? ' <span class="marbete" style="border-color:var(--oro);color:#7A611B">Falta</span>' : '') + '</td>' +
       '<td><span class="marbete ' + (p.estado === 'Activo' ? 'm-ok">Activo' : 'm-off">Desvinculado') + '</span></td>' +
       '<td class="acc">' + (soloLectura ? '' :
         '<button class="mini" data-edp="' + esc(p.rut) + '">Editar</button>' +
@@ -2969,11 +2974,13 @@ function abrirEntrega(folio) {
   solActual = x;
 
   $('#enTitulo').textContent = 'Entregar · ' + folio;
-  $('#enSub').textContent = x.persona + ' · ' + rutFormato(x.rut) + ' · ' + x.instalacion +
+  $('#enSub').innerHTML = esc(x.persona) + ' · ' + esc(rutFormato(x.rut)) + ' · ' + esc(x.instalacion) +
     (x.talla_ropa || x.talla_calzado
-      ? ' · tallas registradas: ' + [x.talla_ropa ? 'ropa ' + x.talla_ropa : '',
-          x.talla_calzado ? 'calzado ' + x.talla_calzado : ''].filter(Boolean).join(', ')
-      : '');
+      ? ' · tallas registradas: ' + esc([x.talla_ropa ? 'ropa ' + x.talla_ropa : '',
+          x.talla_calzado ? 'calzado ' + x.talla_calzado : ''].filter(Boolean).join(', '))
+      : '') +
+    (x.sin_talla ? ' <span class="marbete" style="border-color:var(--oro);color:#7A611B">' +
+      'Falta registrar talla</span>' : '');
 
   const conAlerta = x.detalle.filter(function (d) { return d.alerta; });
   $('#enAlertas').innerHTML = conAlerta.length
@@ -2987,7 +2994,7 @@ function abrirEntrega(folio) {
     const pend = d.cantidad - d.entregado;
     if (pend <= 0) {
       return '<tr class="inactiva"><td>' + esc(d.material) + '</td><td class="num">0</td>' +
-        '<td colspan="3" style="font-size:11.5px;color:var(--tenue)">Ya entregado por completo</td></tr>';
+        '<td colspan="4" style="font-size:11.5px;color:var(--tenue)">Ya entregado por completo</td></tr>';
     }
     const opciones = skusDisponibles(d.material_id, x);
     return '<tr data-det="' + esc(d.id) + '">' +
@@ -2997,10 +3004,40 @@ function abrirEntrega(folio) {
         (opciones.hay ? Math.min(pend, opciones.max) : 0) + '" max="' + pend +
         '" style="width:74px;text-align:right;font-family:var(--mono);border:1px solid var(--regla);padding:5px 7px"' +
         (opciones.hay ? '' : ' disabled') + '></td>' +
-      '<td class="num" data-edisp>' + (opciones.hay ? opciones.max : 0) + '</td></tr>';
+      '<td class="num" data-edisp>' + (opciones.hay ? opciones.max : 0) + '</td>' +
+      '<td data-emotivo>' + celdaMotivoTalla(d, x, opciones.elegida) + '</td></tr>';
   }).join('');
 
   $('#veloEntrega').hidden = false;
+}
+
+/* Cuál es la talla de referencia de la persona para ese material. */
+function tallaReferencia(materialId, sol) {
+  const m = material(materialId);
+  if (!m || m.naturaleza === 'CUSTODIA') return '';
+  if (m.escala === 'CALZADO') return String(sol.talla_calzado || '').trim();
+  if (m.escala === 'ROPA_LETRA' || m.escala === 'ROPA_NUM') return String(sol.talla_ropa || '').trim();
+  return '';
+}
+
+/* Un cambio de talla y una sustitución por falta de stock se ven iguales
+   en el kardex si nadie los distingue, y significan cosas opuestas: uno
+   corrige la ficha, el otro delata un quiebre. */
+function celdaMotivoTalla(d, sol, elegida) {
+  const ref = tallaReferencia(d.material_id, sol);
+  const ent = elegida ? String(elegida.talla || '').trim() : '';
+
+  if (!ent || ent === 'Única') return '<span style="color:var(--tenue);font-size:11.5px">—</span>';
+  if (!ref) return '<span style="font-size:11px;color:#7A611B">Se registrará ' + esc(ent) +
+    ' como su talla</span>';
+  if (ref === ent) return '<span style="color:var(--tenue);font-size:11.5px">Coincide</span>';
+
+  return '<select data-emt style="width:100%;border:1px solid var(--oxido);padding:5px;' +
+    'font-family:inherit;font-size:11.5px">' +
+    '<option value="">Indica el motivo…</option>' +
+    '<option value="CAMBIO_TALLA">Cambió de talla · actualiza su ficha</option>' +
+    '<option value="SIN_STOCK">Sin stock de ' + esc(ref) + ' · sustitución</option>' +
+    '</select>';
 }
 
 /* Ofrece solo unidades con saldo, y deja preseleccionada la talla que la
@@ -3021,7 +3058,7 @@ function skusDisponibles(materialId, sol) {
   const elegida = preferida || nuevas[0] || ls[0];
 
   return {
-    hay: true, max: elegida.cantidad,
+    hay: true, max: elegida.cantidad, elegida: elegida,
     html: '<select data-esku style="width:100%;border:1px solid var(--regla);padding:5px;font-family:var(--mono);font-size:11.5px">' +
       ls.map(function (L) {
         return '<option value="' + esc(L.sku_id) + '" data-max="' + L.cantidad + '"' +
@@ -3039,6 +3076,11 @@ $('#tbEntrega').addEventListener('change', function (ev) {
   const inp = $('[data-ecant]', tr);
   $('[data-edisp]', tr).textContent = max;
   if (Number(inp.value) > max) inp.value = max;
+
+  const d = (solActual.detalle || []).filter(function (x) { return x.id === tr.dataset.det; })[0];
+  const L = ((est.exi && est.exi.lineas) || []).filter(function (x) {
+    return x.sku_id === ev.target.value; })[0];
+  if (d) $('[data-emotivo]', tr).innerHTML = celdaMotivoTalla(d, solActual, L);
 });
 
 $('#enCancelar').addEventListener('click', function () { $('#veloEntrega').hidden = true; });
@@ -3046,11 +3088,18 @@ $('#veloEntrega').addEventListener('click', function (ev) { if (ev.target === th
 
 $('#bEntregar').addEventListener('click', async function () {
   const entregas = [];
+  let falta = '';
   $$('#tbEntrega tr[data-det]').forEach(function (tr) {
     const sel = $('[data-esku]', tr);
     const cant = Number(($('[data-ecant]', tr) || {}).value) || 0;
-    if (sel && cant > 0) entregas.push({ det_id: tr.dataset.det, sku_id: sel.value, cantidad: cant });
+    const mt0 = $('[data-emt]', tr);
+    if (sel && cant > 0 && mt0 && !mt0.value) falta = 'Falta indicar el motivo de la talla distinta.';
+    if (!sel || cant <= 0) return;
+    const mt = $('[data-emt]', tr);
+    entregas.push({ det_id: tr.dataset.det, sku_id: sel.value, cantidad: cant,
+      motivo_talla: mt ? mt.value : '' });
   });
+  if (falta) { aviso(falta, true); return; }
   if (!entregas.length) { aviso('Indica al menos una cantidad a entregar.', true); return; }
 
   const b = this;
@@ -3063,7 +3112,9 @@ $('#bEntregar').addEventListener('click', async function () {
   aviso('Certificado ' + r.certificado + ' emitido' +
     (r.correo === 'ENVIADO' ? ' y enviado' :
      r.correo === 'ENCOLADO' ? ' · correo en cola' :
-     r.correo === 'SIN_DESTINATARIOS' ? ' · faltan correos en parámetros' : ''));
+     r.correo === 'SIN_DESTINATARIOS' ? ' · faltan correos en parámetros' : '') +
+    (r.sustituciones ? ' · ' + r.sustituciones + ' con talla sustituida' : '') +
+    (r.tallas_actualizadas ? ' · ficha de talla actualizada' : ''));
 
   await cargarSolicitudes();
   await cargarCertificados();
