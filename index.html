@@ -73,6 +73,16 @@ section[data-vista].activa{display:block}
 /* ---------- indicadores ---------- */
 .indicadores{display:grid; grid-template-columns:repeat(auto-fit,minmax(146px,1fr)); gap:10px; margin-bottom:18px}
 .ind{background:var(--superficie); border-left:3px solid var(--verde); padding:12px 14px}
+.ind.accionable{cursor:pointer; transition:background .12s}
+.ind.accionable:hover{background:#F4F6F1}
+.ind.accionable .rotulo::after{content:' →'; color:var(--tenue)}
+.ind.apagado .cifra{color:var(--tenue)}
+.menores{display:flex; flex-wrap:wrap; gap:0; background:var(--superficie); border-left:3px solid var(--regla); margin-bottom:18px}
+.menores div{padding:11px 16px; border-right:1px solid var(--regla-suave)}
+.menores div:last-child{border-right:0}
+.menores .cifra{font-family:var(--mono); font-size:16px; font-weight:500}
+.valor-inv{background:var(--superficie); border-left:3px solid var(--oro); padding:13px 16px; margin-bottom:18px}
+.valor-inv .cifra{font-family:var(--mono); font-size:23px; font-weight:500}
 .ind .cifra{font-family:var(--mono); font-size:25px; font-weight:500; line-height:1.1}
 .ind .rotulo{margin-top:4px}
 .ind.aviso{border-left-color:var(--oro)}
@@ -187,18 +197,20 @@ td.acc{white-space:nowrap; text-align:right; padding-right:0}
     <!-- ---- PANEL ---- -->
     <section data-vista="panel">
       <div class="indicadores" id="indicadores"></div>
+      <div class="valor-inv" id="valorInv"></div>
+      <div class="menores" id="menores"></div>
       <div class="nota">
         <b>Fase 2 en operación.</b> El stock ya es real: cada saldo se calcula sumando el kardex, nunca
         se almacena. Las entregas y el certificado entran en la Fase 3, así que por ahora el inventario
         solo puede crecer por compra, inventario inicial o ajuste documentado.
       </div>
-      <div class="bloque">
+      <div class="bloque" id="bloquePuesta">
         <div class="canal"><span class="folio">§ 01</span></div>
         <div class="cuerpo">
           <h2>Puesta en marcha</h2>
           <p class="bajada">Orden de carga para que la Fase 2 arranque con datos consistentes.</p>
           <div class="tabla-env"><table>
-            <thead><tr><th>N.º</th><th>Qué cargar</th><th>Perfil</th><th>Estado</th></tr></thead>
+            <thead><tr><th>N.º</th><th>Qué cargar</th><th>Estado</th></tr></thead>
             <tbody id="tbPuesta"></tbody>
           </table></div>
         </div>
@@ -219,6 +231,13 @@ td.acc{white-space:nowrap; text-align:right; padding-right:0}
                 <option value="DOTACION">Dotación personal</option>
                 <option value="CONSUMIBLE">Consumible</option>
                 <option value="CUSTODIA">Bien bajo custodia</option></select></div>
+            <div class="campo"><label for="eCategoria">Categoría</label>
+              <select id="eCategoria"><option value="">Todas</option></select></div>
+            <div class="campo"><label for="eTemporada">Temporada</label>
+              <select id="eTemporada"><option value="">Todas</option>
+                <option>Todo el año</option><option>Otoño/Invierno</option><option>Primavera/Verano</option></select></div>
+            <div class="campo"><label for="eTipo">Tipo</label>
+              <select id="eTipo"><option value="">Todos</option></select></div>
             <div class="campo"><label for="eAlerta">Mostrar</label>
               <select id="eAlerta">
                 <option value="MOV">Con saldo o alerta</option>
@@ -273,7 +292,9 @@ td.acc{white-space:nowrap; text-align:right; padding-right:0}
                 <select id="coTipo"><option>Factura</option><option>Boleta</option><option>Guía de despacho</option></select></div>
               <div class="campo mono" style="max-width:170px"><label for="coNumero">N.º del documento</label>
                 <input id="coNumero" required></div>
-              <div class="campo"><label for="coProveedor">Proveedor</label><select id="coProveedor" required></select></div>
+              <div class="campo"><label for="coProveedor">Proveedor</label>
+                <select id="coProveedor" required></select>
+                <span class="ayuda">Se crean en la pestaña Empresas</span></div>
               <div class="campo"><label for="coObs">Observación</label><input id="coObs"></div>
             </div>
 
@@ -320,34 +341,6 @@ td.acc{white-space:nowrap; text-align:right; padding-right:0}
         </div>
       </div>
 
-      <div class="bloque">
-        <div class="canal"><span class="folio">§ 72</span></div>
-        <div class="cuerpo">
-          <h2 id="tProveedor">Proveedores</h2>
-          <p class="bajada">Igual que con los clientes: la ficha evita que el informe por proveedor se fragmente.</p>
-          <form id="fProveedor">
-            <input type="hidden" id="prId">
-            <div class="rejilla">
-              <div class="campo"><label for="prRazon">Razón social</label><input id="prRazon" required></div>
-              <div class="campo mono" style="max-width:170px"><label for="prRut">RUT</label>
-                <input id="prRut" placeholder="76.123.456-7">
-                <span class="ayuda" id="prRutAviso"></span></div>
-              <div class="campo"><label for="prGiro">Giro</label><input id="prGiro"></div>
-              <div class="campo"><label for="prContacto">Contacto</label><input id="prContacto"></div>
-              <div class="campo"><label for="prCorreo">Correo</label><input id="prCorreo" type="email"></div>
-              <div class="campo"><label for="prTelefono">Teléfono</label><input id="prTelefono"></div>
-            </div>
-            <div class="acciones">
-              <button class="btn btn-p" type="submit">Guardar proveedor</button>
-              <button class="btn btn-s" type="button" id="prCancelar" hidden>Cancelar edición</button>
-            </div>
-          </form>
-          <div class="tabla-env" style="margin-top:18px"><table>
-            <thead><tr><th>ID</th><th>Razón social</th><th>RUT</th><th>Giro</th><th>Contacto</th><th>Estado</th><th></th></tr></thead>
-            <tbody id="tbProveedores"></tbody>
-          </table></div>
-        </div>
-      </div>
     </section>
 
     <!-- ---- MATERIALES ---- -->
@@ -432,13 +425,14 @@ td.acc{white-space:nowrap; text-align:right; padding-right:0}
     <!-- ---- CLIENTES ---- -->
     <section data-vista="clientes">
       <div class="nota">
-        Las instalaciones apuntan al identificador de la empresa, no a su nombre escrito. Por eso los
-        informes por empresa cliente no se fragmentan aunque alguien escriba el nombre distinto.
+        Clientes y proveedores viven aquí porque son fichas maestras: se crean una vez y se usan muchas.
+        Las instalaciones y las compras apuntan a su identificador, no a su nombre escrito, y por eso los
+        informes por empresa no se fragmentan aunque alguien lo escriba distinto.
       </div>
       <div class="bloque">
         <div class="canal"><span class="folio">§ 20</span></div>
         <div class="cuerpo">
-          <h2 id="tCliente">Nueva empresa</h2>
+          <h2 id="tCliente">Nueva empresa cliente</h2>
           <p class="bajada">Mandantes y la ficha de uso interno de PK.</p>
           <form id="fCliente">
             <input type="hidden" id="clId">
@@ -465,7 +459,7 @@ td.acc{white-space:nowrap; text-align:right; padding-right:0}
       <div class="bloque">
         <div class="canal"><span class="folio">§ 21</span></div>
         <div class="cuerpo">
-          <h2>Nómina de empresas</h2>
+          <h2>Empresas cliente</h2>
           <div class="tabla-env"><table>
             <thead><tr><th>ID</th><th>Razón social</th><th>RUT</th><th>Contrato</th>
               <th class="num">Instalaciones</th><th>Estado</th><th></th></tr></thead>
@@ -474,6 +468,35 @@ td.acc{white-space:nowrap; text-align:right; padding-right:0}
         </div>
       </div>
     </section>
+
+      <div class="bloque">
+        <div class="canal"><span class="folio">§ 22</span></div>
+        <div class="cuerpo">
+          <h2 id="tProveedor">Proveedores</h2>
+          <p class="bajada">Igual que con los clientes: la ficha evita que el informe por proveedor se fragmente.</p>
+          <form id="fProveedor">
+            <input type="hidden" id="prId">
+            <div class="rejilla">
+              <div class="campo"><label for="prRazon">Razón social</label><input id="prRazon" required></div>
+              <div class="campo mono" style="max-width:170px"><label for="prRut">RUT</label>
+                <input id="prRut" placeholder="76.123.456-7">
+                <span class="ayuda" id="prRutAviso"></span></div>
+              <div class="campo"><label for="prGiro">Giro</label><input id="prGiro"></div>
+              <div class="campo"><label for="prContacto">Contacto</label><input id="prContacto"></div>
+              <div class="campo"><label for="prCorreo">Correo</label><input id="prCorreo" type="email"></div>
+              <div class="campo"><label for="prTelefono">Teléfono</label><input id="prTelefono"></div>
+            </div>
+            <div class="acciones">
+              <button class="btn btn-p" type="submit">Guardar proveedor</button>
+              <button class="btn btn-s" type="button" id="prCancelar" hidden>Cancelar edición</button>
+            </div>
+          </form>
+          <div class="tabla-env" style="margin-top:18px"><table>
+            <thead><tr><th>ID</th><th>Razón social</th><th>RUT</th><th>Giro</th><th>Contacto</th><th>Estado</th><th></th></tr></thead>
+            <tbody id="tbProveedores"></tbody>
+          </table></div>
+        </div>
+      </div>
 
     <!-- ---- INSTALACIONES ---- -->
     <section data-vista="instalaciones">
@@ -558,6 +581,35 @@ td.acc{white-space:nowrap; text-align:right; padding-right:0}
             <thead><tr><th>RUT</th><th>Nombre</th><th>Cargo</th><th>Instalación</th><th>Empresa</th>
               <th>Supervisor</th><th>Tallas</th><th>Estado</th><th></th></tr></thead>
             <tbody id="tbPersonas"></tbody>
+          </table></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---- VALIDACIÓN ---- -->
+    <section data-vista="validacion">
+      <div class="nota" id="valNota"></div>
+
+      <div class="bloque">
+        <div class="canal"><span class="folio">§ 80</span></div>
+        <div class="cuerpo">
+          <h2>Aprobación previa</h2>
+          <p class="bajada">Nacieron en borrador y no operan hasta que los apruebes. Un material sin aprobar no aparece en las compras; una empresa sin aprobar no admite instalaciones.</p>
+          <div class="tabla-env"><table>
+            <thead><tr><th>Tipo</th><th>ID</th><th>Registro</th><th>Detalle</th><th>Creado por</th><th></th></tr></thead>
+            <tbody id="tbPrevia"></tbody>
+          </table></div>
+        </div>
+      </div>
+
+      <div class="bloque">
+        <div class="canal"><span class="folio">§ 81</span></div>
+        <div class="cuerpo">
+          <h2>Revisión posterior</h2>
+          <p class="bajada">Ya están operando, como corresponde: un nuevo ingreso no puede esperar aprobación para recibir uniforme. Revísalos cuando puedas.</p>
+          <div class="tabla-env"><table>
+            <thead><tr><th>Tipo</th><th>ID</th><th>Registro</th><th>Detalle</th><th>Creado por</th><th></th></tr></thead>
+            <tbody id="tbPosterior"></tbody>
           </table></div>
         </div>
       </div>
@@ -710,9 +762,10 @@ const VISTAS = {
   existencias:   { rotulo:'Existencias',   roles:['ADMIN','OPERADOR'] },
   compras:       { rotulo:'Compras',       roles:['ADMIN','OPERADOR'] },
   materiales:    { rotulo:'Materiales',    roles:['ADMIN','OPERADOR'] },
-  clientes:      { rotulo:'Clientes',      roles:['ADMIN','OPERADOR'] },
+  clientes:      { rotulo:'Empresas',      roles:['ADMIN','OPERADOR'] },
   instalaciones: { rotulo:'Instalaciones', roles:['ADMIN','OPERADOR'] },
   dotacion:      { rotulo:'Dotación',      roles:['ADMIN','OPERADOR','SUPERVISOR'] },
+  validacion:    { rotulo:'Validación',    roles:['ADMIN'] },
   usuarios:      { rotulo:'Usuarios',      roles:['ADMIN'] }
 };
 
@@ -848,9 +901,15 @@ function montarTabs() {
   ir('panel');
 }
 
-function ir(vista) {
+function ir(vista, filtro) {
   $$('#tabs button').forEach(function (b) { b.setAttribute('aria-current', b.dataset.ir === vista ? 'true' : 'false'); });
   $$('section[data-vista]').forEach(function (s) { s.classList.toggle('activa', s.dataset.vista === vista); });
+  if (vista === 'existencias' && filtro) {
+    $('#eAlerta').value = filtro;
+    $('#eBuscar').value = ''; $('#eNaturaleza').value = '';
+    $('#eCategoria').value = ''; $('#eTemporada').value = ''; $('#eTipo').value = '';
+    pintarExistencias();
+  }
   window.scrollTo(0, 0);
 }
 
@@ -867,6 +926,7 @@ async function recargar() {
   pintarPersonas();
   pintarUsuarios();
   pintarProveedores();
+  pintarValidacion();
   await cargarExistencias();
   await cargarCompras();
 }
@@ -890,47 +950,75 @@ function nombreSupervisor(id) {
 /* ================= PANEL ================= */
 function pintarPanel() {
   const c = est.cat;
+  const V = c.validacion || { total:0, previa:0, posterior:0 };
+  const R = (est.exi && est.exi.resumen) || { quiebres:0, bajos:0, ajustes:0, valor:0, sin_valorizar:0 };
+
   const mat = (c.materiales || []).filter(function (m) { return m.activo === 'SI'; }).length;
-  const sku = (c.sku || []).filter(function (s) { return s.activo === 'SI'; }).length;
+  const sku = (c.sku || []).filter(function (x) { return x.activo === 'SI'; }).length;
   const emp = (c.clientes || []).filter(function (x) { return x.activo === 'SI' && x.tipo === 'MANDANTE'; }).length;
   const ins = (c.instalaciones || []).filter(function (i) { return i.activo === 'SI'; }).length;
-  const per = (c.personas || []).filter(function (p) { return p.estado === 'Activo'; }).length;
+  const per = (c.personas || []).filter(function (x) { return x.estado === 'Activo'; }).length;
+  const prv = (c.proveedores || []).filter(function (x) { return x.activo === 'SI'; }).length;
 
-  const R = (est.exi && est.exi.resumen) || { quiebres:0, bajos:0, ajustes:0, valor:0 };
+  /* Cada cifra que exige una acción es una puerta a la pantalla donde se
+     resuelve. Un tablero que solo informa termina siendo decoración. */
+  const puertas = [
+    { n:R.quiebres, r:'Quiebres de stock', clase:'grave', ir:'existencias', filtro:'QUIEBRE' },
+    { n:R.bajos,    r:'Bajo el mínimo',    clase:'aviso', ir:'existencias', filtro:'BAJO' },
+    { n:V.previa,   r:'Esperan aprobación', clase:'aviso', ir:'validacion', solo:'ADMIN' },
+    { n:V.posterior,r:'Por revisar',       clase:'',      ir:'validacion', solo:'ADMIN' },
+    { n:R.ajustes,  r:'Ajustes en el historial', clase: R.ajustes ? 'aviso' : '' }
+  ].filter(function (x) { return !x.solo || est.usuario.rol === x.solo; });
 
-  const t = [
-    { n: R.quiebres, r: 'Quiebres de stock', c: 'grave' },
-    { n: R.bajos, r: 'Bajo el mínimo', c: 'aviso' },
-    { n: R.ajustes, r: 'Ajustes registrados', c: R.ajustes ? 'aviso' : '' },
-    { n: sku, r: 'SKU en catálogo' },
-    { n: mat, r: 'Materiales activos' },
-    { n: emp, r: 'Empresas mandantes' },
-    { n: ins, r: 'Instalaciones' },
-    { n: per, r: 'Dotación activa' }
-  ];
+  $('#indicadores').innerHTML = puertas.map(function (x) {
+    const vivo = x.n > 0;
+    return '<div class="ind ' + (vivo ? x.clase : 'apagado') +
+      (x.ir && vivo ? ' accionable" data-ir="' + x.ir + '" data-filtro="' + (x.filtro || '') + '"' : '"') + '>' +
+      '<div class="cifra">' + ('0' + x.n).slice(-2) + '</div>' +
+      '<div class="rotulo">' + x.r + '</div></div>';
+  }).join('');
 
-  $('#indicadores').innerHTML = t.map(function (x) {
-    return '<div class="ind ' + (x.c || '') + '"><div class="cifra">' +
-      ('0' + x.n).slice(-2) + '</div><div class="rotulo">' + x.r + '</div></div>';
+  $('#valorInv').innerHTML = R.valor
+    ? '<div class="rotulo">Inventario valorizado</div><div class="cifra">$' + pesos(R.valor) + '</div>' +
+      '<div style="font-size:11.5px;color:var(--tenue);margin-top:3px">Al último costo conocido' +
+      (R.sin_valorizar ? ' · ' + R.sin_valorizar + ' unidades aún sin valorizar' : '') + '</div>'
+    : '<div class="rotulo">Inventario valorizado</div>' +
+      '<div style="font-size:12.5px;color:var(--tenue);margin-top:4px">Sin compras registradas todavía. ' +
+      'El valor aparece con la primera factura.</div>';
+
+  $('#menores').innerHTML = [
+    [sku,'SKU'], [mat,'Materiales'], [emp,'Mandantes'], [prv,'Proveedores'],
+    [ins,'Instalaciones'], [per,'Dotación']
+  ].map(function (x) {
+    return '<div><span class="cifra">' + x[0] + '</span> <span class="rotulo">' + x[1] + '</span></div>';
   }).join('');
 
   const conMov = est.exi ? est.exi.lineas.filter(function (L) { return L.movimientos > 0; }).length : 0;
 
   const pasos = [
-    ['01','Empresas mandantes','Operador', emp > 0],
-    ['02','Instalaciones por empresa','Operador', ins > 0],
-    ['03','Usuarios supervisores','Administrador', (c.supervisores || []).length > 0],
-    ['04','Catálogo de materiales','Operador', mat > 0],
-    ['05','Dotación con RUT y tallas','Operador', per > 0],
-    ['06','Proveedores','Operador', (c.proveedores || []).length > 0],
-    ['07','Inventario inicial o primera compra','Operador', conMov > 0]
+    ['01','Empresas mandantes', emp > 0],
+    ['02','Instalaciones por empresa', ins > 0],
+    ['03','Usuarios supervisores', (c.supervisores || []).length > 0],
+    ['04','Catálogo de materiales', mat > 0],
+    ['05','Dotación con RUT y tallas', per > 0],
+    ['06','Proveedores', prv > 0],
+    ['07','Inventario inicial o primera compra', conMov > 0]
   ];
 
+  const faltan = pasos.filter(function (p) { return !p[2]; });
+  /* El checklist es de arranque, no de operación: cuando está completo
+     desaparece en vez de quedar ocupando el tablero para siempre. */
+  $('#bloquePuesta').hidden = faltan.length === 0;
   $('#tbPuesta').innerHTML = pasos.map(function (p) {
-    return '<tr><td class="ref">' + p[0] + '</td><td>' + p[1] + '</td><td>' + p[2] + '</td>' +
-      '<td><span class="marbete ' + (p[3] ? 'm-ok">Cargado' : 'm-off">Pendiente') + '</span></td></tr>';
+    return '<tr class="' + (p[2] ? 'inactiva' : '') + '"><td class="ref">' + p[0] + '</td><td>' + p[1] + '</td>' +
+      '<td><span class="marbete ' + (p[2] ? 'm-ok">Cargado' : 'm-off">Pendiente') + '</span></td></tr>';
   }).join('');
 }
+
+$('#indicadores').addEventListener('click', function (ev) {
+  const d = ev.target.closest('.ind.accionable');
+  if (d) ir(d.dataset.ir, d.dataset.filtro);
+});
 
 /* ================= MATERIALES ================= */
 function ajustarFormMaterial() {
@@ -961,7 +1049,7 @@ function pintarMateriales() {
     }).length;
     return '<tr class="' + (m.activo === 'SI' ? '' : 'inactiva') + '">' +
       '<td class="ref">' + esc(m.codigo) + '</td>' +
-      '<td>' + esc(m.nombre) + (m.tipo ? '<br><span style="font-size:11.5px;color:var(--tenue)">' + esc(m.tipo) + '</span>' : '') + '</td>' +
+      '<td>' + esc(m.nombre) + marbeteVal(m) + (m.tipo ? '<br><span style="font-size:11.5px;color:var(--tenue)">' + esc(m.tipo) + '</span>' : '') + '</td>' +
       '<td>' + esc(NAT_ROTULO[m.naturaleza] || m.naturaleza) + '</td>' +
       '<td>' + esc(m.categoria) + '</td>' +
       '<td class="num">' + (m.naturaleza === 'CUSTODIA' ? n || '—' : n) + '</td>' +
@@ -1079,7 +1167,7 @@ function pintarClientes() {
     }).length;
     return '<tr class="' + (c.activo === 'SI' ? '' : 'inactiva') + '">' +
       '<td class="ref">' + esc(c.id) + '</td>' +
-      '<td>' + esc(c.razon_social) +
+      '<td>' + esc(c.razon_social) + marbeteVal(c) +
         (c.tipo === 'INTERNO' ? ' <span class="marbete m-int">Interno</span>' : '') + '</td>' +
       '<td class="ref">' + esc(c.rut || '—') + '</td>' +
       '<td style="font-size:11.5px">' + esc(c.contrato || '—') + '</td>' +
@@ -1112,7 +1200,7 @@ $('#tbClientes').addEventListener('click', async function (ev) {
 
 function limpiarCliente() {
   $('#fCliente').reset(); $('#clId').value = ''; $('#clRutAviso').textContent = '';
-  $('#tCliente').textContent = 'Nueva empresa';
+  $('#tCliente').textContent = 'Nueva empresa cliente';
   $('#clCancelar').hidden = true;
 }
 $('#clCancelar').addEventListener('click', limpiarCliente);
@@ -1144,7 +1232,7 @@ function pintarInstalaciones() {
       return String(p.instalacion_id) === String(i.id) && p.estado === 'Activo';
     }).length;
     return '<tr class="' + (i.activo === 'SI' ? '' : 'inactiva') + '">' +
-      '<td class="ref">' + esc(i.id) + '</td><td>' + esc(i.nombre) + '</td>' +
+      '<td class="ref">' + esc(i.id) + '</td><td>' + esc(i.nombre) + marbeteVal(i) + '</td>' +
       '<td>' + esc(c ? c.razon_social : '—') + '</td>' +
       '<td class="ref">' + esc(i.codigo || '—') + '</td>' +
       '<td style="font-size:11.5px;color:var(--tenue)">' + esc(i.direccion || '—') + '</td>' +
@@ -1441,6 +1529,7 @@ async function cargarExistencias() {
   const r = await api('existencias');
   if (!r.ok) return;
   est.exi = r;
+  poblarFiltrosExistencias();
   pintarExistencias();
   pintarInicial();
   pintarPanel();
@@ -1452,8 +1541,15 @@ function pintarExistencias() {
   const fn = $('#eNaturaleza').value;
   const fa = $('#eAlerta').value;
 
+  const fc = $('#eCategoria').value;
+  const ft = $('#eTemporada').value;
+  const fp = $('#eTipo').value;
+
   const ls = est.exi.lineas.filter(function (L) {
     if (fn && L.naturaleza !== fn) return false;
+    if (fc && L.categoria !== fc) return false;
+    if (ft && L.temporada !== ft) return false;
+    if (fp && L.tipo !== fp) return false;
     if (fa === 'QUIEBRE' && L.alerta !== 'QUIEBRE') return false;
     if (fa === 'BAJO' && L.alerta !== 'BAJO') return false;
     if (fa === 'MOV' && !L.movimientos && !L.alerta) return false;
@@ -1493,9 +1589,30 @@ function pintarExistencias() {
     R.ajustes + ' ajustes en el historial.';
 }
 
-['#eBuscar','#eNaturaleza','#eAlerta'].forEach(function (s) {
+['#eBuscar','#eNaturaleza','#eCategoria','#eTemporada','#eTipo','#eAlerta'].forEach(function (s) {
   $(s).addEventListener('input', pintarExistencias);
 });
+
+/* Las categorías y los tipos no son una lista fija: salen de lo que el
+   operador realmente creó, así que los desplegables se arman solos. */
+function poblarFiltrosExistencias() {
+  const unicos = function (campo) {
+    const v = {};
+    (est.cat.materiales || []).forEach(function (m) {
+      const x = String(m[campo] || '').trim();
+      if (x) v[x] = true;
+    });
+    return Object.keys(v).sort();
+  };
+  const armar = function (sel, arr, rotulo) {
+    const previo = $(sel).value;
+    $(sel).innerHTML = '<option value="">' + rotulo + '</option>' +
+      arr.map(function (x) { return '<option value="' + esc(x) + '">' + esc(x) + '</option>'; }).join('');
+    if (arr.indexOf(previo) !== -1) $(sel).value = previo;
+  };
+  armar('#eCategoria', unicos('categoria'), 'Todas');
+  armar('#eTipo', unicos('tipo'), 'Todos');
+}
 
 $('#tbExistencias').addEventListener('click', function (ev) {
   const b = ev.target.closest('button');
@@ -1843,7 +1960,7 @@ function pintarProveedores() {
   }
   tb.innerHTML = ps.map(function (p) {
     return '<tr class="' + (p.activo === 'SI' ? '' : 'inactiva') + '">' +
-      '<td class="ref">' + esc(p.id) + '</td><td>' + esc(p.razon_social) + '</td>' +
+      '<td class="ref">' + esc(p.id) + '</td><td>' + esc(p.razon_social) + marbeteVal(p) + '</td>' +
       '<td class="ref">' + esc(p.rut || '—') + '</td>' +
       '<td style="font-size:11.5px">' + esc(p.giro || '—') + '</td>' +
       '<td style="font-size:11.5px">' + esc(p.contacto || '—') + '</td>' +
@@ -1891,6 +2008,69 @@ $('#fProveedor').addEventListener('submit', async function (ev) {
   aviso('Proveedor guardado');
   limpiarProveedor();
   await recargar();
+});
+
+
+/* ==================================================================
+   VALIDACIÓN DE MAESTROS
+   ================================================================== */
+
+function marbeteVal(f) {
+  const e = String(f.estado_val || 'VIGENTE');
+  if (e === 'BORRADOR')  return ' <span class="marbete" style="border-color:var(--oro);color:#7A611B">Borrador</span>';
+  if (e === 'RECHAZADO') return ' <span class="marbete" style="border-color:var(--oxido);color:var(--oxido)">Rechazado</span>';
+  return '';
+}
+
+function pintarValidacion() {
+  const V = (est.cat && est.cat.validacion) || { pendientes: [], total: 0 };
+  const cola = V.pendientes || [];
+
+  const filaCola = function (x, acciones) {
+    return '<tr><td>' + esc(x.rotulo) + '</td><td class="ref">' + esc(x.id) + '</td>' +
+      '<td><b>' + esc(x.nombre) + '</b></td>' +
+      '<td style="font-size:11.5px;color:var(--tenue)">' + esc(x.detalle || '—') + '</td>' +
+      '<td class="ref">' + esc(x.creado_por || '—') + '</td>' +
+      '<td class="acc">' + acciones + '</td></tr>';
+  };
+
+  const previa = cola.filter(function (x) { return x.modo === 'PREVIA'; });
+  $('#tbPrevia').innerHTML = previa.length
+    ? previa.map(function (x) {
+        return filaCola(x,
+          '<button class="mini" data-val="APROBAR" data-ent="' + esc(x.entidad) + '" data-id="' + esc(x.id) + '">Aprobar</button>' +
+          '<button class="mini peligro" data-val="RECHAZAR" data-ent="' + esc(x.entidad) + '" data-id="' + esc(x.id) + '">Rechazar</button>');
+      }).join('')
+    : '<tr><td colspan="6" class="vacio">Nada pendiente de aprobación.</td></tr>';
+
+  const post = cola.filter(function (x) { return x.modo === 'POSTERIOR'; });
+  $('#tbPosterior').innerHTML = post.length
+    ? post.map(function (x) {
+        return filaCola(x,
+          '<button class="mini" data-val="REVISAR" data-ent="' + esc(x.entidad) + '" data-id="' + esc(x.id) + '">Marcar revisado</button>');
+      }).join('')
+    : '<tr><td colspan="6" class="vacio">Nada pendiente de revisión.</td></tr>';
+
+  $('#valNota').innerHTML = V.bloquea_autoaprobacion
+    ? 'La <b>segregación de funciones</b> está activa: no puedes validar un registro que creaste tú mismo. ' +
+      'Si eres el único administrador, lo que tú crees va a quedar esperando — esa incomodidad es la señal de que ' +
+      'hace falta un segundo aprobador.'
+    : 'La segregación de funciones está <b>desactivada</b>: puedes aprobar registros propios. Cada autoaprobación ' +
+      'queda marcada como tal en la bitácora.';
+}
+
+['#tbPrevia', '#tbPosterior'].forEach(function (sel) {
+  $(sel).addEventListener('click', async function (ev) {
+    const b = ev.target.closest('button[data-val]');
+    if (!b) return;
+    if (b.dataset.val === 'RECHAZAR' &&
+        !confirm('Rechazar deja el registro desactivado y sin uso. ¿Continuar?')) return;
+    const r = await api('validar', { entidad: b.dataset.ent, id: b.dataset.id, accion: b.dataset.val });
+    if (!r.ok) return;
+    aviso(r.estado === 'VIGENTE' ? 'Registro aprobado'
+        : r.estado === 'REVISADO' ? 'Registro revisado' : 'Registro rechazado');
+    await recargar();
+  });
 });
 
 /* ================= ARRANQUE ================= */
