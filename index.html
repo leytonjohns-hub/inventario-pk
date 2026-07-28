@@ -164,7 +164,7 @@ td.acc{white-space:nowrap; text-align:right; padding-right:0}
         <input id="aClave" name="password" type="password" autocomplete="current-password" required></div>
       <button class="btn btn-p btn-full" type="submit" id="bAcceso">Ingresar</button>
     </form>
-    <p class="acceso-pie">Instrumento de Contraloría Interna. Toda operación queda foliada en bitácora. Las validaciones de perfil se ejecutan del lado del servidor.</p>
+    <p class="acceso-pie">Instrumento de Contraloría Interna. Todo movimiento queda foliado y es irrepetible. Las validaciones de perfil se ejecutan del lado del servidor.</p>
   </div>
 </div>
 
@@ -188,9 +188,9 @@ td.acc{white-space:nowrap; text-align:right; padding-right:0}
     <section data-vista="panel">
       <div class="indicadores" id="indicadores"></div>
       <div class="nota">
-        <b>Fase 1 en operación.</b> Están habilitados clientes, instalaciones, catálogo y dotación.
-        El stock, las compras y las entregas entran en la Fase 2, y por eso los contadores de quiebre
-        siguen en cero: aún no hay kardex que leer.
+        <b>Fase 2 en operación.</b> El stock ya es real: cada saldo se calcula sumando el kardex, nunca
+        se almacena. Las entregas y el certificado entran en la Fase 3, así que por ahora el inventario
+        solo puede crecer por compra, inventario inicial o ajuste documentado.
       </div>
       <div class="bloque">
         <div class="canal"><span class="folio">§ 01</span></div>
@@ -200,6 +200,151 @@ td.acc{white-space:nowrap; text-align:right; padding-right:0}
           <div class="tabla-env"><table>
             <thead><tr><th>N.º</th><th>Qué cargar</th><th>Perfil</th><th>Estado</th></tr></thead>
             <tbody id="tbPuesta"></tbody>
+          </table></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---- EXISTENCIAS ---- -->
+    <section data-vista="existencias">
+      <div class="bloque">
+        <div class="canal"><span class="folio">§ 60</span></div>
+        <div class="cuerpo">
+          <h2>Existencias</h2>
+          <p class="bajada">Saldo calculado desde el kardex. Ningún stock se almacena: todo se suma desde los movimientos.</p>
+          <div class="filtros">
+            <div class="campo"><label for="eBuscar">Buscar</label><input id="eBuscar" placeholder="SKU, material o serie"></div>
+            <div class="campo"><label for="eNaturaleza">Naturaleza</label>
+              <select id="eNaturaleza"><option value="">Todas</option>
+                <option value="DOTACION">Dotación personal</option>
+                <option value="CONSUMIBLE">Consumible</option>
+                <option value="CUSTODIA">Bien bajo custodia</option></select></div>
+            <div class="campo"><label for="eAlerta">Mostrar</label>
+              <select id="eAlerta">
+                <option value="MOV">Con saldo o alerta</option>
+                <option value="QUIEBRE">Solo quiebres</option>
+                <option value="BAJO">Solo bajo el mínimo</option>
+                <option value="TODO">Todo el catálogo</option></select></div>
+          </div>
+          <div class="tabla-env"><table>
+            <thead><tr><th>SKU</th><th>Material</th><th>Talla o serie</th><th>Estado</th>
+              <th class="num">Saldo</th><th class="num">Mín.</th><th class="num">Costo unit.</th>
+              <th class="num">Valor</th><th>Alerta</th><th></th></tr></thead>
+            <tbody id="tbExistencias"></tbody>
+          </table></div>
+          <p id="eResumen" style="font-size:11.5px;color:var(--tenue);margin:12px 0 0"></p>
+        </div>
+      </div>
+
+      <div class="bloque">
+        <div class="canal"><span class="folio">§ 61</span></div>
+        <div class="cuerpo">
+          <h2>Inventario inicial</h2>
+          <p class="bajada">Solo admite unidades sin ningún movimiento. Entra en unidades, sin costo: tomará el de la primera compra posterior.</p>
+          <div class="filtros">
+            <div class="campo" style="max-width:170px"><label for="iiFecha">Fecha de apertura</label>
+              <input id="iiFecha" type="date"></div>
+            <div class="campo"><label for="iiBuscar">Filtrar unidades</label>
+              <input id="iiBuscar" placeholder="SKU o material"></div>
+          </div>
+          <div class="tabla-env"><table>
+            <thead><tr><th>SKU</th><th>Material</th><th>Talla</th><th class="num">Unidades contadas</th></tr></thead>
+            <tbody id="tbInicial"></tbody>
+          </table></div>
+          <div class="acciones">
+            <button class="btn btn-p" type="button" id="bInicial">Registrar inventario inicial</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---- COMPRAS ---- -->
+    <section data-vista="compras">
+      <div class="bloque">
+        <div class="canal"><span class="folio">§ 70</span></div>
+        <div class="cuerpo">
+          <h2>Registrar compra</h2>
+          <p class="bajada">El inventario se valoriza al neto. El IVA se guarda para cuadrar con el documento físico.</p>
+          <form id="fCompra">
+            <div class="rejilla">
+              <div class="campo" style="max-width:170px"><label for="coFecha">Fecha del documento</label>
+                <input id="coFecha" type="date" required></div>
+              <div class="campo" style="max-width:150px"><label for="coTipo">Tipo</label>
+                <select id="coTipo"><option>Factura</option><option>Boleta</option><option>Guía de despacho</option></select></div>
+              <div class="campo mono" style="max-width:170px"><label for="coNumero">N.º del documento</label>
+                <input id="coNumero" required></div>
+              <div class="campo"><label for="coProveedor">Proveedor</label><select id="coProveedor" required></select></div>
+              <div class="campo"><label for="coObs">Observación</label><input id="coObs"></div>
+            </div>
+
+            <p class="rotulo" style="margin:20px 0 8px">Detalle</p>
+            <div class="tabla-env"><table>
+              <thead><tr><th style="min-width:180px">Material</th><th style="min-width:150px">Talla o series</th>
+                <th class="num" style="width:90px">Cantidad</th><th class="num" style="width:110px">Costo unit. neto</th>
+                <th style="width:130px">Vencimiento</th><th class="num" style="width:100px">Subtotal</th><th></th></tr></thead>
+              <tbody id="tbLineas"></tbody>
+            </table></div>
+            <div style="margin-top:10px"><button class="btn btn-s" type="button" id="bLinea">Agregar línea</button></div>
+
+            <div style="display:flex; justify-content:flex-end; gap:26px; margin-top:16px; padding-top:14px; border-top:1px solid var(--regla-suave)">
+              <div style="text-align:right"><div class="rotulo">Neto</div><div class="mono" style="font-size:16px" id="coNeto">0</div></div>
+              <div style="text-align:right"><div class="rotulo">IVA 19%</div><div class="mono" style="font-size:16px" id="coIva">0</div></div>
+              <div style="text-align:right"><div class="rotulo">Total</div><div class="mono" style="font-size:19px; font-weight:500" id="coTotal">0</div></div>
+            </div>
+
+            <div class="acciones">
+              <button class="btn btn-p" type="submit" id="bCompra">Registrar compra</button>
+              <button class="btn btn-s" type="button" id="coLimpiar">Limpiar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="bloque">
+        <div class="canal"><span class="folio">§ 71</span></div>
+        <div class="cuerpo">
+          <h2>Documentos registrados</h2>
+          <p class="bajada">Una compra no se edita: se anula con movimientos de reverso y se vuelve a registrar.</p>
+          <div class="filtros">
+            <div class="campo" style="max-width:160px"><label for="cfDesde">Desde</label><input id="cfDesde" type="date"></div>
+            <div class="campo" style="max-width:160px"><label for="cfHasta">Hasta</label><input id="cfHasta" type="date"></div>
+            <div><button class="btn btn-s" type="button" id="bFiltrarCompras">Aplicar</button></div>
+          </div>
+          <div class="tabla-env"><table>
+            <thead><tr><th>Folio</th><th>Fecha</th><th>Documento</th><th>Proveedor</th>
+              <th class="num">Líneas</th><th class="num">Unidades</th><th class="num">Neto</th>
+              <th class="num">Total</th><th>Estado</th><th></th></tr></thead>
+            <tbody id="tbCompras"></tbody>
+          </table></div>
+          <p id="cResumen" style="font-size:11.5px;color:var(--tenue);margin:12px 0 0"></p>
+        </div>
+      </div>
+
+      <div class="bloque">
+        <div class="canal"><span class="folio">§ 72</span></div>
+        <div class="cuerpo">
+          <h2 id="tProveedor">Proveedores</h2>
+          <p class="bajada">Igual que con los clientes: la ficha evita que el informe por proveedor se fragmente.</p>
+          <form id="fProveedor">
+            <input type="hidden" id="prId">
+            <div class="rejilla">
+              <div class="campo"><label for="prRazon">Razón social</label><input id="prRazon" required></div>
+              <div class="campo mono" style="max-width:170px"><label for="prRut">RUT</label>
+                <input id="prRut" placeholder="76.123.456-7">
+                <span class="ayuda" id="prRutAviso"></span></div>
+              <div class="campo"><label for="prGiro">Giro</label><input id="prGiro"></div>
+              <div class="campo"><label for="prContacto">Contacto</label><input id="prContacto"></div>
+              <div class="campo"><label for="prCorreo">Correo</label><input id="prCorreo" type="email"></div>
+              <div class="campo"><label for="prTelefono">Teléfono</label><input id="prTelefono"></div>
+            </div>
+            <div class="acciones">
+              <button class="btn btn-p" type="submit">Guardar proveedor</button>
+              <button class="btn btn-s" type="button" id="prCancelar" hidden>Cancelar edición</button>
+            </div>
+          </form>
+          <div class="tabla-env" style="margin-top:18px"><table>
+            <thead><tr><th>ID</th><th>Razón social</th><th>RUT</th><th>Giro</th><th>Contacto</th><th>Estado</th><th></th></tr></thead>
+            <tbody id="tbProveedores"></tbody>
           </table></div>
         </div>
       </div>
@@ -472,6 +617,67 @@ td.acc{white-space:nowrap; text-align:right; padding-right:0}
   </main>
 </div>
 
+<!-- ============ MODAL KARDEX ============ -->
+<div class="velo" id="veloKardex" hidden>
+  <div class="modal" style="max-width:720px">
+    <h3 id="kTitulo">Kardex</h3>
+    <p class="bajada" id="kSub" style="font-size:12.5px;color:var(--tenue);margin:0 0 14px"></p>
+    <div class="tabla-env" style="max-height:52vh; overflow-y:auto">
+      <table>
+        <thead><tr><th>Folio</th><th>Fecha</th><th>Tipo</th><th>Referencia</th>
+          <th class="num">Entra</th><th class="num">Sale</th><th class="num">Saldo</th><th class="num">Costo</th></tr></thead>
+        <tbody id="tbKardex"></tbody>
+      </table>
+    </div>
+    <p style="font-size:11.5px;color:var(--tenue);margin:12px 0 0">
+      Cada línea es un movimiento irrepetible. El saldo de la última fila es la existencia actual.</p>
+    <div class="acciones"><button class="btn btn-s" type="button" id="kCerrar">Cerrar</button></div>
+  </div>
+</div>
+
+<!-- ============ MODAL AJUSTE ============ -->
+<div class="velo" id="veloAjuste" hidden>
+  <div class="modal">
+    <h3>Ajuste de existencias</h3>
+    <p style="font-size:12.5px;color:var(--tenue);margin:0 0 14px" id="ajSub"></p>
+    <form id="fAjuste">
+      <input type="hidden" id="ajSku">
+      <div class="campo"><label for="ajCantidad">Cantidad</label>
+        <input id="ajCantidad" type="number" step="1" required>
+        <span class="ayuda">Positiva suma, negativa resta. Ej.: −2 por merma.</span></div>
+      <div class="campo" style="margin-top:12px"><label for="ajMotivo">Motivo</label>
+        <input id="ajMotivo" required minlength="10" placeholder="Documento o hecho que respalda el ajuste">
+        <span class="ayuda">Mínimo 10 caracteres. Queda en el kardex de forma permanente.</span></div>
+      <p class="nota" style="margin:14px 0 0">
+        Un ajuste sin documento de respaldo es una señal de auditoría. El panel lleva contador de ajustes del período.</p>
+      <div class="acciones">
+        <button class="btn btn-p" type="submit">Registrar ajuste</button>
+        <button class="btn btn-s" type="button" id="ajCancelar">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ MODAL ANULAR ============ -->
+<div class="velo" id="veloAnular" hidden>
+  <div class="modal">
+    <h3>Anular compra</h3>
+    <p style="font-size:12.5px;color:var(--tenue);margin:0 0 14px" id="anSub"></p>
+    <form id="fAnular">
+      <input type="hidden" id="anFolio">
+      <div class="campo"><label for="anMotivo">Motivo de la anulación</label>
+        <input id="anMotivo" required minlength="10" placeholder="Ej.: factura digitada con cantidades erradas">
+        <span class="ayuda">Mínimo 10 caracteres.</span></div>
+      <p class="nota" style="margin:14px 0 0">
+        La compra no se borra. Se generan movimientos de reverso que dejan el saldo correcto y la historia visible.</p>
+      <div class="acciones">
+        <button class="btn btn-p" type="submit">Anular compra</button>
+        <button class="btn btn-s" type="button" id="anCancelar">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <!-- ============ MODAL CLAVE ============ -->
 <div class="velo" id="velo" hidden>
   <div class="modal">
@@ -497,10 +703,12 @@ td.acc{white-space:nowrap; text-align:right; padding-right:0}
 const API_URL  = 'https://script.google.com/macros/s/AKfycbzF3x9Yios2SX2F2EkRgdYcRMTiOZD6csPlCyfHJchMyAy5G9UAaTjmRqq_2x_D2HY/exec';
 const LOGO_URL = 'data:image/png;base64,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';
 
-const est = { token:'', usuario:null, cat:null, materialAbierto:'' };
+const est = { token:'', usuario:null, cat:null, exi:null, materialAbierto:'' };
 
 const VISTAS = {
   panel:         { rotulo:'Panel',         roles:['ADMIN','OPERADOR','SUPERVISOR'] },
+  existencias:   { rotulo:'Existencias',   roles:['ADMIN','OPERADOR'] },
+  compras:       { rotulo:'Compras',       roles:['ADMIN','OPERADOR'] },
   materiales:    { rotulo:'Materiales',    roles:['ADMIN','OPERADOR'] },
   clientes:      { rotulo:'Clientes',      roles:['ADMIN','OPERADOR'] },
   instalaciones: { rotulo:'Instalaciones', roles:['ADMIN','OPERADOR'] },
@@ -658,6 +866,9 @@ async function recargar() {
   pintarInstalaciones();
   pintarPersonas();
   pintarUsuarios();
+  pintarProveedores();
+  await cargarExistencias();
+  await cargarCompras();
 }
 
 function cliente(id) {
@@ -685,14 +896,17 @@ function pintarPanel() {
   const ins = (c.instalaciones || []).filter(function (i) { return i.activo === 'SI'; }).length;
   const per = (c.personas || []).filter(function (p) { return p.estado === 'Activo'; }).length;
 
+  const R = (est.exi && est.exi.resumen) || { quiebres:0, bajos:0, ajustes:0, valor:0 };
+
   const t = [
-    { n: mat, r: 'Materiales activos' },
+    { n: R.quiebres, r: 'Quiebres de stock', c: 'grave' },
+    { n: R.bajos, r: 'Bajo el mínimo', c: 'aviso' },
+    { n: R.ajustes, r: 'Ajustes registrados', c: R.ajustes ? 'aviso' : '' },
     { n: sku, r: 'SKU en catálogo' },
+    { n: mat, r: 'Materiales activos' },
     { n: emp, r: 'Empresas mandantes' },
     { n: ins, r: 'Instalaciones' },
-    { n: per, r: 'Dotación activa' },
-    { n: 0, r: 'Quiebres de stock', c: 'grave' },
-    { n: 0, r: 'Bajo el mínimo', c: 'aviso' }
+    { n: per, r: 'Dotación activa' }
   ];
 
   $('#indicadores').innerHTML = t.map(function (x) {
@@ -700,12 +914,16 @@ function pintarPanel() {
       ('0' + x.n).slice(-2) + '</div><div class="rotulo">' + x.r + '</div></div>';
   }).join('');
 
+  const conMov = est.exi ? est.exi.lineas.filter(function (L) { return L.movimientos > 0; }).length : 0;
+
   const pasos = [
     ['01','Empresas mandantes','Operador', emp > 0],
     ['02','Instalaciones por empresa','Operador', ins > 0],
     ['03','Usuarios supervisores','Administrador', (c.supervisores || []).length > 0],
     ['04','Catálogo de materiales','Operador', mat > 0],
-    ['05','Dotación con RUT y tallas','Operador', per > 0]
+    ['05','Dotación con RUT y tallas','Operador', per > 0],
+    ['06','Proveedores','Operador', (c.proveedores || []).length > 0],
+    ['07','Inventario inicial o primera compra','Operador', conMov > 0]
   ];
 
   $('#tbPuesta').innerHTML = pasos.map(function (p) {
@@ -991,6 +1209,12 @@ function pintarSelectores() {
   $('#pInstalacion').innerHTML = '<option value="">Seleccionar…</option>' + opInst;
   $('#dInstalacion').innerHTML = '<option value="">Todas</option>' + opInst;
 
+  $('#coProveedor').innerHTML = '<option value="">Seleccionar…</option>' +
+    (est.cat.proveedores || []).filter(function (p) { return p.activo === 'SI'; })
+      .map(function (p) {
+        return '<option value="' + esc(p.id) + '">' + esc(p.razon_social) + '</option>';
+      }).join('');
+
   $('#pSupervisor').innerHTML = '<option value="">Sin asignar</option>' +
     (est.cat.supervisores || []).map(function (s) {
       return '<option value="' + esc(s.id) + '">' + esc(s.nombre) + '</option>';
@@ -1190,8 +1414,493 @@ $('#fClave').addEventListener('submit', async function (ev) {
   aviso('Contraseña actualizada');
 });
 
+/* ==================================================================
+   FASE 2 — EXISTENCIAS, KARDEX, COMPRAS, INVENTARIO INICIAL
+   ================================================================== */
+
+const TIPO_ROTULO = {
+  INGRESO_COMPRA:'Compra', INGRESO_INICIAL:'Inicial', AJUSTE:'Ajuste',
+  REVERSO_COMPRA:'Reverso', ENTREGA:'Entrega', DEVOLUCION:'Devolución', BAJA:'Baja'
+};
+
+function pesos(n) {
+  const v = Math.round(Number(n) || 0);
+  return v.toLocaleString('es-CL');
+}
+
+function material(id) {
+  return (est.cat.materiales || []).filter(function (m) { return String(m.id) === String(id); })[0];
+}
+function proveedor(id) {
+  return (est.cat.proveedores || []).filter(function (p) { return String(p.id) === String(id); })[0];
+}
+
+/* ---------------- EXISTENCIAS ---------------- */
+
+async function cargarExistencias() {
+  const r = await api('existencias');
+  if (!r.ok) return;
+  est.exi = r;
+  pintarExistencias();
+  pintarInicial();
+  pintarPanel();
+}
+
+function pintarExistencias() {
+  if (!est.exi) return;
+  const q = $('#eBuscar').value.trim().toLowerCase();
+  const fn = $('#eNaturaleza').value;
+  const fa = $('#eAlerta').value;
+
+  const ls = est.exi.lineas.filter(function (L) {
+    if (fn && L.naturaleza !== fn) return false;
+    if (fa === 'QUIEBRE' && L.alerta !== 'QUIEBRE') return false;
+    if (fa === 'BAJO' && L.alerta !== 'BAJO') return false;
+    if (fa === 'MOV' && !L.movimientos && !L.alerta) return false;
+    if (q && (L.sku_id + ' ' + L.material + ' ' + (L.serie || '')).toLowerCase().indexOf(q) === -1) return false;
+    return true;
+  });
+
+  const tb = $('#tbExistencias');
+  if (!ls.length) {
+    tb.innerHTML = '<tr><td colspan="10" class="vacio">Ninguna unidad coincide con el filtro.</td></tr>';
+  } else {
+    tb.innerHTML = ls.map(function (L) {
+      const marca = L.alerta === 'QUIEBRE'
+        ? '<span class="marbete" style="border-color:var(--oxido);color:var(--oxido)">Quiebre</span>'
+        : L.alerta === 'BAJO'
+          ? '<span class="marbete" style="border-color:var(--oro);color:#7A611B">Bajo mínimo</span>'
+          : '';
+      return '<tr class="' + (L.activo === 'SI' ? '' : 'inactiva') + '">' +
+        '<td class="ref">' + esc(L.sku_id) + '</td>' +
+        '<td>' + esc(L.material) + '</td>' +
+        '<td>' + esc(L.serie || L.talla) + '</td>' +
+        '<td>' + (L.estado === 'USADO' ? '<span class="marbete" style="border-color:var(--oro);color:#7A611B">Usado</span>' : 'Nuevo') + '</td>' +
+        '<td class="num" style="font-weight:500' + (L.alerta === 'QUIEBRE' ? ';color:var(--oxido)' : '') + '">' + L.cantidad + '</td>' +
+        '<td class="num">' + (L.naturaleza === 'CUSTODIA' || L.estado === 'USADO' ? '—' : L.minimo) + '</td>' +
+        '<td class="num">' + (L.valorizado ? pesos(L.costo) : '<span style="color:var(--tenue)">sin valorizar</span>') + '</td>' +
+        '<td class="num">' + (L.valorizado && L.cantidad > 0 ? pesos(L.valor) : '—') + '</td>' +
+        '<td>' + marca + '</td>' +
+        '<td class="acc">' +
+          '<button class="mini" data-kdx="' + esc(L.sku_id) + '">Kardex</button>' +
+          '<button class="mini" data-ajs="' + esc(L.sku_id) + '">Ajuste</button></td></tr>';
+    }).join('');
+  }
+
+  const R = est.exi.resumen;
+  $('#eResumen').innerHTML = 'Inventario valorizado en <b>$' + pesos(R.valor) + '</b> al último costo conocido. ' +
+    (R.sin_valorizar ? R.sin_valorizar + ' unidades aún sin valorizar (sin compra registrada). ' : '') +
+    R.ajustes + ' ajustes en el historial.';
+}
+
+['#eBuscar','#eNaturaleza','#eAlerta'].forEach(function (s) {
+  $(s).addEventListener('input', pintarExistencias);
+});
+
+$('#tbExistencias').addEventListener('click', function (ev) {
+  const b = ev.target.closest('button');
+  if (!b) return;
+  if (b.dataset.kdx) abrirKardex(b.dataset.kdx);
+  if (b.dataset.ajs) abrirAjuste(b.dataset.ajs);
+});
+
+/* ---------------- KARDEX ---------------- */
+
+async function abrirKardex(sku) {
+  const L = (est.exi.lineas || []).filter(function (x) { return x.sku_id === sku; })[0];
+  $('#kTitulo').textContent = 'Kardex · ' + sku;
+  $('#kSub').textContent = L ? L.material + ' · ' + (L.serie || 'Talla ' + L.talla) : '';
+  $('#tbKardex').innerHTML = '<tr><td colspan="8" class="vacio">Cargando…</td></tr>';
+  $('#veloKardex').hidden = false;
+
+  const r = await api('kardex', { sku_id: sku });
+  if (!r.ok) { $('#veloKardex').hidden = true; return; }
+
+  if (!r.lineas.length) {
+    $('#tbKardex').innerHTML = '<tr><td colspan="8" class="vacio">Esta unidad todavía no tiene movimientos.</td></tr>';
+    return;
+  }
+
+  $('#tbKardex').innerHTML = r.lineas.map(function (x) {
+    const entra = x.cantidad > 0 ? x.cantidad : '';
+    const sale = x.cantidad < 0 ? Math.abs(x.cantidad) : '';
+    return '<tr><td class="ref">' + esc(x.folio) + '</td>' +
+      '<td class="ref">' + esc(String(x.fecha).slice(0,10)) + '</td>' +
+      '<td>' + esc(TIPO_ROTULO[x.tipo] || x.tipo) + '</td>' +
+      '<td class="ref">' + esc(x.referencia || '—') +
+        (x.motivo ? '<br><span style="font-family:var(--sans);font-size:11px;color:var(--tenue)">' + esc(x.motivo) + '</span>' : '') + '</td>' +
+      '<td class="num">' + entra + '</td>' +
+      '<td class="num" style="' + (sale ? 'color:var(--oxido)' : '') + '">' + sale + '</td>' +
+      '<td class="num" style="font-weight:500">' + x.saldo + '</td>' +
+      '<td class="num">' + (x.costo_unitario ? pesos(x.costo_unitario) : '—') + '</td></tr>';
+  }).join('');
+}
+
+$('#kCerrar').addEventListener('click', function () { $('#veloKardex').hidden = true; });
+$('#veloKardex').addEventListener('click', function (ev) { if (ev.target === this) this.hidden = true; });
+
+/* ---------------- AJUSTE ---------------- */
+
+function abrirAjuste(sku) {
+  const L = (est.exi.lineas || []).filter(function (x) { return x.sku_id === sku; })[0];
+  $('#ajSku').value = sku;
+  $('#ajSub').textContent = L ? sku + ' · ' + L.material + ' · saldo actual ' + L.cantidad : sku;
+  $('#fAjuste').reset(); $('#ajSku').value = sku;
+  $('#veloAjuste').hidden = false;
+}
+$('#ajCancelar').addEventListener('click', function () { $('#veloAjuste').hidden = true; });
+$('#veloAjuste').addEventListener('click', function (ev) { if (ev.target === this) this.hidden = true; });
+
+$('#fAjuste').addEventListener('submit', async function (ev) {
+  ev.preventDefault();
+  const r = await api('ajuste', {
+    sku_id: $('#ajSku').value, cantidad: $('#ajCantidad').value, motivo: $('#ajMotivo').value
+  });
+  if (!r.ok) return;
+  $('#veloAjuste').hidden = true;
+  aviso('Ajuste registrado · saldo ' + r.saldo);
+  await cargarExistencias();
+});
+
+/* ---------------- INVENTARIO INICIAL ---------------- */
+
+function pintarInicial() {
+  if (!est.exi) return;
+  const q = $('#iiBuscar').value.trim().toLowerCase();
+
+  /* Solo unidades sin ninguna historia: esa es la regla que impide
+     cuadrar faltantes disfrazándolos de apertura. */
+  const ls = est.exi.lineas.filter(function (L) {
+    if (L.movimientos > 0 || L.activo !== 'SI') return false;
+    if (L.naturaleza === 'CUSTODIA' || L.estado === 'USADO') return false;
+    if (q && (L.sku_id + ' ' + L.material).toLowerCase().indexOf(q) === -1) return false;
+    return true;
+  });
+
+  const tb = $('#tbInicial');
+  if (!ls.length) {
+    tb.innerHTML = '<tr><td colspan="4" class="vacio">No hay unidades disponibles para inventario inicial. Las que ya tienen movimientos se corrigen por ajuste.</td></tr>';
+    $('#bInicial').disabled = true;
+    return;
+  }
+  $('#bInicial').disabled = false;
+
+  tb.innerHTML = ls.map(function (L) {
+    return '<tr><td class="ref">' + esc(L.sku_id) + '</td><td>' + esc(L.material) + '</td>' +
+      '<td>' + esc(L.talla) + '</td>' +
+      '<td class="num"><input type="number" min="0" step="1" data-ii="' + esc(L.sku_id) + '" ' +
+      'style="width:88px;text-align:right;font-family:var(--mono);border:1px solid var(--regla);padding:5px 7px"></td></tr>';
+  }).join('');
+}
+
+$('#iiBuscar').addEventListener('input', pintarInicial);
+
+$('#bInicial').addEventListener('click', async function () {
+  const lineas = $$('input[data-ii]').map(function (i) {
+    return { sku_id: i.dataset.ii, cantidad: Number(i.value) || 0 };
+  }).filter(function (L) { return L.cantidad > 0; });
+
+  if (!lineas.length) { aviso('Ingresa al menos una cantidad.', true); return; }
+  if (!$('#iiFecha').value) { aviso('Indica la fecha de apertura.', true); return; }
+  if (!confirm('Vas a registrar ' + lineas.length + ' unidades de stock como inventario inicial. ' +
+      'Esta carga es irrepetible por SKU. ¿Continuar?')) return;
+
+  const r = await api('inventarioInicial', { fecha: $('#iiFecha').value, lineas: lineas });
+  if (!r.ok) return;
+  aviso('Inventario inicial registrado · ' + r.lineas + ' unidades de stock');
+  await cargarExistencias();
+});
+
+/* ---------------- COMPRAS: LÍNEAS DEL DETALLE ---------------- */
+
+let seqLinea = 0;
+
+function opcionesMateriales() {
+  return '<option value="">Seleccionar…</option>' +
+    (est.cat.materiales || []).filter(function (m) { return m.activo === 'SI'; })
+      .map(function (m) {
+        return '<option value="' + esc(m.id) + '">' + esc(m.codigo) + ' · ' + esc(m.nombre) + '</option>';
+      }).join('');
+}
+
+function agregarLinea() {
+  seqLinea++;
+  const id = 'ln' + seqLinea;
+  const tr = document.createElement('tr');
+  tr.dataset.linea = id;
+  tr.innerHTML =
+    '<td><select data-mat style="width:100%;border:1px solid var(--regla);padding:6px;font-family:inherit;font-size:12.5px">' +
+      opcionesMateriales() + '</select></td>' +
+    '<td data-celda-sku><span style="color:var(--tenue);font-size:11.5px">Elige el material</span></td>' +
+    '<td class="num"><input data-cant type="number" min="1" step="1" value="1" style="width:76px;text-align:right;font-family:var(--mono);border:1px solid var(--regla);padding:5px 7px"></td>' +
+    '<td class="num"><input data-costo type="number" min="0" step="1" placeholder="0" style="width:98px;text-align:right;font-family:var(--mono);border:1px solid var(--regla);padding:5px 7px"></td>' +
+    '<td data-celda-venc><span style="color:var(--tenue);font-size:11.5px">—</span></td>' +
+    '<td class="num" data-sub>0</td>' +
+    '<td class="acc"><button class="mini peligro" type="button" data-quitar>Quitar</button></td>';
+  $('#tbLineas').appendChild(tr);
+}
+
+$('#bLinea').addEventListener('click', agregarLinea);
+
+$('#tbLineas').addEventListener('change', function (ev) {
+  const tr = ev.target.closest('tr[data-linea]');
+  if (!tr) return;
+  if (ev.target.matches('[data-mat]')) ajustarLinea(tr);
+  totalizarCompra();
+});
+$('#tbLineas').addEventListener('input', totalizarCompra);
+$('#tbLineas').addEventListener('click', function (ev) {
+  if (ev.target.matches('[data-quitar]')) {
+    ev.target.closest('tr').remove();
+    totalizarCompra();
+  }
+});
+
+function ajustarLinea(tr) {
+  const mat = material($('[data-mat]', tr).value);
+  const celdaSku = $('[data-celda-sku]', tr);
+  const celdaVenc = $('[data-celda-venc]', tr);
+  const cant = $('[data-cant]', tr);
+
+  if (!mat) {
+    celdaSku.innerHTML = '<span style="color:var(--tenue);font-size:11.5px">Elige el material</span>';
+    celdaVenc.innerHTML = '<span style="color:var(--tenue);font-size:11.5px">—</span>';
+    cant.disabled = false;
+    return;
+  }
+
+  if (mat.naturaleza === 'CUSTODIA') {
+    /* Serializado: la cantidad la determinan las series ingresadas. */
+    celdaSku.innerHTML = '<input data-series placeholder="A4471, A4472" ' +
+      'style="width:100%;font-family:var(--mono);font-size:12px;border:1px solid var(--regla);padding:5px 7px">' +
+      '<span style="display:block;font-size:10.5px;color:var(--tenue);margin-top:3px">Series separadas por coma</span>';
+    cant.value = 0; cant.disabled = true;
+    celdaVenc.innerHTML = '<span style="color:var(--tenue);font-size:11.5px">—</span>';
+  } else {
+    const tallas = (est.cat.sku || []).filter(function (k) {
+      return String(k.material_id) === String(mat.id) && k.estado === 'NUEVO' && k.activo === 'SI';
+    });
+    celdaSku.innerHTML = '<select data-sku style="width:100%;border:1px solid var(--regla);padding:6px;font-family:var(--mono);font-size:12px">' +
+      tallas.map(function (k) {
+        return '<option value="' + esc(k.id) + '">' + esc(k.id) + '</option>';
+      }).join('') + '</select>';
+    cant.disabled = false;
+    if (!Number(cant.value)) cant.value = 1;
+    celdaVenc.innerHTML = mat.vence === 'SI'
+      ? '<input data-venc type="date" style="width:100%;border:1px solid var(--regla);padding:5px;font-size:12px">'
+      : '<span style="color:var(--tenue);font-size:11.5px">—</span>';
+  }
+}
+
+function totalizarCompra() {
+  let neto = 0;
+  $$('#tbLineas tr[data-linea]').forEach(function (tr) {
+    const mat = material($('[data-mat]', tr).value);
+    const costo = Number(($('[data-costo]', tr) || {}).value) || 0;
+    let cant = Number(($('[data-cant]', tr) || {}).value) || 0;
+
+    if (mat && mat.naturaleza === 'CUSTODIA') {
+      const s = $('[data-series]', tr);
+      cant = s ? String(s.value).split(/[,\n;]+/).map(function (x) { return x.trim(); }).filter(Boolean).length : 0;
+      const c = $('[data-cant]', tr);
+      if (c) c.value = cant;
+    }
+    const sub = cant * costo;
+    $('[data-sub]', tr).textContent = pesos(sub);
+    neto += sub;
+  });
+
+  const iva = Math.round(neto * 0.19);
+  $('#coNeto').textContent = pesos(neto);
+  $('#coIva').textContent = pesos(iva);
+  $('#coTotal').textContent = pesos(neto + iva);
+}
+
+function limpiarCompra() {
+  $('#fCompra').reset();
+  $('#tbLineas').innerHTML = '';
+  agregarLinea();
+  totalizarCompra();
+}
+$('#coLimpiar').addEventListener('click', limpiarCompra);
+
+$('#fCompra').addEventListener('submit', async function (ev) {
+  ev.preventDefault();
+  const lineas = [];
+  let error = '';
+
+  $$('#tbLineas tr[data-linea]').forEach(function (tr, i) {
+    const mat = material($('[data-mat]', tr).value);
+    if (!mat) { error = error || 'La línea ' + (i+1) + ' no tiene material.'; return; }
+    const costo = Number(($('[data-costo]', tr) || {}).value) || 0;
+    const L = { material_id: mat.id, costo_unitario: costo };
+    if (mat.naturaleza === 'CUSTODIA') {
+      L.series = ($('[data-series]', tr) || {}).value || '';
+    } else {
+      L.sku_id = ($('[data-sku]', tr) || {}).value || '';
+      L.cantidad = Number(($('[data-cant]', tr) || {}).value) || 0;
+      const v = $('[data-venc]', tr);
+      if (v) L.vencimiento = v.value;
+    }
+    lineas.push(L);
+  });
+
+  if (error) { aviso(error, true); return; }
+  if (!lineas.length) { aviso('Agrega al menos una línea.', true); return; }
+
+  const b = $('#bCompra');
+  b.disabled = true; b.textContent = 'Registrando…';
+  const r = await api('guardarCompra', { registro: {
+    fecha: $('#coFecha').value, tipo_doc: $('#coTipo').value, numero_doc: $('#coNumero').value,
+    proveedor_id: $('#coProveedor').value, observacion: $('#coObs').value, lineas: lineas
+  }});
+  b.disabled = false; b.textContent = 'Registrar compra';
+  if (!r.ok) return;
+
+  aviso('Compra ' + r.folio + ' registrada · ' + r.lineas + ' movimientos');
+  limpiarCompra();
+  await cargarCompras();
+  await cargarExistencias();
+});
+
+/* ---------------- COMPRAS: HISTÓRICO ---------------- */
+
+async function cargarCompras() {
+  const r = await api('compras', { desde: $('#cfDesde').value, hasta: $('#cfHasta').value });
+  if (!r.ok) return;
+
+  const tb = $('#tbCompras');
+  if (!r.compras.length) {
+    tb.innerHTML = '<tr><td colspan="10" class="vacio">No hay compras registradas en el período.</td></tr>';
+  } else {
+    tb.innerHTML = r.compras.map(function (c) {
+      const p = proveedor(c.proveedor_id);
+      const anulada = c.estado === 'ANULADA';
+      return '<tr class="' + (anulada ? 'inactiva' : '') + '">' +
+        '<td class="ref">' + esc(c.folio) + '</td>' +
+        '<td class="ref">' + esc(c.fecha) + '</td>' +
+        '<td>' + esc(c.tipo_doc) + ' <span class="ref">' + esc(c.numero_doc) + '</span></td>' +
+        '<td>' + esc(p ? p.razon_social : c.proveedor_id) + '</td>' +
+        '<td class="num">' + c.lineas + '</td>' +
+        '<td class="num">' + c.unidades + '</td>' +
+        '<td class="num">' + pesos(c.neto) + '</td>' +
+        '<td class="num">' + pesos(c.total) + '</td>' +
+        '<td>' + (anulada
+          ? '<span class="marbete" style="border-color:var(--oxido);color:var(--oxido)">Anulada</span>'
+          : '<span class="marbete m-ok">Vigente</span>') + '</td>' +
+        '<td class="acc">' + (anulada
+          ? '<span style="font-size:11px;color:var(--tenue)">' + esc(c.motivo_anulacion || '') + '</span>'
+          : '<button class="mini peligro" data-anu="' + esc(c.folio) + '">Anular</button>') + '</td></tr>';
+    }).join('');
+  }
+
+  const R = r.resumen;
+  $('#cResumen').innerHTML = R.documentos + ' documentos vigentes · ' + R.unidades +
+    ' unidades · neto <b>$' + pesos(R.neto) + '</b> · total <b>$' + pesos(R.total) + '</b>';
+}
+
+$('#bFiltrarCompras').addEventListener('click', cargarCompras);
+
+$('#tbCompras').addEventListener('click', function (ev) {
+  const b = ev.target.closest('button[data-anu]');
+  if (!b) return;
+  $('#anFolio').value = b.dataset.anu;
+  $('#anSub').textContent = 'Compra ' + b.dataset.anu;
+  $('#fAnular').reset(); $('#anFolio').value = b.dataset.anu;
+  $('#veloAnular').hidden = false;
+});
+
+$('#anCancelar').addEventListener('click', function () { $('#veloAnular').hidden = true; });
+$('#veloAnular').addEventListener('click', function (ev) { if (ev.target === this) this.hidden = true; });
+
+$('#fAnular').addEventListener('submit', async function (ev) {
+  ev.preventDefault();
+  const r = await api('anularCompra', { folio: $('#anFolio').value, motivo: $('#anMotivo').value });
+  if (!r.ok) return;
+  $('#veloAnular').hidden = true;
+  aviso('Compra anulada · ' + r.reversos + ' movimientos de reverso');
+  await cargarCompras();
+  await cargarExistencias();
+});
+
+/* ---------------- PROVEEDORES ---------------- */
+
+$('#prRut').addEventListener('blur', function () {
+  const v = this.value.trim();
+  if (!v) { $('#prRutAviso').textContent = ''; return; }
+  this.value = rutFormato(v);
+  const ok = rutValido(v);
+  $('#prRutAviso').textContent = ok ? 'RUT válido' : 'Dígito verificador incorrecto';
+  $('#prRutAviso').style.color = ok ? 'var(--verde)' : 'var(--oxido)';
+});
+
+function pintarProveedores() {
+  const ps = est.cat.proveedores || [];
+  const tb = $('#tbProveedores');
+  if (!ps.length) {
+    tb.innerHTML = '<tr><td colspan="7" class="vacio">Aún no hay proveedores. Crea el primero antes de registrar una compra.</td></tr>';
+    return;
+  }
+  tb.innerHTML = ps.map(function (p) {
+    return '<tr class="' + (p.activo === 'SI' ? '' : 'inactiva') + '">' +
+      '<td class="ref">' + esc(p.id) + '</td><td>' + esc(p.razon_social) + '</td>' +
+      '<td class="ref">' + esc(p.rut || '—') + '</td>' +
+      '<td style="font-size:11.5px">' + esc(p.giro || '—') + '</td>' +
+      '<td style="font-size:11.5px">' + esc(p.contacto || '—') + '</td>' +
+      '<td><span class="marbete ' + (p.activo === 'SI' ? 'm-ok">Activo' : 'm-off">Inactivo') + '</span></td>' +
+      '<td class="acc"><button class="mini" data-edpr="' + esc(p.id) + '">Editar</button>' +
+      '<button class="mini' + (p.activo === 'SI' ? ' peligro' : '') + '" data-offpr="' + esc(p.id) + '">' +
+      (p.activo === 'SI' ? 'Desactivar' : 'Reactivar') + '</button></td></tr>';
+  }).join('');
+}
+
+$('#tbProveedores').addEventListener('click', async function (ev) {
+  const b = ev.target.closest('button');
+  if (!b) return;
+  if (b.dataset.edpr) {
+    const p = est.cat.proveedores.filter(function (x) { return String(x.id) === b.dataset.edpr; })[0];
+    $('#prId').value = p.id; $('#prRazon').value = p.razon_social; $('#prRut').value = p.rut;
+    $('#prGiro').value = p.giro; $('#prContacto').value = p.contacto;
+    $('#prCorreo').value = p.correo; $('#prTelefono').value = p.telefono;
+    $('#tProveedor').textContent = 'Editar ' + p.razon_social;
+    $('#prCancelar').hidden = false;
+    $('#fProveedor').scrollIntoView({ behavior:'smooth', block:'start' });
+  }
+  if (b.dataset.offpr) {
+    const p = est.cat.proveedores.filter(function (x) { return String(x.id) === b.dataset.offpr; })[0];
+    const r = await api('cambiarEstado', { entidad:'PROVEEDORES', id:p.id, activo: p.activo !== 'SI' });
+    if (r.ok) { aviso('Proveedor actualizado'); await recargar(); }
+  }
+});
+
+function limpiarProveedor() {
+  $('#fProveedor').reset(); $('#prId').value = ''; $('#prRutAviso').textContent = '';
+  $('#tProveedor').textContent = 'Proveedores';
+  $('#prCancelar').hidden = true;
+}
+$('#prCancelar').addEventListener('click', limpiarProveedor);
+
+$('#fProveedor').addEventListener('submit', async function (ev) {
+  ev.preventDefault();
+  const r = await api('guardarProveedor', { registro: {
+    id: $('#prId').value, razon_social: $('#prRazon').value, rut: $('#prRut').value,
+    giro: $('#prGiro').value, contacto: $('#prContacto').value,
+    correo: $('#prCorreo').value, telefono: $('#prTelefono').value, activo:'SI'
+  }});
+  if (!r.ok) return;
+  aviso('Proveedor guardado');
+  limpiarProveedor();
+  await recargar();
+});
+
 /* ================= ARRANQUE ================= */
 ajustarFormMaterial();
+(function () {
+  const hoy = new Date().toISOString().slice(0, 10);
+  $('#coFecha').value = hoy;
+  $('#iiFecha').value = hoy;
+  agregarLinea();
+})();
 reanudar();
 </script>
 </body>
