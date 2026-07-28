@@ -4,235 +4,177 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#2E4F2C">
-<title>Control de Indumentaria y EPP — Seguridad PK</title>
+<title>Control de Existencias y Bienes — Seguridad PK</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 :root{
-  --verde:#2E4F2C; --verde-osc:#1D3320; --verde-cla:#4A7345;
-  --oro:#B8952F; --fondo:#F1F4EF; --panel:#FFFFFF;
-  --texto:#1A211A; --tenue:#6B7A68; --linea:#DCE3D8;
-  --rojo:#B4472E; --ambar:#C07A18; --ok:#3F7A3C;
-  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
-  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
-  --r:6px;
+  --verde:#2E4F2C; --verde-osc:#1B2E1A; --verde-cla:#41663D;
+  --papel:#EEF0E9; --superficie:#FBFBF8;
+  --tinta:#14180F; --tenue:#5E6659;
+  --regla:#C9CFC2; --regla-suave:#DDE1D7;
+  --oxido:#9C3B22; --oro:#A8862A;
+  --serif:'Spectral',Georgia,serif;
+  --sans:'IBM Plex Sans',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
-body{
-  font-family:var(--sans); background:var(--fondo); color:var(--texto);
-  font-size:15px; line-height:1.5; -webkit-text-size-adjust:100%;
-}
-:focus-visible{outline:2px solid var(--oro); outline-offset:2px}
-@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+body{font-family:var(--sans); background:var(--papel); color:var(--tinta); font-size:14.5px; line-height:1.55}
+:focus-visible{outline:2px solid var(--oro); outline-offset:1px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 
-/* ---------- tipografía institucional ---------- */
-.rotulo{
-  font-size:11px; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
-  color:var(--tenue);
-}
+h1,h2,h3{font-family:var(--serif); font-weight:600; letter-spacing:.005em; margin:0}
+.rotulo{font-size:10px; font-weight:600; letter-spacing:.13em; text-transform:uppercase; color:var(--tenue)}
 .mono{font-family:var(--mono); font-variant-numeric:tabular-nums}
 
 /* ---------- acceso ---------- */
 .acceso{min-height:100dvh; display:grid; place-items:center; padding:24px; background:var(--verde-osc)}
-.acceso-caja{
-  width:100%; max-width:380px; background:var(--panel); border-radius:var(--r);
-  padding:36px 30px 30px; box-shadow:0 18px 50px rgba(0,0,0,.35); text-align:center;
-}
-.acceso-caja .marca{width:84px; height:84px; margin:0 auto 16px; color:var(--verde)}
-.acceso-caja h1{font-size:19px; margin:0 0 2px; letter-spacing:-.01em}
-.acceso-caja .sub{font-size:12px; color:var(--tenue); margin:0 0 26px; letter-spacing:.1em; text-transform:uppercase}
-.acceso-caja form{text-align:left}
-.acceso-pie{margin-top:22px; font-size:11px; color:var(--tenue); line-height:1.45}
+.acceso-caja{width:100%; max-width:372px; background:var(--superficie); border-top:4px solid var(--oro); padding:34px 30px 28px}
+.acceso-caja .marca{width:86px; height:86px; margin:0 auto 18px}
+.acceso-caja .marca img{width:100%; height:100%; object-fit:contain}
+.acceso-caja h1{font-size:21px; text-align:center; line-height:1.25}
+.acceso-caja .sub{font-size:10px; letter-spacing:.19em; text-transform:uppercase; color:var(--tenue); text-align:center; margin:6px 0 26px}
+.acceso-pie{margin-top:22px; padding-top:16px; border-top:1px solid var(--regla-suave); font-size:11px; color:var(--tenue); line-height:1.5}
 
 /* ---------- cabecera ---------- */
-.cab{
-  background:var(--verde); color:#fff; padding:10px 18px;
-  display:flex; align-items:center; gap:14px; position:sticky; top:0; z-index:30;
-}
-.cab .marca{width:40px; height:40px; flex:none; color:#fff}
-.cab .marca img{filter:brightness(0) invert(1)}
+.cab{background:var(--verde); color:#fff; padding:11px 20px; display:flex; align-items:center; gap:14px; position:sticky; top:0; z-index:30}
+.cab .marca{width:36px; height:36px; flex:none}
+.cab .marca img{width:100%; height:100%; object-fit:contain; filter:brightness(0) invert(1)}
 .cab .titulo{flex:1; min-width:0}
-.cab .titulo b{display:block; font-size:15px; font-weight:650; letter-spacing:-.01em}
-.cab .titulo span{display:block; font-size:10px; letter-spacing:.16em; text-transform:uppercase; opacity:.72}
-.cab-acc{display:flex; align-items:center; gap:8px}
-.chip-usr{
-  background:rgba(255,255,255,.14); border-radius:100px; padding:5px 12px;
-  font-size:12px; white-space:nowrap;
-}
-.chip-usr b{font-weight:650}
-.chip-usr i{font-style:normal; opacity:.7; font-size:10px; letter-spacing:.1em; text-transform:uppercase}
-.btn-cab{
-  background:transparent; border:1px solid rgba(255,255,255,.35); color:#fff;
-  border-radius:var(--r); padding:6px 11px; font-size:12px; cursor:pointer; font-family:inherit;
-}
-.btn-cab:hover{background:rgba(255,255,255,.14)}
+.cab .titulo b{display:block; font-family:var(--serif); font-size:17px; font-weight:600}
+.cab .titulo span{display:block; font-size:9.5px; letter-spacing:.19em; text-transform:uppercase; color:rgba(255,255,255,.6); margin-top:1px}
+.cab-acc{display:flex; align-items:center; gap:10px}
+.sello{font-family:var(--mono); font-size:11px; color:rgba(255,255,255,.78); border-left:1px solid rgba(255,255,255,.28); padding-left:12px; white-space:nowrap}
+.btn-cab{background:none; border:1px solid rgba(255,255,255,.34); color:#fff; padding:5px 11px; font-family:inherit; font-size:11.5px; cursor:pointer}
+.btn-cab:hover{background:rgba(255,255,255,.12)}
 
 /* ---------- pestañas ---------- */
-.tabs{
-  background:var(--verde-osc); display:flex; gap:0; overflow-x:auto;
-  position:sticky; top:60px; z-index:29; scrollbar-width:none;
-}
+.tabs{background:var(--verde-osc); display:flex; overflow-x:auto; position:sticky; top:60px; z-index:29; padding:0 20px; scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
-.tabs button{
-  background:none; border:0; border-bottom:3px solid transparent; color:rgba(255,255,255,.62);
-  padding:11px 18px; font-size:12.5px; font-weight:600; letter-spacing:.03em;
-  cursor:pointer; white-space:nowrap; font-family:inherit;
-}
+.tabs button{background:none; border:0; border-bottom:2px solid transparent; color:rgba(255,255,255,.55); padding:10px 15px; font-family:inherit; font-size:12.5px; font-weight:500; cursor:pointer; white-space:nowrap}
 .tabs button:hover{color:#fff}
 .tabs button[aria-current="true"]{color:#fff; border-bottom-color:var(--oro)}
 
-/* ---------- estructura ---------- */
-main{max-width:1180px; margin:0 auto; padding:22px 18px 70px}
+/* ---------- bloques con canaleta de folio ---------- */
+main{max-width:1120px; margin:0 auto; padding:20px 20px 64px}
 section[data-vista]{display:none}
 section[data-vista].activa{display:block}
-.tarjeta{
-  background:var(--panel); border:1px solid var(--linea); border-radius:var(--r);
-  padding:20px; margin-bottom:18px;
-}
-.tarjeta > h2{
-  font-size:15px; margin:0 0 3px; letter-spacing:-.01em;
-}
-.tarjeta > .pie-t{font-size:12.5px; color:var(--tenue); margin:0 0 18px}
-.tarjeta > h2 + .tabla-env, .tarjeta > h2 + form{margin-top:16px}
+
+.bloque{display:flex; background:var(--superficie); border-top:3px solid var(--verde); margin-bottom:18px}
+.canal{width:62px; flex:none; border-right:1px solid var(--regla); padding:14px 0; text-align:center}
+.canal .folio{font-family:var(--mono); font-size:10px; color:var(--oro); letter-spacing:.04em}
+.cuerpo{flex:1; min-width:0; padding:13px 18px 18px}
+.cuerpo > h2{font-size:17px}
+.cuerpo > .bajada{font-size:12.5px; color:var(--tenue); margin:2px 0 0}
+.cuerpo > .bajada + *{margin-top:16px}
 
 /* ---------- indicadores ---------- */
-.indicadores{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-bottom:18px}
-.ind{
-  background:var(--panel); border:1px solid var(--linea); border-left:4px solid var(--verde);
-  border-radius:var(--r); padding:14px 16px;
-}
-.ind .cifra{font-family:var(--mono); font-size:28px; font-weight:600; line-height:1.1; letter-spacing:-.02em}
-.ind .rotulo{margin-top:3px}
-.ind.aviso{border-left-color:var(--ambar)}
-.ind.grave{border-left-color:var(--rojo)}
-.ind.grave .cifra{color:var(--rojo)}
+.indicadores{display:grid; grid-template-columns:repeat(auto-fit,minmax(146px,1fr)); gap:10px; margin-bottom:18px}
+.ind{background:var(--superficie); border-left:3px solid var(--verde); padding:12px 14px}
+.ind .cifra{font-family:var(--mono); font-size:25px; font-weight:500; line-height:1.1}
+.ind .rotulo{margin-top:4px}
+.ind.aviso{border-left-color:var(--oro)}
+.ind.grave{border-left-color:var(--oxido)}
+.ind.grave .cifra{color:var(--oxido)}
 
 /* ---------- formularios ---------- */
-.rejilla{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px}
-.campo{display:flex; flex-direction:column; gap:5px}
-.campo label{font-size:11.5px; font-weight:650; letter-spacing:.06em; text-transform:uppercase; color:var(--tenue)}
-.campo input, .campo select, .campo textarea{
-  font-family:inherit; font-size:14.5px; color:var(--texto); background:#fff;
-  border:1px solid var(--linea); border-radius:var(--r); padding:9px 10px; width:100%;
-}
-.campo input:focus, .campo select:focus{border-color:var(--verde-cla); outline:none; box-shadow:0 0 0 3px rgba(74,115,69,.14)}
-.campo .ayuda{font-size:11.5px; color:var(--tenue)}
+.rejilla{display:grid; grid-template-columns:repeat(auto-fit,minmax(196px,1fr)); gap:13px}
+.campo{display:flex; flex-direction:column; gap:4px}
+.campo label{font-size:10px; font-weight:600; letter-spacing:.11em; text-transform:uppercase; color:var(--tenue)}
+.campo input, .campo select{font-family:inherit; font-size:14px; color:var(--tinta); background:#fff; border:1px solid var(--regla); border-radius:0; padding:8px 9px; width:100%}
+.campo input:focus, .campo select:focus{border-color:var(--verde); outline:none; box-shadow:inset 0 -2px 0 var(--verde)}
+.campo .ayuda{font-size:11px; color:var(--tenue)}
 .campo.mono input{font-family:var(--mono)}
-.marcas{display:flex; flex-wrap:wrap; gap:16px; margin-top:14px}
-.marca-op{display:flex; align-items:center; gap:7px; font-size:13.5px}
-.marca-op input{width:16px; height:16px; accent-color:var(--verde)}
-.acciones{display:flex; flex-wrap:wrap; gap:9px; margin-top:18px; padding-top:16px; border-top:1px solid var(--linea)}
+.campo[hidden]{display:none}
+.marcas{display:flex; flex-wrap:wrap; gap:15px; margin-top:13px}
+.marca-op{display:flex; align-items:center; gap:7px; font-size:13px}
+.marca-op input{width:15px; height:15px; accent-color:var(--verde)}
+.acciones{display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; padding-top:14px; border-top:1px solid var(--regla-suave)}
 
-.btn{
-  font-family:inherit; font-size:14px; font-weight:600; border-radius:var(--r);
-  padding:10px 18px; cursor:pointer; border:1px solid transparent;
-}
+.btn{font-family:inherit; font-size:13.5px; font-weight:500; border:1px solid transparent; border-radius:0; padding:9px 17px; cursor:pointer}
 .btn-p{background:var(--verde); color:#fff}
 .btn-p:hover{background:var(--verde-cla)}
-.btn-s{background:#fff; color:var(--verde); border-color:var(--linea)}
-.btn-s:hover{border-color:var(--verde-cla)}
-.btn-full{width:100%; margin-top:8px}
+.btn-s{background:transparent; color:var(--verde); border-color:var(--regla)}
+.btn-s:hover{border-color:var(--verde)}
+.btn-full{width:100%; margin-top:10px}
 .btn:disabled{opacity:.5; cursor:not-allowed}
 
 /* ---------- tablas ---------- */
-.tabla-env{overflow-x:auto; border:1px solid var(--linea); border-radius:var(--r)}
-table{width:100%; border-collapse:collapse; font-size:13.5px}
-thead th{
-  background:#EBF0E8; text-align:left; padding:9px 12px; white-space:nowrap;
-  font-size:10.5px; font-weight:700; letter-spacing:.11em; text-transform:uppercase; color:var(--verde-osc);
-  border-bottom:1px solid var(--linea);
-}
-tbody td{padding:9px 12px; border-bottom:1px solid var(--linea); vertical-align:middle}
+.tabla-env{overflow-x:auto}
+table{width:100%; border-collapse:collapse; font-size:12.5px}
+thead th{text-align:left; padding:0 9px 6px 0; white-space:nowrap; font-size:10px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--tenue); border-bottom:1.5px solid var(--tinta)}
+tbody td{padding:8px 9px 8px 0; border-bottom:1px solid var(--regla-suave); vertical-align:middle}
 tbody tr:last-child td{border-bottom:0}
-tbody tr:hover{background:#F7F9F6}
-tbody tr.inactiva td{opacity:.5}
-td.num{font-family:var(--mono); font-variant-numeric:tabular-nums; text-align:right}
-td.acc{white-space:nowrap; text-align:right}
-.vacio{padding:26px 14px; text-align:center; color:var(--tenue); font-size:13.5px}
+tbody tr.inactiva td{color:var(--tenue)}
+td.num, th.num{text-align:right; padding-right:0}
+td.num{font-family:var(--mono); font-variant-numeric:tabular-nums}
+td.acc{white-space:nowrap; text-align:right; padding-right:0}
+.vacio{padding:24px 0; text-align:center; color:var(--tenue); font-size:13px}
 
-.mini{
-  background:none; border:1px solid var(--linea); border-radius:4px; color:var(--verde);
-  font-family:inherit; font-size:12px; padding:4px 9px; cursor:pointer; margin-left:5px;
-}
-.mini:hover{border-color:var(--verde-cla); background:#F0F5EE}
-.mini.peligro{color:var(--rojo)}
+.mini{background:none; border:1px solid var(--regla); border-radius:0; color:var(--verde); font-family:inherit; font-size:11.5px; padding:3px 9px; cursor:pointer; margin-left:5px}
+.mini:hover{border-color:var(--verde); background:#F1F4EF}
+.mini.peligro{color:var(--oxido)}
 
-/* ---------- etiqueta de SKU (rótulo de inventario) ---------- */
-.etq{
-  display:inline-block; font-family:var(--mono); font-size:11.5px; letter-spacing:.03em;
-  border:1px solid var(--linea); border-left:3px solid var(--verde); border-radius:3px;
-  padding:2px 8px; background:#F7F9F6; margin:2px 4px 2px 0; white-space:nowrap;
-}
-.etq.usado{border-left-color:var(--ambar); background:#FBF6EC}
-.etq.baja{opacity:.42; text-decoration:line-through}
+.ref{font-family:var(--mono); font-size:11.5px}
+.etq{display:inline-block; font-family:var(--mono); font-size:11px; border:1px solid var(--regla); border-left:3px solid var(--verde); padding:2px 7px; background:#F4F6F1; margin:2px 4px 2px 0; white-space:nowrap}
+.etq.usado{border-left-color:var(--oro); background:#FAF6EB}
+.etq.baja{opacity:.4; text-decoration:line-through}
 
-.marbete{
-  display:inline-block; font-size:10.5px; font-weight:700; letter-spacing:.08em;
-  text-transform:uppercase; padding:2px 8px; border-radius:100px;
-}
-.m-ok{background:#E4EFE2; color:var(--ok)}
-.m-off{background:#EEEFEE; color:var(--tenue)}
-.m-epp{background:#F6EBD9; color:#8A5E12}
-.m-ind{background:#E4EFE2; color:var(--verde)}
+.marbete{display:inline-block; font-size:9.5px; font-weight:600; letter-spacing:.09em; text-transform:uppercase; padding:2px 7px; border:1px solid}
+.m-ok{border-color:var(--verde); color:var(--verde)}
+.m-off{border-color:var(--regla); color:var(--tenue)}
+.m-int{border-color:var(--oro); color:#7A611B}
 
-.nota{
-  border-left:3px solid var(--oro); background:#FBF7EC; padding:12px 14px;
-  border-radius:0 var(--r) var(--r) 0; font-size:13px; color:#5C4A16; margin-bottom:18px;
-}
+.nota{border-left:3px solid var(--oro); background:#FAF6EB; padding:11px 14px; font-size:12.5px; color:#5C4A16; margin-bottom:16px}
 .filtros{display:flex; flex-wrap:wrap; gap:10px; align-items:flex-end; margin-bottom:14px}
-.filtros .campo{min-width:150px; flex:1}
+.filtros .campo{min-width:144px; flex:1}
 
 /* ---------- modal ---------- */
-.velo{position:fixed; inset:0; background:rgba(20,30,20,.55); display:grid; place-items:center; padding:20px; z-index:60}
+.velo{position:fixed; inset:0; background:rgba(20,30,20,.6); display:grid; place-items:center; padding:20px; z-index:60}
 .velo[hidden]{display:none}
-.modal{background:var(--panel); border-radius:var(--r); padding:24px; width:100%; max-width:420px}
-.modal h3{margin:0 0 16px; font-size:16px}
+.modal{background:var(--superficie); border-top:3px solid var(--verde); padding:22px; width:100%; max-width:400px}
+.modal h3{font-size:17px; margin-bottom:16px}
 
-/* ---------- aviso flotante ---------- */
-#aviso{
-  position:fixed; left:50%; bottom:24px; transform:translateX(-50%) translateY(140%);
-  background:var(--verde-osc); color:#fff; padding:12px 20px; border-radius:100px;
-  font-size:13.5px; z-index:80; transition:transform .22s ease; max-width:88vw; text-align:center;
-}
+#aviso{position:fixed; left:50%; bottom:22px; transform:translateX(-50%) translateY(150%); background:var(--verde-osc); color:#fff; padding:11px 20px; font-size:13px; z-index:80; transition:transform .2s ease; max-width:88vw; text-align:center}
 #aviso.ver{transform:translateX(-50%) translateY(0)}
-#aviso.mal{background:var(--rojo)}
+#aviso.mal{background:var(--oxido)}
 
-@media (max-width:640px){
-  .cab{padding:9px 12px; gap:10px}
-  .cab .titulo b{font-size:13.5px}
-  .chip-usr{display:none}
-  .tabs{top:58px}
-  main{padding:16px 12px 60px}
-  .tarjeta{padding:16px}
+@media (max-width:680px){
+  .cab{padding:9px 13px} .cab .titulo b{font-size:14.5px} .sello{display:none}
+  .tabs{top:58px; padding:0 13px} main{padding:16px 13px 56px}
+  .canal{width:44px} .cuerpo{padding:12px 13px 15px}
   .acciones .btn{flex:1}
 }
 </style>
 </head>
 <body>
 
-<!-- ================= ACCESO ================= -->
+<!-- ============ ACCESO ============ -->
 <div class="acceso" id="vAcceso">
   <div class="acceso-caja">
     <div class="marca" id="marcaAcceso"></div>
-    <h1>Control de Indumentaria y EPP</h1>
+    <h1>Control de Existencias y Bienes</h1>
     <p class="sub">Seguridad PK SpA</p>
-    <form id="fAcceso" autocomplete="on">
+    <form id="fAcceso">
       <div class="campo"><label for="aUsuario">Usuario</label>
         <input id="aUsuario" name="username" autocomplete="username" required></div>
-      <div class="campo" style="margin-top:14px"><label for="aClave">Contraseña</label>
+      <div class="campo" style="margin-top:13px"><label for="aClave">Contraseña</label>
         <input id="aClave" name="password" type="password" autocomplete="current-password" required></div>
       <button class="btn btn-p btn-full" type="submit" id="bAcceso">Ingresar</button>
     </form>
-    <p class="acceso-pie">Uso interno. Las validaciones de perfil y los registros de trazabilidad se ejecutan del lado del servidor.</p>
+    <p class="acceso-pie">Instrumento de Contraloría Interna. Toda operación queda foliada en bitácora. Las validaciones de perfil se ejecutan del lado del servidor.</p>
   </div>
 </div>
 
-<!-- ================= APLICACIÓN ================= -->
+<!-- ============ APLICACIÓN ============ -->
 <div id="vApp" hidden>
   <header class="cab">
     <div class="marca" id="marcaCab"></div>
-    <div class="titulo"><b>Control de Indumentaria y EPP</b><span>Seguridad PK · Contraloría Interna</span></div>
+    <div class="titulo"><b>Control de Existencias y Bienes</b><span>Seguridad PK · Contraloría Interna</span></div>
     <div class="cab-acc">
-      <span class="chip-usr" id="chipUsr"></span>
+      <span class="sello" id="sello"></span>
       <button class="btn-cab" id="bClave">Mi clave</button>
       <button class="btn-cab" id="bSalir">Salir</button>
     </div>
@@ -242,215 +184,295 @@ td.acc{white-space:nowrap; text-align:right}
 
   <main>
 
-    <!-- ---------- PANEL ---------- -->
+    <!-- ---- PANEL ---- -->
     <section data-vista="panel">
       <div class="indicadores" id="indicadores"></div>
-      <div class="nota" id="notaFase">
-        <b>Fase 1 en operación.</b> Ya puedes cargar el catálogo de materiales, las instalaciones y la dotación.
-        El stock, las compras y las entregas se habilitan en la Fase 2: hasta entonces los indicadores de
-        quiebre y stock bajo permanecen en cero porque todavía no hay kardex que leer.
+      <div class="nota">
+        <b>Fase 1 en operación.</b> Están habilitados clientes, instalaciones, catálogo y dotación.
+        El stock, las compras y las entregas entran en la Fase 2, y por eso los contadores de quiebre
+        siguen en cero: aún no hay kardex que leer.
       </div>
-      <div class="tarjeta">
-        <h2>Puesta en marcha</h2>
-        <p class="pie-t">Orden recomendado de carga para que la Fase 2 arranque con datos consistentes.</p>
-        <div class="tabla-env"><table>
-          <thead><tr><th>Paso</th><th>Qué cargar</th><th>Perfil</th><th>Estado</th></tr></thead>
-          <tbody id="tbPuesta"></tbody>
-        </table></div>
-      </div>
-    </section>
-
-    <!-- ---------- MATERIALES ---------- -->
-    <section data-vista="materiales">
-      <div class="tarjeta">
-        <h2 id="tMaterial">Nuevo material</h2>
-        <p class="pie-t">El código genera los SKU. Cada talla es una unidad de stock independiente.</p>
-        <form id="fMaterial">
-          <input type="hidden" id="mId">
-          <div class="rejilla">
-            <div class="campo mono" style="max-width:130px"><label for="mCodigo">Código</label>
-              <input id="mCodigo" maxlength="4" required>
-              <span class="ayuda">2 a 4 letras</span></div>
-            <div class="campo"><label for="mNombre">Nombre del material</label>
-              <input id="mNombre" required></div>
-            <div class="campo"><label for="mTipo">Tipo</label>
-              <input id="mTipo" list="lTipos">
-              <datalist id="lTipos">
-                <option value="Calzado"><option value="Pantalón"><option value="Chaqueta">
-                <option value="Camisa"><option value="Polera"><option value="Gorro"><option value="Protección">
-              </datalist></div>
-            <div class="campo"><label for="mCategoria">Categoría</label>
-              <select id="mCategoria"><option>Indumentaria</option><option>EPP</option></select></div>
-            <div class="campo"><label for="mTemporada">Temporada</label>
-              <select id="mTemporada">
-                <option>Todo el año</option><option>Otoño/Invierno</option><option>Primavera/Verano</option>
-              </select></div>
-            <div class="campo"><label for="mEscala">Escala de talla</label>
-              <select id="mEscala">
-                <option value="ROPA_LETRA">Ropa por letra (XS–XXXL)</option>
-                <option value="ROPA_NUM">Ropa por número (38–56)</option>
-                <option value="CALZADO">Calzado (36–46)</option>
-                <option value="UNICA">Talla única</option>
-              </select></div>
-            <div class="campo"><label for="mVida">Vida útil esperada (meses)</label>
-              <input id="mVida" type="number" min="1" max="120" value="12">
-              <span class="ayuda">Base de la alerta por desgaste acelerado</span></div>
-            <div class="campo"><label for="mMinimo">Stock mínimo por talla</label>
-              <input id="mMinimo" type="number" min="0" max="999" value="2"></div>
-          </div>
-          <div class="marcas">
-            <label class="marca-op"><input type="checkbox" id="mConsumible"> Es consumible (no se le aplica la alerta de 3 y 6 meses)</label>
-            <label class="marca-op"><input type="checkbox" id="mReingreso"> Admite devolución a stock como usado</label>
-          </div>
-          <div class="acciones">
-            <button class="btn btn-p" type="submit">Guardar material</button>
-            <button class="btn btn-s" type="button" id="mCancelar" hidden>Cancelar edición</button>
-          </div>
-        </form>
-      </div>
-
-      <div class="tarjeta">
-        <h2>Catálogo de materiales</h2>
-        <p class="pie-t">Pulsa un material para ver sus SKU generados.</p>
-        <div class="tabla-env"><table>
-          <thead><tr>
-            <th>Código</th><th>Material</th><th>Categoría</th><th>Temporada</th>
-            <th>Tallas</th><th>Vida útil</th><th>Mín.</th><th>Devolución</th><th></th>
-          </tr></thead>
-          <tbody id="tbMateriales"></tbody>
-        </table></div>
-        <div id="skuDetalle"></div>
-      </div>
-    </section>
-
-    <!-- ---------- INSTALACIONES ---------- -->
-    <section data-vista="instalaciones">
-      <div class="tarjeta">
-        <h2 id="tInstalacion">Nueva instalación</h2>
-        <p class="pie-t">La empresa cliente se hereda desde aquí a toda la dotación de la instalación.</p>
-        <form id="fInstalacion">
-          <input type="hidden" id="iId">
-          <div class="rejilla">
-            <div class="campo"><label for="iNombre">Nombre de la instalación</label><input id="iNombre" required></div>
-            <div class="campo"><label for="iCliente">Empresa cliente</label>
-              <input id="iCliente" list="lClientes" required>
-              <datalist id="lClientes">
-                <option value="Weir Minerals"><option value="Soprole"><option value="Air Liquide">
-                <option value="SADCO"><option value="Recsol">
-              </datalist></div>
-            <div class="campo mono" style="max-width:150px"><label for="iCodigo">Código interno</label><input id="iCodigo"></div>
-            <div class="campo"><label for="iDireccion">Dirección referencial</label><input id="iDireccion"></div>
-          </div>
-          <div class="acciones">
-            <button class="btn btn-p" type="submit">Guardar instalación</button>
-            <button class="btn btn-s" type="button" id="iCancelar" hidden>Cancelar edición</button>
-          </div>
-        </form>
-      </div>
-      <div class="tarjeta">
-        <h2>Instalaciones</h2>
-        <div class="tabla-env"><table>
-          <thead><tr><th>ID</th><th>Instalación</th><th>Cliente</th><th>Código</th><th>Dirección</th><th>Dotación</th><th>Estado</th><th></th></tr></thead>
-          <tbody id="tbInstalaciones"></tbody>
-        </table></div>
-      </div>
-    </section>
-
-    <!-- ---------- DOTACIÓN ---------- -->
-    <section data-vista="dotacion">
-      <div class="tarjeta" id="cFormPersona">
-        <h2 id="tPersona">Nueva persona</h2>
-        <p class="pie-t">Las tallas registradas se proponen por defecto al momento de solicitar.</p>
-        <form id="fPersona">
-          <div class="rejilla">
-            <div class="campo mono" style="max-width:170px"><label for="pRut">RUT</label>
-              <input id="pRut" placeholder="12.345.678-9" required>
-              <span class="ayuda" id="pRutAviso"></span></div>
-            <div class="campo"><label for="pNombre">Nombres</label><input id="pNombre" required></div>
-            <div class="campo"><label for="pApellidos">Apellidos</label><input id="pApellidos" required></div>
-            <div class="campo"><label for="pCargo">Cargo</label>
-              <select id="pCargo"><option>Guardia</option><option>Supervisor</option></select></div>
-            <div class="campo"><label for="pInstalacion">Instalación</label><select id="pInstalacion" required></select></div>
-            <div class="campo"><label for="pSupervisor">Supervisor responsable</label><select id="pSupervisor"></select></div>
-            <div class="campo"><label for="pCorreo">Correo</label><input id="pCorreo" type="email"></div>
-            <div class="campo"><label for="pTelefono">Teléfono</label><input id="pTelefono"></div>
-            <div class="campo"><label for="pIngreso">Fecha de ingreso</label><input id="pIngreso" type="date"></div>
-            <div class="campo"><label for="pCalzado">Talla de calzado</label><select id="pCalzado"></select></div>
-            <div class="campo"><label for="pRopa">Talla de ropa</label><select id="pRopa"></select></div>
-            <div class="campo"><label for="pEstado">Estado</label>
-              <select id="pEstado"><option>Activo</option><option>Desvinculado</option></select></div>
-          </div>
-          <div class="acciones">
-            <button class="btn btn-p" type="submit">Guardar persona</button>
-            <button class="btn btn-s" type="button" id="pCancelar" hidden>Cancelar edición</button>
-          </div>
-        </form>
-      </div>
-
-      <div class="tarjeta">
-        <h2>Dotación</h2>
-        <div class="filtros">
-          <div class="campo"><label for="dBuscar">Buscar</label><input id="dBuscar" placeholder="RUT, nombre o apellido"></div>
-          <div class="campo"><label for="dInstalacion">Instalación</label><select id="dInstalacion"><option value="">Todas</option></select></div>
-          <div class="campo"><label for="dEstado">Estado</label>
-            <select id="dEstado"><option value="Activo">Activos</option><option value="Desvinculado">Desvinculados</option><option value="">Todos</option></select></div>
+      <div class="bloque">
+        <div class="canal"><span class="folio">§ 01</span></div>
+        <div class="cuerpo">
+          <h2>Puesta en marcha</h2>
+          <p class="bajada">Orden de carga para que la Fase 2 arranque con datos consistentes.</p>
+          <div class="tabla-env"><table>
+            <thead><tr><th>N.º</th><th>Qué cargar</th><th>Perfil</th><th>Estado</th></tr></thead>
+            <tbody id="tbPuesta"></tbody>
+          </table></div>
         </div>
-        <div class="tabla-env"><table>
-          <thead><tr><th>RUT</th><th>Nombre</th><th>Cargo</th><th>Instalación</th><th>Cliente</th><th>Supervisor</th><th>Tallas</th><th>Estado</th><th></th></tr></thead>
-          <tbody id="tbPersonas"></tbody>
-        </table></div>
       </div>
     </section>
 
-    <!-- ---------- USUARIOS ---------- -->
+    <!-- ---- MATERIALES ---- -->
+    <section data-vista="materiales">
+      <div class="bloque">
+        <div class="canal"><span class="folio">§ 10</span></div>
+        <div class="cuerpo">
+          <h2 id="tMaterial">Nuevo material</h2>
+          <p class="bajada">La naturaleza define cómo se comporta el material en todo el sistema.</p>
+          <form id="fMaterial">
+            <input type="hidden" id="mId">
+            <div class="rejilla">
+              <div class="campo"><label for="mNaturaleza">Naturaleza</label>
+                <select id="mNaturaleza">
+                  <option value="DOTACION">Dotación personal</option>
+                  <option value="CONSUMIBLE">Consumible</option>
+                  <option value="CUSTODIA">Bien bajo custodia</option>
+                </select>
+                <span class="ayuda" id="mNatAyuda"></span></div>
+              <div class="campo mono" style="max-width:118px"><label for="mCodigo">Código</label>
+                <input id="mCodigo" maxlength="4" required>
+                <span class="ayuda">2 a 4 letras</span></div>
+              <div class="campo"><label for="mNombre">Nombre</label><input id="mNombre" required></div>
+              <div class="campo"><label for="mCategoria">Categoría</label>
+                <input id="mCategoria" list="lCategorias">
+                <datalist id="lCategorias">
+                  <option value="Indumentaria"><option value="EPP"><option value="Insumo de oficina">
+                  <option value="Alimento"><option value="Aseo"><option value="Comunicaciones">
+                  <option value="Informática">
+                </datalist></div>
+              <div class="campo"><label for="mTipo">Tipo</label>
+                <input id="mTipo" list="lTipos">
+                <datalist id="lTipos">
+                  <option value="Calzado"><option value="Pantalón"><option value="Chaqueta">
+                  <option value="Camisa"><option value="Polera"><option value="Gorro">
+                  <option value="Protección"><option value="Papelería"><option value="Radio">
+                </datalist></div>
+              <div class="campo" id="cTemporada"><label for="mTemporada">Temporada</label>
+                <select id="mTemporada">
+                  <option>Todo el año</option><option>Otoño/Invierno</option><option>Primavera/Verano</option>
+                </select></div>
+              <div class="campo" id="cEscala"><label for="mEscala">Escala de talla</label>
+                <select id="mEscala">
+                  <option value="ROPA_LETRA">Ropa por letra (XS–XXXL)</option>
+                  <option value="ROPA_NUM">Ropa por número (38–56)</option>
+                  <option value="CALZADO">Calzado (36–46)</option>
+                  <option value="UNICA">Talla única</option>
+                </select></div>
+              <div class="campo" id="cVida"><label for="mVida">Vida útil esperada (meses)</label>
+                <input id="mVida" type="number" min="1" max="120" value="12"></div>
+              <div class="campo" id="cMinimo"><label for="mMinimo">Stock mínimo por SKU</label>
+                <input id="mMinimo" type="number" min="0" max="999" value="2"></div>
+            </div>
+            <div class="marcas">
+              <label class="marca-op" id="cDesgaste"><input type="checkbox" id="mDesgaste" checked> Controlar desgaste acelerado (alerta a 3 y 6 meses)</label>
+              <label class="marca-op" id="cReingreso"><input type="checkbox" id="mReingreso"> Admite devolución a stock como usado</label>
+              <label class="marca-op" id="cVence"><input type="checkbox" id="mVence"> Tiene fecha de vencimiento</label>
+            </div>
+            <div class="acciones">
+              <button class="btn btn-p" type="submit">Guardar material</button>
+              <button class="btn btn-s" type="button" id="mCancelar" hidden>Cancelar edición</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="bloque">
+        <div class="canal"><span class="folio">§ 11</span></div>
+        <div class="cuerpo">
+          <h2>Catálogo</h2>
+          <p class="bajada">Pulsa SKU para ver las unidades de stock que genera cada material.</p>
+          <div class="tabla-env"><table>
+            <thead><tr><th>Código</th><th>Material</th><th>Naturaleza</th><th>Categoría</th>
+              <th class="num">SKU</th><th class="num">Vida útil</th><th class="num">Mín.</th><th></th></tr></thead>
+            <tbody id="tbMateriales"></tbody>
+          </table></div>
+          <div id="skuDetalle"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---- CLIENTES ---- -->
+    <section data-vista="clientes">
+      <div class="nota">
+        Las instalaciones apuntan al identificador de la empresa, no a su nombre escrito. Por eso los
+        informes por empresa cliente no se fragmentan aunque alguien escriba el nombre distinto.
+      </div>
+      <div class="bloque">
+        <div class="canal"><span class="folio">§ 20</span></div>
+        <div class="cuerpo">
+          <h2 id="tCliente">Nueva empresa</h2>
+          <p class="bajada">Mandantes y la ficha de uso interno de PK.</p>
+          <form id="fCliente">
+            <input type="hidden" id="clId">
+            <div class="rejilla">
+              <div class="campo"><label for="clRazon">Razón social</label><input id="clRazon" required></div>
+              <div class="campo mono" style="max-width:170px"><label for="clRut">RUT</label>
+                <input id="clRut" placeholder="76.123.456-7">
+                <span class="ayuda" id="clRutAviso"></span></div>
+              <div class="campo"><label for="clTipo">Tipo</label>
+                <select id="clTipo"><option value="MANDANTE">Empresa mandante</option>
+                  <option value="INTERNO">Uso interno PK</option></select></div>
+              <div class="campo"><label for="clContrato">Contrato o anexo</label>
+                <input id="clContrato" placeholder="N.º o referencia"></div>
+              <div class="campo"><label for="clContacto">Contraparte</label><input id="clContacto"></div>
+              <div class="campo"><label for="clCorreo">Correo</label><input id="clCorreo" type="email"></div>
+            </div>
+            <div class="acciones">
+              <button class="btn btn-p" type="submit">Guardar empresa</button>
+              <button class="btn btn-s" type="button" id="clCancelar" hidden>Cancelar edición</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="bloque">
+        <div class="canal"><span class="folio">§ 21</span></div>
+        <div class="cuerpo">
+          <h2>Nómina de empresas</h2>
+          <div class="tabla-env"><table>
+            <thead><tr><th>ID</th><th>Razón social</th><th>RUT</th><th>Contrato</th>
+              <th class="num">Instalaciones</th><th>Estado</th><th></th></tr></thead>
+            <tbody id="tbClientes"></tbody>
+          </table></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---- INSTALACIONES ---- -->
+    <section data-vista="instalaciones">
+      <div class="bloque">
+        <div class="canal"><span class="folio">§ 30</span></div>
+        <div class="cuerpo">
+          <h2 id="tInstalacion">Nueva instalación</h2>
+          <p class="bajada">La empresa cliente se hereda desde aquí a toda la dotación del recinto.</p>
+          <form id="fInstalacion">
+            <input type="hidden" id="iId">
+            <div class="rejilla">
+              <div class="campo"><label for="iNombre">Nombre</label><input id="iNombre" required></div>
+              <div class="campo"><label for="iCliente">Empresa cliente</label><select id="iCliente" required></select></div>
+              <div class="campo mono" style="max-width:150px"><label for="iCodigo">Código interno</label><input id="iCodigo"></div>
+              <div class="campo"><label for="iDireccion">Dirección referencial</label><input id="iDireccion"></div>
+            </div>
+            <div class="acciones">
+              <button class="btn btn-p" type="submit">Guardar instalación</button>
+              <button class="btn btn-s" type="button" id="iCancelar" hidden>Cancelar edición</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="bloque">
+        <div class="canal"><span class="folio">§ 31</span></div>
+        <div class="cuerpo">
+          <h2>Instalaciones</h2>
+          <div class="tabla-env"><table>
+            <thead><tr><th>ID</th><th>Instalación</th><th>Empresa</th><th>Código</th><th>Dirección</th>
+              <th class="num">Dotación</th><th>Estado</th><th></th></tr></thead>
+            <tbody id="tbInstalaciones"></tbody>
+          </table></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---- DOTACIÓN ---- -->
+    <section data-vista="dotacion">
+      <div class="bloque" id="cFormPersona">
+        <div class="canal"><span class="folio">§ 40</span></div>
+        <div class="cuerpo">
+          <h2 id="tPersona">Nueva persona</h2>
+          <p class="bajada">Las tallas registradas se proponen por defecto al momento de solicitar.</p>
+          <form id="fPersona">
+            <div class="rejilla">
+              <div class="campo mono" style="max-width:165px"><label for="pRut">RUT</label>
+                <input id="pRut" placeholder="12.345.678-9" required>
+                <span class="ayuda" id="pRutAviso"></span></div>
+              <div class="campo"><label for="pNombre">Nombres</label><input id="pNombre" required></div>
+              <div class="campo"><label for="pApellidos">Apellidos</label><input id="pApellidos" required></div>
+              <div class="campo"><label for="pCargo">Cargo</label>
+                <select id="pCargo"><option>Guardia</option><option>Supervisor</option><option>Administrativo</option></select></div>
+              <div class="campo"><label for="pInstalacion">Instalación</label><select id="pInstalacion" required></select></div>
+              <div class="campo"><label for="pSupervisor">Supervisor responsable</label><select id="pSupervisor"></select></div>
+              <div class="campo"><label for="pCorreo">Correo</label><input id="pCorreo" type="email"></div>
+              <div class="campo"><label for="pTelefono">Teléfono</label><input id="pTelefono"></div>
+              <div class="campo"><label for="pIngreso">Fecha de ingreso</label><input id="pIngreso" type="date"></div>
+              <div class="campo"><label for="pCalzado">Talla de calzado</label><select id="pCalzado"></select></div>
+              <div class="campo"><label for="pRopa">Talla de ropa</label><select id="pRopa"></select></div>
+              <div class="campo"><label for="pEstado">Estado</label>
+                <select id="pEstado"><option>Activo</option><option>Desvinculado</option></select></div>
+            </div>
+            <div class="acciones">
+              <button class="btn btn-p" type="submit">Guardar persona</button>
+              <button class="btn btn-s" type="button" id="pCancelar" hidden>Cancelar edición</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="bloque">
+        <div class="canal"><span class="folio">§ 41</span></div>
+        <div class="cuerpo">
+          <h2>Dotación</h2>
+          <div class="filtros">
+            <div class="campo"><label for="dBuscar">Buscar</label><input id="dBuscar" placeholder="RUT, nombre o apellido"></div>
+            <div class="campo"><label for="dInstalacion">Instalación</label><select id="dInstalacion"><option value="">Todas</option></select></div>
+            <div class="campo"><label for="dEstado">Estado</label>
+              <select id="dEstado"><option value="Activo">Activos</option><option value="Desvinculado">Desvinculados</option><option value="">Todos</option></select></div>
+          </div>
+          <div class="tabla-env"><table>
+            <thead><tr><th>RUT</th><th>Nombre</th><th>Cargo</th><th>Instalación</th><th>Empresa</th>
+              <th>Supervisor</th><th>Tallas</th><th>Estado</th><th></th></tr></thead>
+            <tbody id="tbPersonas"></tbody>
+          </table></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---- USUARIOS ---- -->
     <section data-vista="usuarios">
       <div class="nota">
-        Un <b>supervisor</b> solo ve y solicita para la dotación de las instalaciones que le asignes aquí,
-        y no tiene acceso a stock ni a costos. El <b>operador</b> resuelve las solicitudes contra existencias.
+        El <b>supervisor</b> solo ve y solicita para la dotación de las instalaciones asignadas aquí, y no
+        accede a stock ni a costos. El <b>operador</b> resuelve las solicitudes contra existencias.
       </div>
-      <div class="tarjeta">
-        <h2 id="tUsuario">Nuevo usuario</h2>
-        <form id="fUsuario">
-          <input type="hidden" id="uId">
-          <div class="rejilla">
-            <div class="campo"><label for="uNombre">Nombre completo</label><input id="uNombre" required></div>
-            <div class="campo mono"><label for="uUsuario">Usuario</label><input id="uUsuario" autocomplete="off" required></div>
-            <div class="campo"><label for="uRol">Perfil</label>
-              <select id="uRol">
-                <option value="OPERADOR">Operador del sistema</option>
-                <option value="SUPERVISOR">Supervisor</option>
-                <option value="ADMIN">Administrador</option>
-              </select></div>
-            <div class="campo"><label for="uCorreo">Correo</label><input id="uCorreo" type="email"></div>
-            <div class="campo"><label for="uClave">Contraseña</label>
-              <input id="uClave" type="password" autocomplete="new-password">
-              <span class="ayuda" id="uClaveAyuda">Mínimo 8 caracteres</span></div>
-            <div class="campo"><label for="uActivo">Estado</label>
-              <select id="uActivo"><option value="SI">Activo</option><option value="NO">Desactivado</option></select></div>
-          </div>
-          <div id="uInstalaciones" hidden>
-            <p class="rotulo" style="margin:18px 0 8px">Instalaciones a cargo</p>
-            <div class="marcas" id="uInstLista"></div>
-          </div>
-          <div class="acciones">
-            <button class="btn btn-p" type="submit">Guardar usuario</button>
-            <button class="btn btn-s" type="button" id="uCancelar" hidden>Cancelar edición</button>
-          </div>
-        </form>
+      <div class="bloque">
+        <div class="canal"><span class="folio">§ 50</span></div>
+        <div class="cuerpo">
+          <h2 id="tUsuario">Nuevo usuario</h2>
+          <form id="fUsuario">
+            <input type="hidden" id="uId">
+            <div class="rejilla">
+              <div class="campo"><label for="uNombre">Nombre completo</label><input id="uNombre" required></div>
+              <div class="campo mono"><label for="uUsuario">Usuario</label><input id="uUsuario" autocomplete="off" required></div>
+              <div class="campo"><label for="uRol">Perfil</label>
+                <select id="uRol">
+                  <option value="OPERADOR">Operador del sistema</option>
+                  <option value="SUPERVISOR">Supervisor</option>
+                  <option value="ADMIN">Administrador</option>
+                </select></div>
+              <div class="campo"><label for="uCorreo">Correo</label><input id="uCorreo" type="email"></div>
+              <div class="campo"><label for="uClave">Contraseña</label>
+                <input id="uClave" type="password" autocomplete="new-password">
+                <span class="ayuda" id="uClaveAyuda">Mínimo 8 caracteres</span></div>
+              <div class="campo"><label for="uActivo">Estado</label>
+                <select id="uActivo"><option value="SI">Activo</option><option value="NO">Desactivado</option></select></div>
+            </div>
+            <div id="uInstalaciones" hidden>
+              <p class="rotulo" style="margin:16px 0 8px">Instalaciones a cargo</p>
+              <div class="marcas" id="uInstLista"></div>
+            </div>
+            <div class="acciones">
+              <button class="btn btn-p" type="submit">Guardar usuario</button>
+              <button class="btn btn-s" type="button" id="uCancelar" hidden>Cancelar edición</button>
+            </div>
+          </form>
+        </div>
       </div>
-      <div class="tarjeta">
-        <h2>Usuarios del sistema</h2>
-        <div class="tabla-env"><table>
-          <thead><tr><th>Usuario</th><th>Nombre</th><th>Perfil</th><th>Correo</th><th>Instalaciones</th><th>Estado</th><th></th></tr></thead>
-          <tbody id="tbUsuarios"></tbody>
-        </table></div>
+      <div class="bloque">
+        <div class="canal"><span class="folio">§ 51</span></div>
+        <div class="cuerpo">
+          <h2>Usuarios del sistema</h2>
+          <div class="tabla-env"><table>
+            <thead><tr><th>Usuario</th><th>Nombre</th><th>Perfil</th><th>Correo</th><th>Instalaciones</th><th>Estado</th><th></th></tr></thead>
+            <tbody id="tbUsuarios"></tbody>
+          </table></div>
+        </div>
       </div>
     </section>
 
   </main>
 </div>
 
-<!-- ================= MODAL CLAVE ================= -->
+<!-- ============ MODAL CLAVE ============ -->
 <div class="velo" id="velo" hidden>
   <div class="modal">
     <h3>Cambiar mi contraseña</h3>
@@ -458,8 +480,7 @@ td.acc{white-space:nowrap; text-align:right}
       <div class="campo"><label for="cActual">Contraseña actual</label><input id="cActual" type="password" required></div>
       <div class="campo" style="margin-top:12px"><label for="cNueva">Nueva contraseña</label><input id="cNueva" type="password" required></div>
       <div class="campo" style="margin-top:12px"><label for="cRepetir">Repetir nueva contraseña</label><input id="cRepetir" type="password" required></div>
-      <p class="ayuda" style="font-size:12px; color:var(--tenue); margin:12px 0 0">
-        Mínimo 8 caracteres. Combina letras, números y símbolos, y no uses datos personales.</p>
+      <p style="font-size:11.5px; color:var(--tenue); margin:12px 0 0">Mínimo 8 caracteres. Combina letras, números y símbolos, y no uses datos personales.</p>
       <div class="acciones">
         <button class="btn btn-p" type="submit">Cambiar contraseña</button>
         <button class="btn btn-s" type="button" id="cCancelar">Cancelar</button>
@@ -473,30 +494,28 @@ td.acc{white-space:nowrap; text-align:right}
 <script>
 'use strict';
 
-/* ==================================================================
-   CONFIGURACIÓN — lo único que hay que editar
-   ================================================================== */
 const API_URL  = 'https://script.google.com/macros/s/AKfycbzF3x9Yios2SX2F2EkRgdYcRMTiOZD6csPlCyfHJchMyAy5G9UAaTjmRqq_2x_D2HY/exec';
 const LOGO_URL = 'data:image/png;base64,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';
 
-/* ==================================================================
-   ESTADO
-   ================================================================== */
 const est = { token:'', usuario:null, cat:null, materialAbierto:'' };
 
 const VISTAS = {
   panel:         { rotulo:'Panel',         roles:['ADMIN','OPERADOR','SUPERVISOR'] },
   materiales:    { rotulo:'Materiales',    roles:['ADMIN','OPERADOR'] },
+  clientes:      { rotulo:'Clientes',      roles:['ADMIN','OPERADOR'] },
   instalaciones: { rotulo:'Instalaciones', roles:['ADMIN','OPERADOR'] },
   dotacion:      { rotulo:'Dotación',      roles:['ADMIN','OPERADOR','SUPERVISOR'] },
   usuarios:      { rotulo:'Usuarios',      roles:['ADMIN'] }
 };
 
 const ROL_ROTULO = { ADMIN:'Administrador', OPERADOR:'Operador', SUPERVISOR:'Supervisor' };
+const NAT_ROTULO = { DOTACION:'Dotación personal', CONSUMIBLE:'Consumible', CUSTODIA:'Bien bajo custodia' };
+const NAT_AYUDA = {
+  DOTACION:  'Con talla y vida útil. Se entrega a una persona y puede volver usado.',
+  CONSUMIBLE:'Se gasta y no vuelve a stock. Puede llevar fecha de vencimiento.',
+  CUSTODIA:  'Serializado. Cada unidad se crea con su serie al registrar la compra.'
+};
 
-/* ==================================================================
-   UTILIDADES
-   ================================================================== */
 const $  = function (s, c) { return (c || document).querySelector(s); };
 const $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
 
@@ -511,22 +530,20 @@ function aviso(texto, mal) {
   a.textContent = texto;
   a.className = 'ver' + (mal ? ' mal' : '');
   clearTimeout(avisoT);
-  avisoT = setTimeout(function () { a.className = ''; }, mal ? 5000 : 2800);
+  avisoT = setTimeout(function () { a.className = ''; }, mal ? 5000 : 2600);
 }
 
 const guardar = {
-  set: function (k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} },
-  get: function (k)    { try { return sessionStorage.getItem(k) || ''; } catch (e) { return ''; } },
-  del: function (k)    { try { sessionStorage.removeItem(k); } catch (e) {} }
+  set: function (k,v) { try { sessionStorage.setItem(k,v); } catch(e){} },
+  get: function (k)   { try { return sessionStorage.getItem(k) || ''; } catch(e){ return ''; } },
+  del: function (k)   { try { sessionStorage.removeItem(k); } catch(e){} }
 };
 
 async function api(accion, datos) {
-  if (!API_URL) { aviso('Falta configurar API_URL en index.html', true); return { ok:false }; }
   const cuerpo = Object.assign({ accion: accion, token: est.token }, datos || {});
   try {
     const r = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(cuerpo)
     });
     const j = await r.json();
@@ -540,54 +557,30 @@ async function api(accion, datos) {
 }
 
 /* ---- RUT ---- */
-function rutLimpio(r) { return String(r || '').replace(/[^0-9kK]/g, '').toUpperCase(); }
-
+function rutLimpio(r) { return String(r || '').replace(/[^0-9kK]/g,'').toUpperCase(); }
 function rutValido(r) {
   const l = rutLimpio(r);
   if (l.length < 8) return false;
-  const cuerpo = l.slice(0, -1), dv = l.slice(-1);
+  const cuerpo = l.slice(0,-1), dv = l.slice(-1);
   let suma = 0, m = 2;
-  for (let i = cuerpo.length - 1; i >= 0; i--) { suma += Number(cuerpo[i]) * m; m = m === 7 ? 2 : m + 1; }
-  const resto = 11 - (suma % 11);
-  return dv === (resto === 11 ? '0' : resto === 10 ? 'K' : String(resto));
+  for (let i = cuerpo.length-1; i >= 0; i--) { suma += Number(cuerpo[i])*m; m = m===7?2:m+1; }
+  const r2 = 11 - (suma % 11);
+  return dv === (r2===11?'0':r2===10?'K':String(r2));
 }
-
 function rutFormato(r) {
   const l = rutLimpio(r);
   if (l.length < 2) return l;
-  return l.slice(0, -1).replace(/\B(?=(\d{3})+(?!\d))/g, '.') + '-' + l.slice(-1);
+  return l.slice(0,-1).replace(/\B(?=(\d{3})+(?!\d))/g,'.') + '-' + l.slice(-1);
 }
 
-/* ---- Escudo PK de respaldo ---- */
 function escudo() {
-  if (LOGO_URL) return '<img src="' + esc(LOGO_URL) + '" alt="Seguridad PK" style="width:100%;height:100%;object-fit:contain">';
-  let hojas = '';
-  [-1, 1].forEach(function (lado) {
-    for (let i = 0; i < 8; i++) {
-      const t = (36 + i * 18) * Math.PI / 180;
-      const x = 50 + lado * 33 * Math.sin(t);
-      const y = 52 - 33 * Math.cos(t);
-      const g = lado * (t * 180 / Math.PI - 12);
-      hojas += '<ellipse cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) +
-               '" rx="4.2" ry="8.4" transform="rotate(' + g.toFixed(1) + ' ' +
-               x.toFixed(1) + ' ' + y.toFixed(1) + ')" fill="currentColor" opacity="' +
-               (0.55 + i * 0.055).toFixed(2) + '"/>';
-    }
-  });
-  return '<svg viewBox="0 0 100 100" width="100%" height="100%" role="img" aria-label="Seguridad PK">' +
-    hojas +
-    '<text x="50" y="62" text-anchor="middle" font-family="system-ui,sans-serif" font-size="30" ' +
-    'font-weight="700" letter-spacing="1" fill="currentColor">PK</text>' +
-    '<text x="50" y="80" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" ' +
-    'letter-spacing="2.2" fill="currentColor" opacity=".85">SEGURIDAD</text></svg>';
+  return '<img src="' + LOGO_URL + '" alt="Seguridad PK">';
 }
 
-/* ==================================================================
-   ACCESO
-   ================================================================== */
 $('#marcaAcceso').innerHTML = escudo();
 $('#marcaCab').innerHTML = escudo();
 
+/* ================= ACCESO ================= */
 $('#fAcceso').addEventListener('submit', async function (ev) {
   ev.preventDefault();
   const b = $('#bAcceso');
@@ -596,13 +589,13 @@ $('#fAcceso').addEventListener('submit', async function (ev) {
   b.disabled = false; b.textContent = 'Ingresar';
   if (!r.ok) return;
   est.token = r.token; est.usuario = r.usuario;
-  guardar.set('pk_inv_token', r.token);
+  guardar.set('pk_exi_token', r.token);
   $('#aClave').value = '';
   await abrir();
 });
 
 async function reanudar() {
-  const t = guardar.get('pk_inv_token');
+  const t = guardar.get('pk_exi_token');
   if (!t) return;
   est.token = t;
   const r = await api('sesion');
@@ -611,27 +604,25 @@ async function reanudar() {
 
 function salir(porExpiracion) {
   if (!porExpiracion && est.token) api('salir');
-  guardar.del('pk_inv_token');
+  guardar.del('pk_exi_token');
   est.token = ''; est.usuario = null; est.cat = null;
   $('#vApp').hidden = true;
   $('#vAcceso').style.display = '';
   if (porExpiracion) aviso('La sesión expiró. Vuelve a ingresar.', true);
 }
-
 $('#bSalir').addEventListener('click', function () { salir(false); });
 
 async function abrir() {
   $('#vAcceso').style.display = 'none';
   $('#vApp').hidden = false;
-  $('#chipUsr').innerHTML = '<b>' + esc(est.usuario.nombre || est.usuario.usuario) + '</b> · <i>' +
-    esc(ROL_ROTULO[est.usuario.rol] || est.usuario.rol) + '</i>';
+  const n = est.usuario.nombre || est.usuario.usuario;
+  const iniciales = n.split(/\s+/).map(function(p){return p.charAt(0);}).join('').slice(0,3).toUpperCase();
+  $('#sello').textContent = iniciales + ' · ' + (est.usuario.rol || '').slice(0,3);
   montarTabs();
   await recargar();
 }
 
-/* ==================================================================
-   NAVEGACIÓN
-   ================================================================== */
+/* ================= NAVEGACIÓN ================= */
 function montarTabs() {
   const nav = $('#tabs');
   nav.innerHTML = '';
@@ -650,104 +641,119 @@ function montarTabs() {
 }
 
 function ir(vista) {
-  $$('#tabs button').forEach(function (b) {
-    b.setAttribute('aria-current', b.dataset.ir === vista ? 'true' : 'false');
-  });
-  $$('section[data-vista]').forEach(function (s) {
-    s.classList.toggle('activa', s.dataset.vista === vista);
-  });
-  window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+  $$('#tabs button').forEach(function (b) { b.setAttribute('aria-current', b.dataset.ir === vista ? 'true' : 'false'); });
+  $$('section[data-vista]').forEach(function (s) { s.classList.toggle('activa', s.dataset.vista === vista); });
+  window.scrollTo(0, 0);
 }
 
-/* ==================================================================
-   CARGA DE DATOS
-   ================================================================== */
+/* ================= DATOS ================= */
 async function recargar() {
   const r = await api('catalogo');
   if (!r.ok) return;
   est.cat = r;
+  pintarSelectores();
   pintarPanel();
   pintarMateriales();
+  pintarClientes();
   pintarInstalaciones();
-  pintarSelectores();
   pintarPersonas();
   pintarUsuarios();
 }
 
+function cliente(id) {
+  return (est.cat.clientes || []).filter(function (c) { return String(c.id) === String(id); })[0];
+}
 function instalacion(id) {
   return (est.cat.instalaciones || []).filter(function (i) { return String(i.id) === String(id); })[0];
 }
-
+function empresaDe(instId) {
+  const i = instalacion(instId);
+  const c = i ? cliente(i.cliente_id) : null;
+  return c ? c.razon_social : '—';
+}
 function nombreSupervisor(id) {
   const s = (est.cat.supervisores || []).filter(function (u) { return String(u.id) === String(id); })[0];
   return s ? s.nombre : '—';
 }
 
-/* ==================================================================
-   PANEL
-   ================================================================== */
+/* ================= PANEL ================= */
 function pintarPanel() {
   const c = est.cat;
-  const matAct = (c.materiales || []).filter(function (m) { return m.activo === 'SI'; }).length;
-  const skuAct = (c.sku || []).filter(function (s) { return s.activo === 'SI'; }).length;
-  const insAct = (c.instalaciones || []).filter(function (i) { return i.activo === 'SI'; }).length;
-  const perAct = (c.personas || []).filter(function (p) { return p.estado === 'Activo'; }).length;
+  const mat = (c.materiales || []).filter(function (m) { return m.activo === 'SI'; }).length;
+  const sku = (c.sku || []).filter(function (s) { return s.activo === 'SI'; }).length;
+  const emp = (c.clientes || []).filter(function (x) { return x.activo === 'SI' && x.tipo === 'MANDANTE'; }).length;
+  const ins = (c.instalaciones || []).filter(function (i) { return i.activo === 'SI'; }).length;
+  const per = (c.personas || []).filter(function (p) { return p.estado === 'Activo'; }).length;
 
-  const tarjetas = [
-    { cifra: matAct, rotulo: 'Materiales activos' },
-    { cifra: skuAct, rotulo: 'SKU en catálogo' },
-    { cifra: insAct, rotulo: 'Instalaciones' },
-    { cifra: perAct, rotulo: 'Dotación activa' },
-    { cifra: 0, rotulo: 'Quiebres de stock', clase: 'grave' },
-    { cifra: 0, rotulo: 'Bajo el mínimo', clase: 'aviso' }
+  const t = [
+    { n: mat, r: 'Materiales activos' },
+    { n: sku, r: 'SKU en catálogo' },
+    { n: emp, r: 'Empresas mandantes' },
+    { n: ins, r: 'Instalaciones' },
+    { n: per, r: 'Dotación activa' },
+    { n: 0, r: 'Quiebres de stock', c: 'grave' },
+    { n: 0, r: 'Bajo el mínimo', c: 'aviso' }
   ];
 
-  $('#indicadores').innerHTML = tarjetas.map(function (t) {
-    return '<div class="ind ' + (t.clase || '') + '">' +
-           '<div class="cifra">' + t.cifra + '</div>' +
-           '<div class="rotulo">' + t.rotulo + '</div></div>';
+  $('#indicadores').innerHTML = t.map(function (x) {
+    return '<div class="ind ' + (x.c || '') + '"><div class="cifra">' +
+      ('0' + x.n).slice(-2) + '</div><div class="rotulo">' + x.r + '</div></div>';
   }).join('');
 
   const pasos = [
-    ['1', 'Instalaciones y empresas cliente', 'Operador', insAct > 0],
-    ['2', 'Usuarios supervisores y sus instalaciones', 'Administrador', (c.supervisores || []).length > 0],
-    ['3', 'Catálogo de materiales y tallas', 'Operador', matAct > 0],
-    ['4', 'Dotación con RUT y tallas registradas', 'Operador', perAct > 0]
+    ['01','Empresas mandantes','Operador', emp > 0],
+    ['02','Instalaciones por empresa','Operador', ins > 0],
+    ['03','Usuarios supervisores','Administrador', (c.supervisores || []).length > 0],
+    ['04','Catálogo de materiales','Operador', mat > 0],
+    ['05','Dotación con RUT y tallas','Operador', per > 0]
   ];
 
   $('#tbPuesta').innerHTML = pasos.map(function (p) {
-    return '<tr><td class="mono">' + p[0] + '</td><td>' + p[1] + '</td><td>' + p[2] + '</td>' +
+    return '<tr><td class="ref">' + p[0] + '</td><td>' + p[1] + '</td><td>' + p[2] + '</td>' +
       '<td><span class="marbete ' + (p[3] ? 'm-ok">Cargado' : 'm-off">Pendiente') + '</span></td></tr>';
   }).join('');
 }
 
-/* ==================================================================
-   MATERIALES
-   ================================================================== */
+/* ================= MATERIALES ================= */
+function ajustarFormMaterial() {
+  const n = $('#mNaturaleza').value;
+  $('#mNatAyuda').textContent = NAT_AYUDA[n] || '';
+  const custodia = n === 'CUSTODIA';
+  const dotacion = n === 'DOTACION';
+  $('#cEscala').hidden = custodia;
+  $('#cTemporada').hidden = custodia;
+  $('#cVida').hidden = custodia;
+  $('#cMinimo').hidden = custodia;
+  $('#cDesgaste').hidden = !dotacion;
+  $('#cReingreso').hidden = !dotacion;
+  $('#cVence').hidden = dotacion;
+}
+$('#mNaturaleza').addEventListener('change', ajustarFormMaterial);
+
 function pintarMateriales() {
   const ms = est.cat.materiales || [];
   const tb = $('#tbMateriales');
   if (!ms.length) {
-    tb.innerHTML = '<tr><td colspan="9" class="vacio">Aún no hay materiales. Crea el primero con el formulario de arriba.</td></tr>';
+    tb.innerHTML = '<tr><td colspan="8" class="vacio">Aún no hay materiales.</td></tr>';
     return;
   }
   tb.innerHTML = ms.map(function (m) {
-    const tallas = (est.cat.escalas[m.escala] || []).length;
-    return '<tr class="' + (m.activo === 'SI' ? '' : 'inactiva') + '" data-mat="' + esc(m.id) + '">' +
-      '<td><span class="etq">' + esc(m.codigo) + '</span></td>' +
-      '<td><b>' + esc(m.nombre) + '</b><br><span style="font-size:12px;color:var(--tenue)">' + esc(m.tipo) + '</span></td>' +
-      '<td><span class="marbete ' + (m.categoria === 'EPP' ? 'm-epp">EPP' : 'm-ind">Indumentaria') + '</span></td>' +
-      '<td>' + esc(m.temporada) + '</td>' +
-      '<td class="num">' + tallas + '</td>' +
-      '<td class="num">' + esc(m.vida_util_meses) + ' m' + (m.consumible === 'SI' ? ' *' : '') + '</td>' +
+    const n = (est.cat.sku || []).filter(function (s) {
+      return String(s.material_id) === String(m.id) && s.activo === 'SI';
+    }).length;
+    return '<tr class="' + (m.activo === 'SI' ? '' : 'inactiva') + '">' +
+      '<td class="ref">' + esc(m.codigo) + '</td>' +
+      '<td>' + esc(m.nombre) + (m.tipo ? '<br><span style="font-size:11.5px;color:var(--tenue)">' + esc(m.tipo) + '</span>' : '') + '</td>' +
+      '<td>' + esc(NAT_ROTULO[m.naturaleza] || m.naturaleza) + '</td>' +
+      '<td>' + esc(m.categoria) + '</td>' +
+      '<td class="num">' + (m.naturaleza === 'CUSTODIA' ? n || '—' : n) + '</td>' +
+      '<td class="num">' + (m.naturaleza === 'CUSTODIA' ? '—' : esc(m.vida_util_meses) + ' m') + '</td>' +
       '<td class="num">' + esc(m.stock_minimo) + '</td>' +
-      '<td>' + (m.reingreso === 'SI' ? 'Admite' : '<span style="color:var(--tenue)">No admite</span>') + '</td>' +
       '<td class="acc">' +
         '<button class="mini" data-ver="' + esc(m.id) + '">SKU</button>' +
         '<button class="mini" data-edm="' + esc(m.id) + '">Editar</button>' +
-        '<button class="mini' + (m.activo === 'SI' ? ' peligro' : '') + '" data-offm="' + esc(m.id) +
-          '">' + (m.activo === 'SI' ? 'Desactivar' : 'Reactivar') + '</button>' +
-      '</td></tr>';
+        '<button class="mini' + (m.activo === 'SI' ? ' peligro' : '') + '" data-offm="' + esc(m.id) + '">' +
+        (m.activo === 'SI' ? 'Desactivar' : 'Reactivar') + '</button></td></tr>';
   }).join('');
   if (est.materialAbierto) verSku(est.materialAbierto);
 }
@@ -757,16 +763,25 @@ function verSku(matId) {
   const m = (est.cat.materiales || []).filter(function (x) { return String(x.id) === String(matId); })[0];
   if (!m) return;
   const lista = (est.cat.sku || []).filter(function (s) { return String(s.material_id) === String(matId); });
-  $('#skuDetalle').innerHTML =
-    '<div style="margin-top:18px;padding-top:16px;border-top:1px solid var(--linea)">' +
-    '<p class="rotulo" style="margin:0 0 10px">SKU de ' + esc(m.nombre) + ' · ' + lista.length + ' unidades de stock</p>' +
-    lista.map(function (s) {
+
+  let cuerpo;
+  if (m.naturaleza === 'CUSTODIA' && !lista.length) {
+    cuerpo = '<p style="font-size:12.5px;color:var(--tenue);margin:0">' +
+      'Bien bajo custodia: las unidades no se crean por adelantado. Cada equipo nace con su número de ' +
+      'serie propio al registrarse la compra, en la Fase 2.</p>';
+  } else {
+    cuerpo = lista.map(function (s) {
       return '<span class="etq ' + (s.estado === 'USADO' ? 'usado ' : '') + (s.activo === 'SI' ? '' : 'baja') + '">' +
         esc(s.id) + '</span>';
     }).join('') +
-    '<p style="font-size:12px;color:var(--tenue);margin:10px 0 0">' +
-    'El sufijo N corresponde a stock nuevo y U a stock devuelto en uso. Son existencias separadas: ' +
-    'el stock usado no cuenta para la alerta de reposición.</p></div>';
+    (m.reingreso === 'SI'
+      ? '<p style="font-size:11.5px;color:var(--tenue);margin:10px 0 0">El sufijo N es stock nuevo y U es stock devuelto en uso. Son existencias separadas: el usado no cuenta para la alerta de reposición.</p>'
+      : '');
+  }
+
+  $('#skuDetalle').innerHTML =
+    '<div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--regla-suave)">' +
+    '<p class="rotulo" style="margin:0 0 9px">Unidades de stock · ' + esc(m.nombre) + '</p>' + cuerpo + '</div>';
 }
 
 $('#tbMateriales').addEventListener('click', async function (ev) {
@@ -785,13 +800,15 @@ function editarMaterial(id) {
   const m = est.cat.materiales.filter(function (x) { return String(x.id) === String(id); })[0];
   if (!m) return;
   $('#mId').value = m.id;
+  $('#mNaturaleza').value = m.naturaleza || 'DOTACION';
   $('#mCodigo').value = m.codigo; $('#mCodigo').disabled = true;
-  $('#mNombre').value = m.nombre; $('#mTipo').value = m.tipo;
-  $('#mCategoria').value = m.categoria; $('#mTemporada').value = m.temporada;
-  $('#mEscala').value = m.escala; $('#mVida').value = m.vida_util_meses;
-  $('#mMinimo').value = m.stock_minimo;
-  $('#mConsumible').checked = m.consumible === 'SI';
+  $('#mNombre').value = m.nombre; $('#mCategoria').value = m.categoria; $('#mTipo').value = m.tipo;
+  $('#mTemporada').value = m.temporada; $('#mEscala').value = m.escala;
+  $('#mVida').value = m.vida_util_meses; $('#mMinimo').value = m.stock_minimo;
+  $('#mDesgaste').checked = m.alerta_desgaste !== 'NO';
   $('#mReingreso').checked = m.reingreso === 'SI';
+  $('#mVence').checked = m.vence === 'SI';
+  ajustarFormMaterial();
   $('#tMaterial').textContent = 'Editar ' + m.nombre;
   $('#mCancelar').hidden = false;
   $('#fMaterial').scrollIntoView({ behavior:'smooth', block:'start' });
@@ -800,7 +817,8 @@ function editarMaterial(id) {
 function limpiarMaterial() {
   $('#fMaterial').reset();
   $('#mId').value = ''; $('#mCodigo').disabled = false;
-  $('#mVida').value = 12; $('#mMinimo').value = 2;
+  $('#mVida').value = 12; $('#mMinimo').value = 2; $('#mDesgaste').checked = true;
+  ajustarFormMaterial();
   $('#tMaterial').textContent = 'Nuevo material';
   $('#mCancelar').hidden = true;
 }
@@ -810,10 +828,12 @@ $('#fMaterial').addEventListener('submit', async function (ev) {
   ev.preventDefault();
   const r = await api('guardarMaterial', { registro: {
     id: $('#mId').value, codigo: $('#mCodigo').value.toUpperCase(), nombre: $('#mNombre').value,
-    tipo: $('#mTipo').value, categoria: $('#mCategoria').value, temporada: $('#mTemporada').value,
-    escala: $('#mEscala').value, vida_util_meses: $('#mVida').value, stock_minimo: $('#mMinimo').value,
-    consumible: $('#mConsumible').checked ? 'SI' : 'NO',
-    reingreso: $('#mReingreso').checked ? 'SI' : 'NO', activo: 'SI'
+    naturaleza: $('#mNaturaleza').value, categoria: $('#mCategoria').value, tipo: $('#mTipo').value,
+    temporada: $('#mTemporada').value, escala: $('#mEscala').value,
+    vida_util_meses: $('#mVida').value, stock_minimo: $('#mMinimo').value,
+    alerta_desgaste: $('#mDesgaste').checked ? 'SI' : 'NO',
+    reingreso: $('#mReingreso').checked ? 'SI' : 'NO',
+    vence: $('#mVence').checked ? 'SI' : 'NO', activo: 'SI'
   }});
   if (!r.ok) return;
   aviso('Material guardado');
@@ -821,24 +841,95 @@ $('#fMaterial').addEventListener('submit', async function (ev) {
   await recargar();
 });
 
-/* ==================================================================
-   INSTALACIONES
-   ================================================================== */
+/* ================= CLIENTES ================= */
+$('#clRut').addEventListener('blur', function () {
+  const v = this.value.trim();
+  if (!v) { $('#clRutAviso').textContent = ''; return; }
+  this.value = rutFormato(v);
+  const ok = rutValido(v);
+  $('#clRutAviso').textContent = ok ? 'RUT válido' : 'Dígito verificador incorrecto';
+  $('#clRutAviso').style.color = ok ? 'var(--verde)' : 'var(--oxido)';
+});
+
+function pintarClientes() {
+  const cs = est.cat.clientes || [];
+  const tb = $('#tbClientes');
+  if (!cs.length) { tb.innerHTML = '<tr><td colspan="7" class="vacio">Aún no hay empresas.</td></tr>'; return; }
+  tb.innerHTML = cs.map(function (c) {
+    const n = (est.cat.instalaciones || []).filter(function (i) {
+      return String(i.cliente_id) === String(c.id) && i.activo === 'SI';
+    }).length;
+    return '<tr class="' + (c.activo === 'SI' ? '' : 'inactiva') + '">' +
+      '<td class="ref">' + esc(c.id) + '</td>' +
+      '<td>' + esc(c.razon_social) +
+        (c.tipo === 'INTERNO' ? ' <span class="marbete m-int">Interno</span>' : '') + '</td>' +
+      '<td class="ref">' + esc(c.rut || '—') + '</td>' +
+      '<td style="font-size:11.5px">' + esc(c.contrato || '—') + '</td>' +
+      '<td class="num">' + n + '</td>' +
+      '<td><span class="marbete ' + (c.activo === 'SI' ? 'm-ok">Activa' : 'm-off">Inactiva') + '</span></td>' +
+      '<td class="acc"><button class="mini" data-edc="' + esc(c.id) + '">Editar</button>' +
+      '<button class="mini' + (c.activo === 'SI' ? ' peligro' : '') + '" data-offc="' + esc(c.id) + '">' +
+      (c.activo === 'SI' ? 'Desactivar' : 'Reactivar') + '</button></td></tr>';
+  }).join('');
+}
+
+$('#tbClientes').addEventListener('click', async function (ev) {
+  const b = ev.target.closest('button');
+  if (!b) return;
+  if (b.dataset.edc) {
+    const c = est.cat.clientes.filter(function (x) { return String(x.id) === b.dataset.edc; })[0];
+    $('#clId').value = c.id; $('#clRazon').value = c.razon_social; $('#clRut').value = c.rut;
+    $('#clTipo').value = c.tipo; $('#clContrato').value = c.contrato;
+    $('#clContacto').value = c.contacto; $('#clCorreo').value = c.correo;
+    $('#tCliente').textContent = 'Editar ' + c.razon_social;
+    $('#clCancelar').hidden = false;
+    $('#fCliente').scrollIntoView({ behavior:'smooth', block:'start' });
+  }
+  if (b.dataset.offc) {
+    const c = est.cat.clientes.filter(function (x) { return String(x.id) === b.dataset.offc; })[0];
+    const r = await api('cambiarEstado', { entidad:'CLIENTES', id:c.id, activo: c.activo !== 'SI' });
+    if (r.ok) { aviso('Empresa actualizada'); await recargar(); }
+  }
+});
+
+function limpiarCliente() {
+  $('#fCliente').reset(); $('#clId').value = ''; $('#clRutAviso').textContent = '';
+  $('#tCliente').textContent = 'Nueva empresa';
+  $('#clCancelar').hidden = true;
+}
+$('#clCancelar').addEventListener('click', limpiarCliente);
+
+$('#fCliente').addEventListener('submit', async function (ev) {
+  ev.preventDefault();
+  const r = await api('guardarCliente', { registro: {
+    id: $('#clId').value, razon_social: $('#clRazon').value, rut: $('#clRut').value,
+    tipo: $('#clTipo').value, contrato: $('#clContrato').value,
+    contacto: $('#clContacto').value, correo: $('#clCorreo').value, activo:'SI'
+  }});
+  if (!r.ok) return;
+  aviso('Empresa guardada');
+  limpiarCliente();
+  await recargar();
+});
+
+/* ================= INSTALACIONES ================= */
 function pintarInstalaciones() {
   const is = est.cat.instalaciones || [];
   const tb = $('#tbInstalaciones');
   if (!is.length) {
-    tb.innerHTML = '<tr><td colspan="8" class="vacio">Aún no hay instalaciones. Empieza por aquí: la dotación se cuelga de ellas.</td></tr>';
+    tb.innerHTML = '<tr><td colspan="8" class="vacio">Aún no hay instalaciones. La dotación se cuelga de ellas.</td></tr>';
     return;
   }
   tb.innerHTML = is.map(function (i) {
+    const c = cliente(i.cliente_id);
     const dot = (est.cat.personas || []).filter(function (p) {
       return String(p.instalacion_id) === String(i.id) && p.estado === 'Activo';
     }).length;
     return '<tr class="' + (i.activo === 'SI' ? '' : 'inactiva') + '">' +
-      '<td class="mono">' + esc(i.id) + '</td><td><b>' + esc(i.nombre) + '</b></td>' +
-      '<td>' + esc(i.cliente) + '</td><td class="mono">' + esc(i.codigo) + '</td>' +
-      '<td style="font-size:12.5px;color:var(--tenue)">' + esc(i.direccion) + '</td>' +
+      '<td class="ref">' + esc(i.id) + '</td><td>' + esc(i.nombre) + '</td>' +
+      '<td>' + esc(c ? c.razon_social : '—') + '</td>' +
+      '<td class="ref">' + esc(i.codigo || '—') + '</td>' +
+      '<td style="font-size:11.5px;color:var(--tenue)">' + esc(i.direccion || '—') + '</td>' +
       '<td class="num">' + dot + '</td>' +
       '<td><span class="marbete ' + (i.activo === 'SI' ? 'm-ok">Activa' : 'm-off">Inactiva') + '</span></td>' +
       '<td class="acc"><button class="mini" data-edi="' + esc(i.id) + '">Editar</button>' +
@@ -852,7 +943,7 @@ $('#tbInstalaciones').addEventListener('click', async function (ev) {
   if (!b) return;
   if (b.dataset.edi) {
     const i = est.cat.instalaciones.filter(function (x) { return String(x.id) === b.dataset.edi; })[0];
-    $('#iId').value = i.id; $('#iNombre').value = i.nombre; $('#iCliente').value = i.cliente;
+    $('#iId').value = i.id; $('#iNombre').value = i.nombre; $('#iCliente').value = i.cliente_id;
     $('#iCodigo').value = i.codigo; $('#iDireccion').value = i.direccion;
     $('#tInstalacion').textContent = 'Editar ' + i.nombre;
     $('#iCancelar').hidden = false;
@@ -875,7 +966,7 @@ $('#iCancelar').addEventListener('click', limpiarInstalacion);
 $('#fInstalacion').addEventListener('submit', async function (ev) {
   ev.preventDefault();
   const r = await api('guardarInstalacion', { registro: {
-    id: $('#iId').value, nombre: $('#iNombre').value, cliente: $('#iCliente').value,
+    id: $('#iId').value, nombre: $('#iNombre').value, cliente_id: $('#iCliente').value,
     codigo: $('#iCodigo').value, direccion: $('#iDireccion').value, activo:'SI'
   }});
   if (!r.ok) return;
@@ -884,14 +975,18 @@ $('#fInstalacion').addEventListener('submit', async function (ev) {
   await recargar();
 });
 
-/* ==================================================================
-   SELECTORES DEPENDIENTES
-   ================================================================== */
+/* ================= SELECTORES ================= */
 function pintarSelectores() {
-  const activas = (est.cat.instalaciones || []).filter(function (i) { return i.activo === 'SI'; });
+  const clientesAct = (est.cat.clientes || []).filter(function (c) { return c.activo === 'SI'; });
+  $('#iCliente').innerHTML = '<option value="">Seleccionar…</option>' + clientesAct.map(function (c) {
+    return '<option value="' + esc(c.id) + '">' + esc(c.razon_social) + '</option>';
+  }).join('');
 
-  const opInst = activas.map(function (i) {
-    return '<option value="' + esc(i.id) + '">' + esc(i.nombre) + ' · ' + esc(i.cliente) + '</option>';
+  const insAct = (est.cat.instalaciones || []).filter(function (i) { return i.activo === 'SI'; });
+  const opInst = insAct.map(function (i) {
+    const c = cliente(i.cliente_id);
+    return '<option value="' + esc(i.id) + '">' + esc(i.nombre) +
+      (c ? ' · ' + esc(c.razon_social) : '') + '</option>';
   }).join('');
   $('#pInstalacion').innerHTML = '<option value="">Seleccionar…</option>' + opInst;
   $('#dInstalacion').innerHTML = '<option value="">Todas</option>' + opInst;
@@ -902,29 +997,27 @@ function pintarSelectores() {
     }).join('');
 
   const opc = function (arr) {
-    return '<option value="">—</option>' + arr.map(function (t) {
+    return '<option value="">—</option>' + (arr || []).map(function (t) {
       return '<option value="' + esc(t) + '">' + esc(t) + '</option>';
     }).join('');
   };
-  $('#pCalzado').innerHTML = opc(est.cat.escalas.CALZADO || []);
-  $('#pRopa').innerHTML    = opc(est.cat.escalas.ROPA_LETRA || []);
+  $('#pCalzado').innerHTML = opc(est.cat.escalas.CALZADO);
+  $('#pRopa').innerHTML    = opc(est.cat.escalas.ROPA_LETRA);
 
-  $('#uInstLista').innerHTML = activas.map(function (i) {
+  $('#uInstLista').innerHTML = insAct.map(function (i) {
     return '<label class="marca-op"><input type="checkbox" name="uInst" value="' + esc(i.id) + '"> ' +
       esc(i.nombre) + '</label>';
-  }).join('') || '<span style="font-size:13px;color:var(--tenue)">Crea instalaciones antes de asignar supervisores.</span>';
+  }).join('') || '<span style="font-size:12.5px;color:var(--tenue)">Crea instalaciones antes de asignar supervisores.</span>';
 }
 
-/* ==================================================================
-   DOTACIÓN
-   ================================================================== */
+/* ================= DOTACIÓN ================= */
 $('#pRut').addEventListener('blur', function () {
   const v = this.value.trim();
   if (!v) { $('#pRutAviso').textContent = ''; return; }
   this.value = rutFormato(v);
   const ok = rutValido(v);
   $('#pRutAviso').textContent = ok ? 'RUT válido' : 'Dígito verificador incorrecto';
-  $('#pRutAviso').style.color = ok ? 'var(--ok)' : 'var(--rojo)';
+  $('#pRutAviso').style.color = ok ? 'var(--verde)' : 'var(--oxido)';
 });
 
 function pintarPersonas() {
@@ -938,44 +1031,39 @@ function pintarPersonas() {
   const ps = (est.cat.personas || []).filter(function (p) {
     if (fi && String(p.instalacion_id) !== fi) return false;
     if (fe && p.estado !== fe) return false;
-    if (q) {
-      const t = (p.rut + ' ' + p.nombre + ' ' + p.apellidos).toLowerCase();
-      if (t.indexOf(q) === -1) return false;
-    }
+    if (q && (p.rut + ' ' + p.nombre + ' ' + p.apellidos).toLowerCase().indexOf(q) === -1) return false;
     return true;
   });
 
   const tb = $('#tbPersonas');
   if (!ps.length) {
     tb.innerHTML = '<tr><td colspan="9" class="vacio">' +
-      (est.cat.personas && est.cat.personas.length
-        ? 'Ningún registro coincide con el filtro.'
-        : 'Aún no hay dotación cargada.') + '</td></tr>';
+      ((est.cat.personas || []).length ? 'Ningún registro coincide con el filtro.' : 'Aún no hay dotación cargada.') +
+      '</td></tr>';
     return;
   }
 
   tb.innerHTML = ps.map(function (p) {
     const i = instalacion(p.instalacion_id);
-    const tallas = [p.talla_calzado ? 'Calz. ' + p.talla_calzado : '', p.talla_ropa ? 'Ropa ' + p.talla_ropa : '']
-      .filter(Boolean).join(' · ') || '—';
+    const tallas = [p.talla_calzado ? 'Calz. ' + p.talla_calzado : '',
+                    p.talla_ropa ? 'Ropa ' + p.talla_ropa : ''].filter(Boolean).join(' · ') || '—';
     return '<tr class="' + (p.estado === 'Activo' ? '' : 'inactiva') + '">' +
-      '<td class="mono">' + esc(rutFormato(p.rut)) + '</td>' +
-      '<td><b>' + esc(p.apellidos) + '</b>, ' + esc(p.nombre) + '</td>' +
+      '<td class="ref">' + esc(rutFormato(p.rut)) + '</td>' +
+      '<td>' + esc(p.apellidos) + ', ' + esc(p.nombre) + '</td>' +
       '<td>' + esc(p.cargo) + '</td>' +
       '<td>' + esc(i ? i.nombre : '—') + '</td>' +
-      '<td>' + esc(i ? i.cliente : '—') + '</td>' +
+      '<td>' + esc(empresaDe(p.instalacion_id)) + '</td>' +
       '<td>' + esc(nombreSupervisor(p.supervisor_id)) + '</td>' +
-      '<td style="font-size:12.5px">' + esc(tallas) + '</td>' +
+      '<td style="font-size:11.5px">' + esc(tallas) + '</td>' +
       '<td><span class="marbete ' + (p.estado === 'Activo' ? 'm-ok">Activo' : 'm-off">Desvinculado') + '</span></td>' +
       '<td class="acc">' + (soloLectura ? '' :
         '<button class="mini" data-edp="' + esc(p.rut) + '">Editar</button>' +
         '<button class="mini' + (p.estado === 'Activo' ? ' peligro' : '') + '" data-offp="' + esc(p.rut) + '">' +
-        (p.estado === 'Activo' ? 'Desvincular' : 'Reactivar') + '</button>') +
-      '</td></tr>';
+        (p.estado === 'Activo' ? 'Desvincular' : 'Reactivar') + '</button>') + '</td></tr>';
   }).join('');
 }
 
-['#dBuscar', '#dInstalacion', '#dEstado'].forEach(function (s) {
+['#dBuscar','#dInstalacion','#dEstado'].forEach(function (s) {
   $(s).addEventListener('input', pintarPersonas);
 });
 
@@ -997,9 +1085,8 @@ $('#tbPersonas').addEventListener('click', async function (ev) {
   }
   if (b.dataset.offp) {
     const p = est.cat.personas.filter(function (x) { return String(x.rut) === b.dataset.offp; })[0];
-    if (p.estado === 'Activo' &&
-        !confirm('Al desvincular a ' + p.nombre + ' ' + p.apellidos +
-                 ' quedará pendiente la devolución de su indumentaria. ¿Continuar?')) return;
+    if (p.estado === 'Activo' && !confirm('Al desvincular a ' + p.nombre + ' ' + p.apellidos +
+        ' queda pendiente la devolución de su indumentaria y equipos. ¿Continuar?')) return;
     const r = await api('cambiarEstado', { entidad:'PERSONAS', id:p.rut, activo: p.estado !== 'Activo' });
     if (r.ok) { aviso('Dotación actualizada'); await recargar(); }
   }
@@ -1029,24 +1116,21 @@ $('#fPersona').addEventListener('submit', async function (ev) {
   await recargar();
 });
 
-/* ==================================================================
-   USUARIOS
-   ================================================================== */
+/* ================= USUARIOS ================= */
 $('#uRol').addEventListener('change', function () {
   $('#uInstalaciones').hidden = this.value !== 'SUPERVISOR';
 });
 
 function pintarUsuarios() {
   if (est.usuario.rol !== 'ADMIN') return;
-  const us = est.cat.usuarios || [];
-  const tb = $('#tbUsuarios');
-  tb.innerHTML = us.map(function (u) {
+  $('#tbUsuarios').innerHTML = (est.cat.usuarios || []).map(function (u) {
     const insts = String(u.instalaciones || '').split(',').filter(Boolean)
       .map(function (id) { const i = instalacion(id); return i ? i.nombre : id; }).join(', ') || '—';
     return '<tr class="' + (u.activo === 'SI' ? '' : 'inactiva') + '">' +
-      '<td class="mono">' + esc(u.usuario) + '</td><td>' + esc(u.nombre) + '</td>' +
-      '<td>' + esc(ROL_ROTULO[u.rol] || u.rol) + '</td><td style="font-size:12.5px">' + esc(u.correo) + '</td>' +
-      '<td style="font-size:12.5px">' + esc(insts) + '</td>' +
+      '<td class="ref">' + esc(u.usuario) + '</td><td>' + esc(u.nombre) + '</td>' +
+      '<td>' + esc(ROL_ROTULO[u.rol] || u.rol) + '</td>' +
+      '<td style="font-size:11.5px">' + esc(u.correo || '—') + '</td>' +
+      '<td style="font-size:11.5px">' + esc(insts) + '</td>' +
       '<td><span class="marbete ' + (u.activo === 'SI' ? 'm-ok">Activo' : 'm-off">Desactivado') + '</span></td>' +
       '<td class="acc"><button class="mini" data-edu="' + esc(u.id) + '">Editar</button></td></tr>';
   }).join('');
@@ -1092,12 +1176,10 @@ $('#fUsuario').addEventListener('submit', async function (ev) {
   await recargar();
 });
 
-/* ==================================================================
-   CAMBIO DE CONTRASEÑA
-   ================================================================== */
+/* ================= CLAVE ================= */
 $('#bClave').addEventListener('click', function () { $('#velo').hidden = false; });
 $('#cCancelar').addEventListener('click', function () { $('#velo').hidden = true; $('#fClave').reset(); });
-$('#velo').addEventListener('click', function (ev) { if (ev.target === this) { this.hidden = true; } });
+$('#velo').addEventListener('click', function (ev) { if (ev.target === this) this.hidden = true; });
 
 $('#fClave').addEventListener('submit', async function (ev) {
   ev.preventDefault();
@@ -1108,9 +1190,8 @@ $('#fClave').addEventListener('submit', async function (ev) {
   aviso('Contraseña actualizada');
 });
 
-/* ==================================================================
-   ARRANQUE
-   ================================================================== */
+/* ================= ARRANQUE ================= */
+ajustarFormMaterial();
 reanudar();
 </script>
 </body>
