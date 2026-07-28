@@ -537,6 +537,111 @@ td.acc{white-space:nowrap; text-align:right; padding-right:0}
       </div>
     </section>
 
+    <!-- ---- INFORMES ---- -->
+    <section data-vista="informes">
+      <div class="bloque">
+        <div class="canal"><span class="folio">&sect; 130</span></div>
+        <div class="cuerpo">
+          <h2>Generador de informes</h2>
+          <p class="bajada">Elige qué medir, cómo agruparlo y con qué filtros. Las combinaciones que no aplican se desactivan solas.</p>
+          <div class="rejilla">
+            <div class="campo"><label for="inMedida">Qué medir</label>
+              <select id="inMedida">
+                <option value="ENTREGAS">Entregas y devoluciones</option>
+                <option value="COSTOS">Costo del consumo</option>
+                <option value="EXISTENCIAS">Existencias actuales</option>
+                <option value="DIFERENCIAS">Diferencias de inventario</option>
+                <option value="COMPRAS">Compras</option>
+                <option value="REPOSICION">Reposición evitada</option>
+              </select></div>
+            <div class="campo"><label for="inAgrupa">Agrupar por</label><select id="inAgrupa"></select></div>
+            <div class="campo" style="max-width:160px"><label for="inDesde">Desde</label><input id="inDesde" type="date"></div>
+            <div class="campo" style="max-width:160px"><label for="inHasta">Hasta</label><input id="inHasta" type="date"></div>
+            <div class="campo"><label for="inEmpresa">Empresa mandante</label><select id="inEmpresa"></select></div>
+            <div class="campo"><label for="inInstalacion">Instalación</label><select id="inInstalacion"></select></div>
+            <div class="campo"><label for="inCategoria">Categoría</label><select id="inCategoria"></select></div>
+            <div class="campo"><label for="inNaturaleza">Naturaleza</label>
+              <select id="inNaturaleza"><option value="">Todas</option>
+                <option value="DOTACION">Dotación personal</option>
+                <option value="CONSUMIBLE">Consumible</option>
+                <option value="CUSTODIA">Bien bajo custodia</option></select></div>
+            <div class="campo"><label for="inMaterial">Material</label><select id="inMaterial"></select></div>
+          </div>
+          <div class="acciones">
+            <button class="btn btn-p" type="button" id="bInforme">Generar</button>
+            <button class="btn btn-s" type="button" id="bInfExcel" hidden>Descargar Excel</button>
+            <button class="btn btn-s" type="button" id="bInfImprimir" hidden>Imprimir</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="bloque" id="bloqueInforme" hidden>
+        <div class="canal"><span class="folio">&sect; 131</span></div>
+        <div class="cuerpo">
+          <h2 id="infTitulo">Resultado</h2>
+          <p class="bajada" id="infSub"></p>
+          <div class="tabla-env"><table>
+            <thead id="thInforme"></thead>
+            <tbody id="tbInforme"></tbody>
+            <tfoot id="tfInforme"></tfoot>
+          </table></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---- CONTROL VISUAL ---- -->
+    <section data-vista="controles">
+      <div class="bloque">
+        <div class="canal"><span class="folio">&sect; 140</span></div>
+        <div class="cuerpo">
+          <h2>Control visual de uniforme</h2>
+          <p class="bajada">Una orden por instalación cada trimestre, con la gente y los elementos que efectivamente tiene entregados. Lo que se marca desgastado o faltante es necesidad de reposición.</p>
+          <div class="filtros" id="cvAcciones">
+            <div class="campo" style="max-width:200px"><label for="cvPeriodo">Período</label>
+              <input id="cvPeriodo" class="mono" readonly></div>
+            <div><button class="btn btn-s" type="button" id="bGenerarCV">Generar controles del trimestre</button></div>
+          </div>
+          <div class="tabla-env"><table>
+            <thead><tr><th>Folio</th><th class="opc">Período</th><th>Instalación</th>
+              <th class="opc">Empresa</th><th class="num opc">Personas</th><th class="num">Hallazgos</th>
+              <th>Estado</th><th></th></tr></thead>
+            <tbody id="tbControles"></tbody>
+          </table></div>
+        </div>
+      </div>
+
+      <div class="bloque" id="bloqueCV" hidden>
+        <div class="canal"><span class="folio">&sect; 141</span></div>
+        <div class="cuerpo">
+          <h2 id="cvTitulo">Registrar control</h2>
+          <p class="bajada" id="cvSub"></p>
+          <div class="tabla-env" style="max-height:52vh;overflow-y:auto"><table>
+            <thead><tr><th>Persona</th><th>Elemento</th><th style="min-width:190px">Resultado</th>
+              <th style="min-width:160px">Observación</th></tr></thead>
+            <tbody id="tbCVDet"></tbody>
+          </table></div>
+          <div class="acciones">
+            <button class="btn btn-p" type="button" id="bGuardarCV">Guardar resultados</button>
+            <button class="btn btn-s" type="button" id="bPautaCV">Imprimir pauta</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="bloque" id="bloqueAuto">
+        <div class="canal"><span class="folio">&sect; 142</span></div>
+        <div class="cuerpo">
+          <h2>Automatizaciones</h2>
+          <p class="bajada">Un disparador diario a las 20:00 que envía el resumen el último día del mes, genera los controles al cambiar de trimestre y despacha los correos que quedaron en cola.</p>
+          <div id="autoEstado"></div>
+          <div class="acciones">
+            <button class="btn btn-p" type="button" id="bAutoOn">Encender</button>
+            <button class="btn btn-s" type="button" id="bAutoOff">Apagar</button>
+            <button class="btn btn-s" type="button" id="bAutoProbar">Enviar resumen de prueba ahora</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ---- COMPRAS ---- -->
     <section data-vista="compras">
       <div class="bloque">
@@ -1199,12 +1304,12 @@ td.acc{white-space:nowrap; text-align:right; padding-right:0}
 <script>
 'use strict';
 
-const VERSION = 'v6.0 · 28-07-2026';
+const VERSION = 'v7.0 · 28-07-2026';
 
 const API_URL  = 'https://script.google.com/macros/s/AKfycbzF3x9Yios2SX2F2EkRgdYcRMTiOZD6csPlCyfHJchMyAy5G9UAaTjmRqq_2x_D2HY/exec';
 const LOGO_URL = 'data:image/png;base64,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';
 
-const est = { token:'', usuario:null, cat:null, exi:null, sol:null, cert:null, historial:null, poder:null, rest:null, compras:null, masiva:null, compraCalidad:null, tomas:null, toma:null, materialAbierto:'' };
+const est = { token:'', usuario:null, cat:null, exi:null, sol:null, cert:null, historial:null, poder:null, rest:null, compras:null, masiva:null, compraCalidad:null, tomas:null, toma:null, informe:null, controles:null, control:null, materialAbierto:'' };
 
 const VISTAS = {
   panel:         { rotulo:'Panel',         roles:['ADMIN','OPERADOR','SUPERVISOR'] },
@@ -1212,6 +1317,8 @@ const VISTAS = {
   solicitudes:   { rotulo:'Solicitudes',   roles:['ADMIN','OPERADOR','SUPERVISOR'] },
   devoluciones:  { rotulo:'Devoluciones',  roles:['ADMIN','OPERADOR'] },
   inventario:    { rotulo:'Inventario',    roles:['ADMIN','OPERADOR'] },
+  controles:     { rotulo:'Control visual', roles:['ADMIN','OPERADOR','SUPERVISOR'] },
+  informes:      { rotulo:'Informes',      roles:['ADMIN','OPERADOR'] },
   compras:       { rotulo:'Compras',       roles:['ADMIN','OPERADOR'] },
   materiales:    { rotulo:'Materiales',    roles:['ADMIN','OPERADOR'] },
   clientes:      { rotulo:'Empresas',      roles:['ADMIN','OPERADOR'] },
@@ -1335,6 +1442,9 @@ async function abrir() {
   $('#bloqueCert').hidden = est.usuario.rol === 'SUPERVISOR';
   const esAdmin = est.usuario.rol === 'ADMIN';
   $('#bloqueSubir').hidden = !esAdmin;
+  $('#bloqueAuto').hidden = !esAdmin;
+  /* El supervisor ejecuta el control en terreno, no lo programa. */
+  $('#cvAcciones').hidden = est.usuario.rol === 'SUPERVISOR';
   $('#masNota').innerHTML = esAdmin
     ? 'La planilla circula por correo y su contenido no está verificado, así que solo el administrador la sube. ' +
       'Nada se escribe hasta que revises la vista previa.'
@@ -1400,8 +1510,11 @@ async function recargar() {
     pintarSelectorDevolucion();
     await cargarDevoluciones();
     await cargarTomas();
+    pintarFiltrosInforme();
+    await cargarAutomatizaciones();
   }
   await cargarSolicitudes();
+  await cargarControles();
 }
 
 function cliente(id) {
@@ -1453,7 +1566,10 @@ function pintarPanel() {
     { n:((est.tomas || []).filter(function (t) { return t.estado === 'ABIERTA' || t.estado === 'CONTADA'; })).length,
       r:'Tomas en curso', clase:'aviso', ir:'inventario' },
     { n:(est.tomas || []).reduce(function (a, t) { return a + (t.retenidas || 0); }, 0),
-      r:'Diferencias retenidas', clase:'grave', ir:'inventario' }
+      r:'Diferencias retenidas', clase:'grave', ir:'inventario' },
+    { n:(est.controles && est.controles.pendientes) || 0, r:'Controles por ejecutar', clase:'aviso', ir:'controles' },
+    { n:(est.controles ? est.controles.controles.reduce(function (a,c) { return a + (c.hallazgos || 0); }, 0) : 0),
+      r:'Hallazgos de control', clase:'grave', ir:'controles' }
   ].filter(function (x) { return !x.solo || est.usuario.rol === x.solo; });
 
   $('#indicadores').innerHTML = puertas.map(function (x) {
@@ -3824,6 +3940,304 @@ $('#fAnularToma').addEventListener('submit', async function (ev) {
   await cargarTomas();
 });
 
+
+/* ==================================================================
+   FASE 6 Y 7 — INFORMES, CONTROL VISUAL Y AUTOMATIZACIONES
+   ================================================================== */
+
+const AGRUPACIONES = {
+  ENTREGAS:   ['PERSONA','SUPERVISOR','INSTALACION','EMPRESA','MATERIAL','CATEGORIA','NATURALEZA','MES'],
+  COSTOS:     ['PERSONA','SUPERVISOR','INSTALACION','EMPRESA','MATERIAL','CATEGORIA','NATURALEZA','MES'],
+  EXISTENCIAS:['MATERIAL','CATEGORIA','NATURALEZA'],
+  DIFERENCIAS:['MATERIAL','CATEGORIA','NATURALEZA','MES'],
+  COMPRAS:    ['PROVEEDOR','MATERIAL','CATEGORIA','NATURALEZA','MES'],
+  REPOSICION: ['MATERIAL','CATEGORIA','INSTALACION','EMPRESA','MES']
+};
+const AGR_TXT = { PERSONA:'Persona', SUPERVISOR:'Supervisor', INSTALACION:'Instalación',
+  EMPRESA:'Empresa mandante', MATERIAL:'Material', CATEGORIA:'Categoría',
+  NATURALEZA:'Naturaleza', MES:'Mes', PROVEEDOR:'Proveedor' };
+
+function pintarAgrupaciones() {
+  const m = $('#inMedida').value;
+  const previo = $('#inAgrupa').value;
+  const ops = AGRUPACIONES[m] || [];
+  $('#inAgrupa').innerHTML = ops.map(function (a) {
+    return '<option value="' + a + '">' + esc(AGR_TXT[a]) + '</option>'; }).join('');
+  if (ops.indexOf(previo) !== -1) $('#inAgrupa').value = previo;
+
+  /* Existencias es una foto de hoy: el rango de fechas no aplica. */
+  const sinFecha = m === 'EXISTENCIAS';
+  $('#inDesde').disabled = sinFecha;
+  $('#inHasta').disabled = sinFecha;
+}
+$('#inMedida').addEventListener('change', pintarAgrupaciones);
+
+function pintarFiltrosInforme() {
+  const opc = function (arr, rot) {
+    return '<option value="">' + rot + '</option>' + arr.join('');
+  };
+  $('#inEmpresa').innerHTML = opc((est.cat.clientes || []).map(function (c) {
+    return '<option value="' + esc(c.id) + '">' + esc(c.razon_social) + '</option>'; }), 'Todas');
+  $('#inInstalacion').innerHTML = opc((est.cat.instalaciones || []).map(function (i) {
+    return '<option value="' + esc(i.id) + '">' + esc(i.nombre) + '</option>'; }), 'Todas');
+  $('#inMaterial').innerHTML = opc((est.cat.materiales || []).map(function (m) {
+    return '<option value="' + esc(m.id) + '">' + esc(m.nombre) + '</option>'; }), 'Todos');
+  const cats = {};
+  (est.cat.materiales || []).forEach(function (m) { if (m.categoria) cats[m.categoria] = true; });
+  $('#inCategoria').innerHTML = opc(Object.keys(cats).sort().map(function (c) {
+    return '<option value="' + esc(c) + '">' + esc(c) + '</option>'; }), 'Todas');
+}
+
+$('#bInforme').addEventListener('click', async function () {
+  const b = this;
+  b.disabled = true; b.textContent = 'Calculando…';
+  const r = await api('informe', {
+    medida: $('#inMedida').value, agrupa: $('#inAgrupa').value,
+    filtros: {
+      desde: $('#inDesde').disabled ? '' : $('#inDesde').value,
+      hasta: $('#inHasta').disabled ? '' : $('#inHasta').value,
+      empresa_id: $('#inEmpresa').value, instalacion_id: $('#inInstalacion').value,
+      categoria: $('#inCategoria').value, naturaleza: $('#inNaturaleza').value,
+      material_id: $('#inMaterial').value
+    }
+  });
+  b.disabled = false; b.textContent = 'Generar';
+  if (!r.ok) return;
+  est.informe = r;
+  pintarInforme(r);
+});
+
+function celda(v, tipo) {
+  if (tipo === '$') return v ? '$' + pesos(v) : '—';
+  return Number(v) ? String(Math.round(Number(v) * 100) / 100) : '0';
+}
+
+function pintarInforme(r) {
+  $('#bloqueInforme').hidden = false;
+  $('#bInfExcel').hidden = false;
+  $('#bInfImprimir').hidden = false;
+
+  $('#infTitulo').textContent = r.encabezado.medida + ' por ' + r.encabezado.agrupa.toLowerCase();
+  $('#infSub').textContent = r.encabezado.filtros + ' · ' + r.filas.length + ' grupos · ' +
+    r.hechos + ' registros · emitido ' + r.encabezado.emitido;
+
+  $('#thInforme').innerHTML = '<tr><th>' + esc(r.encabezado.agrupa) + '</th>' +
+    r.columnas.map(function (c) { return '<th class="num">' + esc(c[1]) + '</th>'; }).join('') + '</tr>';
+
+  $('#tbInforme').innerHTML = r.filas.length ? r.filas.map(function (f) {
+    return '<tr><td>' + esc(f.etiqueta) + '</td>' +
+      r.columnas.map(function (c) {
+        return '<td class="num">' + celda(f[c[0]], c[2]) + '</td>'; }).join('') + '</tr>';
+  }).join('') : '<tr><td colspan="' + (r.columnas.length + 1) + '" class="vacio">Sin datos en el período y los filtros elegidos.</td></tr>';
+
+  $('#tfInforme').innerHTML = r.filas.length
+    ? '<tr><td style="font-weight:600;border-top:1.5px solid var(--tinta);padding-top:8px">Total</td>' +
+      r.columnas.map(function (c) {
+        return '<td class="num" style="font-weight:600;border-top:1.5px solid var(--tinta);padding-top:8px">' +
+          celda(r.totales[c[0]], c[2]) + '</td>'; }).join('') + '</tr>'
+    : '';
+}
+
+$('#bInfExcel').addEventListener('click', async function () {
+  const listo = await cargarSheetJS();
+  if (!listo) { aviso('No se pudo cargar el generador de Excel.', true); return; }
+  const r = est.informe;
+  const aoa = [
+    [r.encabezado.medida + ' por ' + r.encabezado.agrupa],
+    [r.encabezado.filtros],
+    ['Emitido ' + r.encabezado.emitido + ' por ' + r.encabezado.emitido_por],
+    [],
+    [r.encabezado.agrupa].concat(r.columnas.map(function (c) { return c[1]; }))
+  ];
+  r.filas.forEach(function (f) {
+    aoa.push([f.etiqueta].concat(r.columnas.map(function (c) { return Number(f[c[0]]) || 0; })));
+  });
+  aoa.push(['Total'].concat(r.columnas.map(function (c) { return Number(r.totales[c[0]]) || 0; })));
+
+  const libro = XLSX.utils.book_new();
+  const hoja = XLSX.utils.aoa_to_sheet(aoa);
+  hoja['!cols'] = [{ wch:34 }].concat(r.columnas.map(function () { return { wch:16 }; }));
+  XLSX.utils.book_append_sheet(libro, hoja, 'Informe');
+  XLSX.writeFile(libro, 'PK-informe-' + $('#inMedida').value.toLowerCase() + '.xlsx');
+});
+
+$('#bInfImprimir').addEventListener('click', function () {
+  const r = est.informe;
+  const v = window.open('', '_blank');
+  if (!v) { aviso('El navegador bloqueó la ventana.', true); return; }
+  v.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>' +
+    esc(r.encabezado.medida) + '</title>' +
+    '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@600&family=IBM+Plex+Sans:wght@400;600&display=swap">' +
+    '<style>@page{size:letter;margin:16mm}body{font-family:"IBM Plex Sans",sans-serif;font-size:11px;color:#14180F}' +
+    'h1{font-family:Spectral,serif;font-size:16px;margin:0 0 3px}' +
+    '.s{font-size:10px;color:#5E6659;margin:0 0 16px}' +
+    'table{width:100%;border-collapse:collapse}' +
+    'th{background:#EEF0E9;text-align:left;font-size:9px;letter-spacing:.1em;text-transform:uppercase;' +
+    'padding:6px;border-bottom:1.5px solid #14180F;color:#2E4F2C}' +
+    'td{padding:5px 6px;border-bottom:1px solid #DDE1D7}.n{text-align:right}' +
+    'tfoot td{font-weight:600;border-top:1.5px solid #14180F}' +
+    '.noimp{margin-bottom:12px}@media print{.noimp{display:none}}</style></head><body>' +
+    '<div class="noimp"><button onclick="window.print()">Imprimir</button></div>' +
+    '<h1>' + esc(r.encabezado.medida) + ' por ' + esc(r.encabezado.agrupa.toLowerCase()) + '</h1>' +
+    '<p class="s">' + esc(r.encabezado.filtros) + ' · emitido ' + esc(r.encabezado.emitido) +
+    ' por ' + esc(r.encabezado.emitido_por) + '</p><table><thead><tr><th>' + esc(r.encabezado.agrupa) + '</th>' +
+    r.columnas.map(function (c) { return '<th class="n">' + esc(c[1]) + '</th>'; }).join('') +
+    '</tr></thead><tbody>' +
+    r.filas.map(function (f) {
+      return '<tr><td>' + esc(f.etiqueta) + '</td>' + r.columnas.map(function (c) {
+        return '<td class="n">' + celda(f[c[0]], c[2]) + '</td>'; }).join('') + '</tr>'; }).join('') +
+    '</tbody><tfoot><tr><td>Total</td>' + r.columnas.map(function (c) {
+      return '<td class="n">' + celda(r.totales[c[0]], c[2]) + '</td>'; }).join('') +
+    '</tr></tfoot></table></body></html>');
+  v.document.close();
+});
+
+/* ---------- control visual ---------- */
+
+const RESULT_OPS = [['CONFORME','Conforme'], ['DESGASTADO','Desgastado'],
+  ['FALTA','Falta / no lo porta'], ['NO_APLICA','No aplica']];
+
+async function cargarControles() {
+  const r = await api('controles', {});
+  if (!r.ok) return;
+  est.controles = r;
+  $('#cvPeriodo').value = r.periodo;
+
+  const marca = { PROGRAMADO:['var(--oro)','#7A611B','Programado'],
+    EN_CURSO:['var(--oro)','#7A611B','En curso'], EJECUTADO:['var(--verde)','var(--verde)','Ejecutado'] };
+
+  $('#tbControles').innerHTML = r.controles.length ? r.controles.map(function (c) {
+    const m = marca[c.estado] || ['var(--regla)','var(--tenue)',c.estado];
+    return '<tr class="' + (c.estado === 'EJECUTADO' ? 'inactiva' : '') + '">' +
+      '<td class="ref">' + esc(c.folio) + '</td><td class="ref opc">' + esc(c.periodo) + '</td>' +
+      '<td>' + esc(c.instalacion) + '</td><td class="opc">' + esc(c.empresa) + '</td>' +
+      '<td class="num opc">' + c.personas + '</td>' +
+      '<td class="num" style="' + (c.hallazgos ? 'color:var(--oxido);font-weight:500' : '') + '">' + c.hallazgos + '</td>' +
+      '<td><span class="marbete" style="border-color:' + m[0] + ';color:' + m[1] + '">' + m[2] + '</span></td>' +
+      '<td class="acc"><button class="mini" data-cv="' + esc(c.folio) + '">Registrar</button>' +
+      '<button class="mini" data-cvp="' + esc(c.folio) + '">Pauta</button></td></tr>';
+  }).join('') : '<tr><td colspan="8" class="vacio">Aún no hay controles generados para ningún trimestre.</td></tr>';
+
+  pintarPanel();
+}
+
+$('#bGenerarCV').addEventListener('click', async function () {
+  if (!confirm('Se generará una orden por instalación con la gente que tiene elementos entregados. ¿Continuar?')) return;
+  const r = await api('generarControles', { periodo: $('#cvPeriodo').value });
+  if (!r.ok) return;
+  aviso(r.controles + ' controles generados · ' + r.lineas + ' elementos por revisar');
+  await cargarControles();
+});
+
+$('#tbControles').addEventListener('click', async function (ev) {
+  const b = ev.target.closest('button');
+  if (!b) return;
+  if (b.dataset.cvp) {
+    const v = window.open('', '_blank');
+    if (!v) { aviso('El navegador bloqueó la ventana.', true); return; }
+    v.document.write('<p style="font-family:sans-serif;padding:20px">Generando…</p>');
+    const r = await api('controlHtml', { folio: b.dataset.cvp });
+    if (!r.ok) { v.close(); return; }
+    v.document.open(); v.document.write(r.html); v.document.close();
+    return;
+  }
+  if (b.dataset.cv) verControl(b.dataset.cv);
+});
+
+async function verControl(folio) {
+  const r = await api('controlDetalle', { folio: folio });
+  if (!r.ok) return;
+  est.control = r;
+
+  $('#bloqueCV').hidden = false;
+  $('#cvTitulo').textContent = 'Control ' + folio;
+  $('#cvSub').textContent = r.control.instalacion + ' · ' + r.control.empresa +
+    ' · período ' + r.control.periodo + ' · ' + r.lineas.length + ' elementos por revisar';
+
+  let personaActual = '';
+  $('#tbCVDet').innerHTML = r.lineas.map(function (L) {
+    const nueva = L.persona !== personaActual;
+    personaActual = L.persona;
+    return '<tr data-cd="' + esc(L.id) + '">' +
+      '<td>' + (nueva ? '<b>' + esc(L.persona) + '</b>' : '') + '</td>' +
+      '<td>' + esc(L.material) + '</td>' +
+      '<td><select data-res style="width:100%;border:1px solid var(--regla);padding:5px;font-family:inherit;font-size:12px">' +
+        '<option value="">Sin revisar</option>' +
+        RESULT_OPS.map(function (o) {
+          return '<option value="' + o[0] + '"' + (L.resultado === o[0] ? ' selected' : '') + '>' +
+            esc(o[1]) + '</option>'; }).join('') + '</select></td>' +
+      '<td><input data-cobs value="' + esc(L.observacion || '') +
+        '" placeholder="Detalle" style="width:100%;border:1px solid var(--regla);padding:5px 7px;font-family:inherit;font-size:12px"></td></tr>';
+  }).join('');
+
+  $('#bloqueCV').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+$('#bGuardarCV').addEventListener('click', async function () {
+  const lineas = [];
+  $$('#tbCVDet tr[data-cd]').forEach(function (tr) {
+    const res = $('[data-res]', tr).value;
+    if (!res) return;
+    lineas.push({ id: tr.dataset.cd, resultado: res, observacion: $('[data-cobs]', tr).value });
+  });
+  if (!lineas.length) { aviso('Marca al menos un resultado.', true); return; }
+
+  const r = await api('registrarControl', { folio: est.control.control.folio, lineas: lineas });
+  if (!r.ok) return;
+  aviso(r.registrados + ' revisados · ' + r.hallazgos + ' hallazgos' +
+    (r.completo ? ' · control cerrado' : ' · aún incompleto'));
+  await cargarControles();
+  await verControl(est.control.control.folio);
+});
+
+$('#bPautaCV').addEventListener('click', async function () {
+  const v = window.open('', '_blank');
+  if (!v) { aviso('El navegador bloqueó la ventana.', true); return; }
+  v.document.write('<p style="font-family:sans-serif;padding:20px">Generando…</p>');
+  const r = await api('controlHtml', { folio: est.control.control.folio });
+  if (!r.ok) { v.close(); return; }
+  v.document.open(); v.document.write(r.html); v.document.close();
+});
+
+/* ---------- automatizaciones ---------- */
+
+async function cargarAutomatizaciones() {
+  if (est.usuario.rol !== 'ADMIN') return;
+  const r = await api('automatizaciones', { accion: 'ESTADO' });
+  if (!r.ok) return;
+  $('#autoEstado').innerHTML =
+    '<div class="nota" style="border-left-color:' + (r.activo ? 'var(--verde);background:#EDF3EB;color:#25441F' : 'var(--oro)') + '">' +
+    '<b>' + (r.activo ? 'Encendidas' : 'Apagadas') + '.</b> ' +
+    (r.activo
+      ? 'El disparador corre todos los días a las 20:00.'
+      : 'Nada se envía solo. Enciéndelas cuando termines de probar.') +
+    (r.destinatarios < 4
+      ? ' <b>Faltan destinatarios:</b> hay ' + r.destinatarios + ' de 4 correos configurados en la hoja PARAMETROS.'
+      : '') +
+    '</div>' +
+    '<div class="menores" style="margin-top:12px">' +
+      '<div><span class="cifra">' + (r.ultimo_resumen || '—') + '</span> <span class="rotulo">Último resumen</span></div>' +
+      '<div><span class="cifra">' + (r.ultimo_periodo || '—') + '</span> <span class="rotulo">Controles generados</span></div>' +
+      '<div><span class="cifra">' + r.periodo_actual + '</span> <span class="rotulo">Trimestre actual</span></div>' +
+      '<div><span class="cifra">' + r.cola + '</span> <span class="rotulo">Correos en cola</span></div>' +
+    '</div>';
+}
+
+['bAutoOn','bAutoOff','bAutoProbar'].forEach(function (id) {
+  $('#' + id).addEventListener('click', async function () {
+    const accion = id === 'bAutoOn' ? 'ENCENDER' : id === 'bAutoOff' ? 'APAGAR' : 'PROBAR';
+    if (accion === 'PROBAR' && !confirm('Se enviará un resumen real a los cuatro destinatarios configurados. ¿Continuar?')) return;
+    const b = this;
+    b.disabled = true;
+    const r = await api('automatizaciones', { accion: accion });
+    b.disabled = false;
+    if (!r.ok) return;
+    aviso(accion === 'PROBAR' ? 'Resumen de prueba enviado'
+      : accion === 'ENCENDER' ? 'Automatizaciones encendidas' : 'Automatizaciones apagadas');
+    await cargarAutomatizaciones();
+  });
+});
+
 /* ================= ARRANQUE ================= */
 ajustarFormMaterial();
 (function () {
@@ -3834,6 +4248,7 @@ ajustarFormMaterial();
   agregarSolLinea();
   $('#ctDesde').value = ''; $('#ctHasta').value = '';
   pintarCamposPlantilla();
+  pintarAgrupaciones();
 })();
 reanudar();
 </script>
