@@ -218,7 +218,8 @@ td.acc{white-space:nowrap; text-align:right; padding-right:0}
         <input id="aClave" name="password" type="password" autocomplete="current-password" required></div>
       <button class="btn btn-p btn-full" type="submit" id="bAcceso">Ingresar</button>
     </form>
-    <p class="acceso-pie">Instrumento de Contraloría Interna. Todo movimiento queda foliado y es irrepetible. Las validaciones de perfil se ejecutan del lado del servidor.</p>
+    <p class="acceso-pie">Instrumento de Contraloría Interna. Todo movimiento queda foliado y es irrepetible. Las validaciones de perfil se ejecutan del lado del servidor.
+      <span class="mono" id="verAcceso" style="display:block;margin-top:9px;font-size:10.5px;opacity:.65"></span></p>
   </div>
 </div>
 
@@ -317,6 +318,100 @@ td.acc{white-space:nowrap; text-align:right; padding-right:0}
           <div class="acciones">
             <button class="btn btn-p" type="button" id="bInicial">Registrar inventario inicial</button>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---- SOLICITUDES ---- -->
+    <section data-vista="solicitudes">
+      <div class="bloque">
+        <div class="canal"><span class="folio">&sect; 90</span></div>
+        <div class="cuerpo">
+          <h2>Nueva solicitud</h2>
+          <p class="bajada">Se pide el elemento y la cantidad. La talla la resuelve el operador al entregar, contra las existencias reales y la talla registrada de cada persona.</p>
+
+          <div class="filtros">
+            <div class="campo" style="max-width:210px"><label for="soModo">Modo</label>
+              <select id="soModo"><option value="UNO">Una persona</option>
+                <option value="VARIOS">Varias personas</option></select></div>
+            <div class="campo"><label for="soInstalacion">Instalación</label>
+              <select id="soInstalacion"><option value="">Todas</option></select></div>
+            <div class="campo"><label for="soBuscar">Buscar persona</label>
+              <input id="soBuscar" placeholder="RUT, nombre o apellido"></div>
+          </div>
+
+          <div id="soUno">
+            <div class="campo"><label for="soPersona">Persona</label><select id="soPersona"></select></div>
+            <div id="soHistorial" style="margin-top:14px"></div>
+          </div>
+
+          <div id="soVarios" hidden>
+            <p class="rotulo" style="margin:4px 0 8px">Selecciona a quiénes va dirigida</p>
+            <div id="soLista" style="max-height:230px;overflow-y:auto;border:1px solid var(--regla);padding:10px"></div>
+            <p style="font-size:11.5px;color:var(--tenue);margin:8px 0 0" id="soConteo"></p>
+          </div>
+
+          <p class="rotulo" style="margin:20px 0 8px">Elementos solicitados</p>
+          <div class="tabla-env"><table>
+            <thead><tr><th style="min-width:210px">Elemento</th><th class="num" style="width:100px">Cantidad</th>
+              <th>Antecedente</th><th></th></tr></thead>
+            <tbody id="tbSolLineas"></tbody>
+          </table></div>
+          <div style="margin-top:10px"><button class="btn btn-s" type="button" id="bSolLinea">Agregar elemento</button></div>
+
+          <div class="campo" style="margin-top:16px"><label for="soObs">Observación</label>
+            <input id="soObs" placeholder="Motivo, urgencia o antecedente"></div>
+
+          <div class="acciones">
+            <button class="btn btn-p" type="button" id="bSolicitar">Registrar solicitud</button>
+            <button class="btn btn-s" type="button" id="bSolLimpiar">Limpiar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="bloque">
+        <div class="canal"><span class="folio">&sect; 91</span></div>
+        <div class="cuerpo">
+          <h2>Solicitudes registradas</h2>
+          <p class="bajada">El operador resuelve contra existencias. La entrega puede ser parcial: lo que falta queda pendiente en la misma solicitud.</p>
+          <div class="filtros">
+            <div class="campo" style="max-width:200px"><label for="sfEstado">Estado</label>
+              <select id="sfEstado">
+                <option value="">Todas</option>
+                <option value="PENDIENTE">Pendientes</option>
+                <option value="PARCIAL">Parciales</option>
+                <option value="ENTREGADA">Entregadas</option>
+                <option value="RECHAZADA">Rechazadas</option></select></div>
+            <div class="campo"><label for="sfBuscar">Buscar</label>
+              <input id="sfBuscar" placeholder="Folio, RUT o persona"></div>
+          </div>
+          <div class="tabla-env"><table>
+            <thead><tr><th>Folio</th><th>Fecha</th><th>Persona</th><th class="opc">Instalación</th>
+              <th class="num opc">Pedido</th><th class="num">Entregado</th><th class="opc">Origen</th>
+              <th>Estado</th><th></th></tr></thead>
+            <tbody id="tbSolicitudes"></tbody>
+          </table></div>
+        </div>
+      </div>
+
+      <div class="bloque" id="bloqueCert">
+        <div class="canal"><span class="folio">&sect; 92</span></div>
+        <div class="cuerpo">
+          <h2>Certificados emitidos</h2>
+          <p class="bajada">Un certificado sin firma devuelta no acredita la entrega. Marca el documento cuando lo recibas firmado.</p>
+          <div class="filtros">
+            <div class="campo" style="max-width:160px"><label for="ctDesde">Desde</label><input id="ctDesde" type="date"></div>
+            <div class="campo" style="max-width:160px"><label for="ctHasta">Hasta</label><input id="ctHasta" type="date"></div>
+            <div><button class="btn btn-s" type="button" id="bCertFiltrar">Aplicar</button></div>
+            <div><button class="btn btn-s" type="button" id="bCorreos">Reintentar correos en cola</button></div>
+          </div>
+          <div class="tabla-env"><table>
+            <thead><tr><th>Folio</th><th>Fecha</th><th>Persona</th><th class="opc">Instalación</th>
+              <th class="num opc">Unidades</th><th class="opc">Operador</th><th>Firma</th>
+              <th class="opc">Correo</th><th></th></tr></thead>
+            <tbody id="tbCertificados"></tbody>
+          </table></div>
+          <p id="ctResumen" style="font-size:11.5px;color:var(--tenue);margin:12px 0 0"></p>
         </div>
       </div>
     </section>
@@ -721,7 +816,49 @@ td.acc{white-space:nowrap; text-align:right; padding-right:0}
       </div>
     </section>
 
+    <p class="mono" id="verPie" style="text-align:center;font-size:10.5px;color:var(--tenue);margin:34px 0 0"></p>
   </main>
+</div>
+
+<!-- ============ MODAL ENTREGA ============ -->
+<div class="velo" id="veloEntrega" hidden>
+  <div class="modal" style="max-width:760px">
+    <h3 id="enTitulo">Entregar</h3>
+    <p style="font-size:12.5px;color:var(--tenue);margin:0 0 14px" id="enSub"></p>
+    <div id="enAlertas"></div>
+    <div class="tabla-env" style="max-height:46vh;overflow-y:auto">
+      <table>
+        <thead><tr><th>Elemento</th><th class="num">Pend.</th><th style="min-width:150px">Unidad de stock</th>
+          <th class="num" style="width:96px">Entregar</th><th class="num">Disp.</th></tr></thead>
+        <tbody id="tbEntrega"></tbody>
+      </table>
+    </div>
+    <p class="nota" style="margin:14px 0 0">
+      Al confirmar se descuenta el stock, se emite el certificado y se despacha por correo a RRHH,
+      al supervisor y a Gerencia de Operaciones.</p>
+    <div class="acciones">
+      <button class="btn btn-p" type="button" id="bEntregar">Confirmar entrega</button>
+      <button class="btn btn-s" type="button" id="enCancelar">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL RECHAZO ============ -->
+<div class="velo" id="veloRechazo" hidden>
+  <div class="modal">
+    <h3>Rechazar solicitud</h3>
+    <p style="font-size:12.5px;color:var(--tenue);margin:0 0 14px" id="rcSub"></p>
+    <form id="fRechazo">
+      <input type="hidden" id="rcFolio">
+      <div class="campo"><label for="rcMotivo">Motivo</label>
+        <input id="rcMotivo" required minlength="10" placeholder="Razón del rechazo">
+        <span class="ayuda">Mínimo 10 caracteres. Queda en el registro de la solicitud.</span></div>
+      <div class="acciones">
+        <button class="btn btn-p" type="submit">Rechazar</button>
+        <button class="btn btn-s" type="button" id="rcCancelar">Cancelar</button>
+      </div>
+    </form>
+  </div>
 </div>
 
 <!-- ============ MODAL KARDEX ============ -->
@@ -807,14 +944,17 @@ td.acc{white-space:nowrap; text-align:right; padding-right:0}
 <script>
 'use strict';
 
+const VERSION = 'v3.0 · 28-07-2026';
+
 const API_URL  = 'https://script.google.com/macros/s/AKfycbzF3x9Yios2SX2F2EkRgdYcRMTiOZD6csPlCyfHJchMyAy5G9UAaTjmRqq_2x_D2HY/exec';
 const LOGO_URL = 'data:image/png;base64,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';
 
-const est = { token:'', usuario:null, cat:null, exi:null, materialAbierto:'' };
+const est = { token:'', usuario:null, cat:null, exi:null, sol:null, cert:null, historial:null, materialAbierto:'' };
 
 const VISTAS = {
   panel:         { rotulo:'Panel',         roles:['ADMIN','OPERADOR','SUPERVISOR'] },
   existencias:   { rotulo:'Existencias',   roles:['ADMIN','OPERADOR'] },
+  solicitudes:   { rotulo:'Solicitudes',   roles:['ADMIN','OPERADOR','SUPERVISOR'] },
   compras:       { rotulo:'Compras',       roles:['ADMIN','OPERADOR'] },
   materiales:    { rotulo:'Materiales',    roles:['ADMIN','OPERADOR'] },
   clientes:      { rotulo:'Empresas',      roles:['ADMIN','OPERADOR'] },
@@ -893,6 +1033,9 @@ function escudo() {
   return '<img src="' + LOGO_URL + '" alt="Seguridad PK">';
 }
 
+$('#verAcceso').textContent = VERSION;
+$('#verPie').textContent = 'Control de Existencias y Bienes · Seguridad PK SpA · ' + VERSION;
+
 $('#marcaAcceso').innerHTML = escudo();
 $('#marcaCab').innerHTML = escudo();
 
@@ -930,6 +1073,8 @@ $('#bSalir').addEventListener('click', function () { salir(false); });
 
 async function abrir() {
   $('#vAcceso').style.display = 'none';
+  /* El supervisor solicita, no resuelve: no ve certificados ni stock. */
+  $('#bloqueCert').hidden = est.usuario.rol === 'SUPERVISOR';
   $('#vApp').hidden = false;
   const n = est.usuario.nombre || est.usuario.usuario;
   const iniciales = n.split(/\s+/).map(function(p){return p.charAt(0);}).join('').slice(0,3).toUpperCase();
@@ -982,8 +1127,13 @@ async function recargar() {
   pintarUsuarios();
   pintarProveedores();
   pintarValidacion();
-  await cargarExistencias();
-  await cargarCompras();
+  pintarSelectorPersonas();
+  if (est.usuario.rol !== 'SUPERVISOR') {
+    await cargarExistencias();
+    await cargarCompras();
+    await cargarCertificados();
+  }
+  await cargarSolicitudes();
 }
 
 function cliente(id) {
@@ -1022,7 +1172,10 @@ function pintarPanel() {
     { n:R.bajos,    r:'Bajo el mínimo',    clase:'aviso', ir:'existencias', filtro:'BAJO' },
     { n:V.previa,   r:'Esperan aprobación', clase:'aviso', ir:'validacion', solo:'ADMIN' },
     { n:V.posterior,r:'Por revisar',       clase:'',      ir:'validacion', solo:'ADMIN' },
-    { n:R.ajustes,  r:'Ajustes en el historial', clase: R.ajustes ? 'aviso' : '' }
+    { n:R.ajustes,  r:'Ajustes en el historial', clase: R.ajustes ? 'aviso' : '' },
+    { n:(est.sol && est.sol.pendientes) || 0, r:'Solicitudes por resolver', clase:'aviso', ir:'solicitudes' },
+    { n:R.sin_firma || 0, r:'Certificados sin firma', clase:'grave', ir:'solicitudes' },
+    { n:R.correo_pendiente || 0, r:'Correos en cola', clase:'aviso', ir:'solicitudes' }
   ].filter(function (x) { return !x.solo || est.usuario.rol === x.solo; });
 
   $('#indicadores').innerHTML = puertas.map(function (x) {
@@ -1033,9 +1186,14 @@ function pintarPanel() {
       '<div class="rotulo">' + x.r + '</div></div>';
   }).join('');
 
-  $('#valorInv').innerHTML = R.valor
-    ? '<div class="rotulo">Inventario valorizado</div><div class="cifra">$' + pesos(R.valor) + '</div>' +
-      '<div style="font-size:11.5px;color:var(--tenue);margin-top:3px">Al último costo conocido' +
+  $('#valorInv').innerHTML = R.valor || R.asignado
+    ? '<div class="rotulo">Existencias en bodega</div><div class="cifra">$' + pesos(R.valor) + '</div>' +
+      (R.asignado
+        ? '<div style="font-size:12px;margin-top:6px">Bajo custodia de personas: <b class="mono">$' + pesos(R.asignado) +
+          '</b> en ' + R.unidades_asignadas + ' equipo' + (R.unidades_asignadas === 1 ? '' : 's') + '</div>' +
+          '<div style="font-size:12px;margin-top:2px">Patrimonio total: <b class="mono">$' + pesos(R.patrimonio) + '</b></div>'
+        : '') +
+      '<div style="font-size:11.5px;color:var(--tenue);margin-top:5px">Al último costo conocido' +
       (R.sin_valorizar ? ' · ' + R.sin_valorizar + ' unidades aún sin valorizar' : '') + '</div>'
     : '<div class="rotulo">Inventario valorizado</div>' +
       '<div style="font-size:12.5px;color:var(--tenue);margin-top:4px">Sin compras registradas todavía. ' +
@@ -1351,6 +1509,7 @@ function pintarSelectores() {
   }).join('');
   $('#pInstalacion').innerHTML = '<option value="">Seleccionar…</option>' + opInst;
   $('#dInstalacion').innerHTML = '<option value="">Todas</option>' + opInst;
+  $('#soInstalacion').innerHTML = '<option value="">Todas</option>' + opInst;
 
   $('#coProveedor').innerHTML = '<option value="">Seleccionar…</option>' +
     (est.cat.proveedores || []).filter(function (p) { return p.activo === 'SI'; })
@@ -1617,7 +1776,9 @@ function pintarExistencias() {
     tb.innerHTML = '<tr><td colspan="10" class="vacio">Ninguna unidad coincide con el filtro.</td></tr>';
   } else {
     tb.innerHTML = ls.map(function (L) {
-      const marca = L.alerta === 'QUIEBRE'
+      const marca = L.asignado
+        ? '<span class="marbete" style="border-color:var(--oro);color:#7A611B">Asignado</span>'
+        : L.alerta === 'QUIEBRE'
         ? '<span class="marbete" style="border-color:var(--oxido);color:var(--oxido)">Quiebre</span>'
         : L.alerta === 'BAJO'
           ? '<span class="marbete" style="border-color:var(--oro);color:#7A611B">Bajo mínimo</span>'
@@ -1625,7 +1786,9 @@ function pintarExistencias() {
       return '<tr class="' + (L.activo === 'SI' ? '' : 'inactiva') + '">' +
         '<td class="ref">' + esc(L.sku_id) + '</td>' +
         '<td>' + esc(L.material) + '</td>' +
-        '<td class="opc">' + esc(L.serie || L.talla) + '</td>' +
+        '<td class="opc">' + esc(L.serie || L.talla) +
+          (L.asignado ? '<br><span style="font-size:10.5px;color:var(--oro)">' +
+            esc(L.asignado_nombre || rutFormato(L.asignado_a)) + '</span>' : '') + '</td>' +
         '<td class="opc">' + (L.estado === 'USADO' ? '<span class="marbete" style="border-color:var(--oro);color:#7A611B">Usado</span>' : 'Nuevo') + '</td>' +
         '<td class="num" style="font-weight:500' + (L.alerta === 'QUIEBRE' ? ';color:var(--oxido)' : '') + '">' + L.cantidad + '</td>' +
         '<td class="num opc">' + (L.naturaleza === 'CUSTODIA' || L.estado === 'USADO' ? '—' : L.minimo) + '</td>' +
@@ -2128,6 +2291,439 @@ function pintarValidacion() {
   });
 });
 
+
+/* ==================================================================
+   FASE 3 — SOLICITUD, ENTREGA Y CERTIFICADO
+   ================================================================== */
+
+const ALERTA_ROTULO = {
+  CRITICA: { texto:'Desgaste crítico', color:'var(--oxido)' },
+  REVISAR: { texto:'Revisar desgaste', color:'#7A611B' }
+};
+
+let seqSolLinea = 0;
+let solActual = null;
+
+function personasVisibles() {
+  const q = $('#soBuscar').value.trim().toLowerCase();
+  const fi = $('#soInstalacion').value;
+  return (est.cat.personas || []).filter(function (p) {
+    if (p.estado !== 'Activo') return false;
+    if (fi && String(p.instalacion_id) !== fi) return false;
+    if (q && (p.rut + ' ' + p.nombre + ' ' + p.apellidos).toLowerCase().indexOf(q) === -1) return false;
+    return true;
+  }).sort(function (a, b) { return a.apellidos < b.apellidos ? -1 : 1; });
+}
+
+function pintarSelectorPersonas() {
+  const ps = personasVisibles();
+  const etiqueta = function (p) {
+    const i = instalacion(p.instalacion_id);
+    return p.apellidos + ', ' + p.nombre + ' · ' + rutFormato(p.rut) + (i ? ' · ' + i.nombre : '');
+  };
+
+  const previo = $('#soPersona').value;
+  $('#soPersona').innerHTML = '<option value="">Seleccionar…</option>' + ps.map(function (p) {
+    return '<option value="' + esc(p.rut) + '">' + esc(etiqueta(p)) + '</option>';
+  }).join('');
+  if (ps.some(function (p) { return String(p.rut) === previo; })) $('#soPersona').value = previo;
+
+  const marcados = $$('input[name="soP"]:checked').map(function (c) { return c.value; });
+  $('#soLista').innerHTML = ps.length
+    ? ps.map(function (p) {
+        return '<label class="marca-op" style="width:100%;padding:3px 0">' +
+          '<input type="checkbox" name="soP" value="' + esc(p.rut) + '"' +
+          (marcados.indexOf(String(p.rut)) !== -1 ? ' checked' : '') + '> ' + esc(etiqueta(p)) + '</label>';
+      }).join('')
+    : '<span style="font-size:12.5px;color:var(--tenue)">Ninguna persona coincide con el filtro.</span>';
+  contarSeleccion();
+}
+
+function contarSeleccion() {
+  const n = $$('input[name="soP"]:checked').length;
+  $('#soConteo').textContent = n
+    ? n + (n === 1 ? ' persona seleccionada · se generará 1 solicitud' : ' personas seleccionadas · se generarán ' + n + ' solicitudes, una por cada una')
+    : 'Ninguna persona seleccionada.';
+}
+
+$('#soLista').addEventListener('change', contarSeleccion);
+['#soBuscar', '#soInstalacion'].forEach(function (s) {
+  $(s).addEventListener('input', pintarSelectorPersonas);
+});
+
+$('#soModo').addEventListener('change', function () {
+  const varios = this.value === 'VARIOS';
+  $('#soUno').hidden = varios;
+  $('#soVarios').hidden = !varios;
+});
+
+/* Al elegir una persona se muestra qué recibió antes y hace cuánto: es
+   el antecedente que permite distinguir una reposición normal de un
+   desgaste anormalmente rápido. */
+$('#soPersona').addEventListener('change', async function () {
+  const cont = $('#soHistorial');
+  if (!this.value) { cont.innerHTML = ''; est.historial = null; pintarAntecedentes(); return; }
+  cont.innerHTML = '<p style="font-size:12.5px;color:var(--tenue)">Cargando antecedentes…</p>';
+
+  const r = await api('historialPersona', { rut: this.value });
+  if (!r.ok) { cont.innerHTML = ''; return; }
+  est.historial = r;
+
+  if (!r.lineas.length) {
+    cont.innerHTML = '<p class="nota" style="margin:0">Sin entregas previas registradas. Es la primera dotación de esta persona.</p>';
+  } else {
+    cont.innerHTML = '<p class="rotulo" style="margin:0 0 8px">Entregas anteriores</p>' +
+      '<div class="tabla-env"><table><thead><tr><th>Elemento</th><th class="num">Veces</th>' +
+      '<th class="num">Unidades</th><th>Última</th><th class="num">Meses</th><th>Antecedente</th></tr></thead><tbody>' +
+      r.lineas.map(function (L) {
+        const a = ALERTA_ROTULO[L.alerta];
+        return '<tr><td>' + esc(L.material) + '</td><td class="num">' + L.veces + '</td>' +
+          '<td class="num">' + L.unidades + '</td><td class="ref">' + esc(L.ultima) + '</td>' +
+          '<td class="num">' + (L.meses === null ? '—' : L.meses) + '</td>' +
+          '<td>' + (a ? '<span class="marbete" style="border-color:' + a.color + ';color:' + a.color + '">' + a.texto + '</span>' : '') + '</td></tr>';
+      }).join('') + '</tbody></table></div>';
+  }
+  pintarAntecedentes();
+});
+
+/* ---------- líneas de la solicitud ---------- */
+
+function agregarSolLinea() {
+  seqSolLinea++;
+  const tr = document.createElement('tr');
+  tr.dataset.sl = 'sl' + seqSolLinea;
+  tr.innerHTML =
+    '<td><select data-smat style="width:100%;border:1px solid var(--regla);padding:6px;font-family:inherit;font-size:12.5px">' +
+      opcionesMaterialesSolicitud() + '</select></td>' +
+    '<td class="num"><input data-scant type="number" min="1" step="1" value="1" style="width:78px;text-align:right;font-family:var(--mono);border:1px solid var(--regla);padding:5px 7px"></td>' +
+    '<td data-sant><span style="color:var(--tenue);font-size:11.5px">—</span></td>' +
+    '<td class="acc"><button class="mini peligro" type="button" data-squitar>Quitar</button></td>';
+  $('#tbSolLineas').appendChild(tr);
+}
+
+function opcionesMaterialesSolicitud() {
+  return '<option value="">Seleccionar…</option>' +
+    (est.cat.materiales || [])
+      .filter(function (m) { return m.activo === 'SI' && (m.estado_val || 'VIGENTE') === 'VIGENTE'; })
+      .map(function (m) {
+        return '<option value="' + esc(m.id) + '">' + esc(m.nombre) +
+          (m.naturaleza === 'CUSTODIA' ? ' (custodia)' : '') + '</option>';
+      }).join('');
+}
+
+/* Cruza cada elemento pedido con el historial de la persona elegida. */
+function pintarAntecedentes() {
+  const h = est.historial;
+  $$('#tbSolLineas tr[data-sl]').forEach(function (tr) {
+    const id = $('[data-smat]', tr).value;
+    const celda = $('[data-sant]', tr);
+    if (!id || !h) { celda.innerHTML = '<span style="color:var(--tenue);font-size:11.5px">—</span>'; return; }
+    const L = h.lineas.filter(function (x) { return String(x.material_id) === String(id); })[0];
+    if (!L) { celda.innerHTML = '<span style="color:var(--tenue);font-size:11.5px">Sin entregas previas</span>'; return; }
+    const a = ALERTA_ROTULO[L.alerta];
+    celda.innerHTML = '<span style="font-size:11.5px">Última: ' + esc(L.ultima) + ' · ' +
+      (L.meses === null ? '—' : L.meses + ' meses') + '</span>' +
+      (a ? '<br><span class="marbete" style="border-color:' + a.color + ';color:' + a.color + '">' + a.texto + '</span>' : '');
+  });
+}
+
+$('#bSolLinea').addEventListener('click', agregarSolLinea);
+$('#tbSolLineas').addEventListener('change', pintarAntecedentes);
+$('#tbSolLineas').addEventListener('click', function (ev) {
+  if (ev.target.matches('[data-squitar]')) ev.target.closest('tr').remove();
+});
+
+function limpiarSolicitud() {
+  $('#tbSolLineas').innerHTML = '';
+  agregarSolLinea();
+  $('#soObs').value = '';
+  $('#soPersona').value = '';
+  $('#soHistorial').innerHTML = '';
+  est.historial = null;
+  $$('input[name="soP"]').forEach(function (c) { c.checked = false; });
+  contarSeleccion();
+}
+$('#bSolLimpiar').addEventListener('click', limpiarSolicitud);
+
+$('#bSolicitar').addEventListener('click', async function () {
+  const ruts = $('#soModo').value === 'VARIOS'
+    ? $$('input[name="soP"]:checked').map(function (c) { return c.value; })
+    : ($('#soPersona').value ? [$('#soPersona').value] : []);
+
+  if (!ruts.length) { aviso('Selecciona al menos una persona.', true); return; }
+
+  const lineas = [];
+  $$('#tbSolLineas tr[data-sl]').forEach(function (tr) {
+    const id = $('[data-smat]', tr).value;
+    const cant = Number($('[data-scant]', tr).value) || 0;
+    if (id && cant > 0) lineas.push({ material_id: id, cantidad: cant });
+  });
+  if (!lineas.length) { aviso('Agrega al menos un elemento.', true); return; }
+
+  if (ruts.length > 1 &&
+      !confirm('Se generarán ' + ruts.length + ' solicitudes, una por persona. ¿Continuar?')) return;
+
+  const b = this;
+  b.disabled = true; b.textContent = 'Registrando…';
+  const r = await api('guardarSolicitud', { registro: {
+    ruts: ruts, lineas: lineas, observacion: $('#soObs').value
+  }});
+  b.disabled = false; b.textContent = 'Registrar solicitud';
+  if (!r.ok) return;
+
+  aviso(r.solicitudes === 1 ? 'Solicitud ' + r.folios[0] + ' registrada'
+                            : r.solicitudes + ' solicitudes registradas');
+  limpiarSolicitud();
+  await cargarSolicitudes();
+});
+
+/* ---------- cola de solicitudes ---------- */
+
+async function cargarSolicitudes() {
+  const r = await api('solicitudes', {});
+  if (!r.ok) return;
+  est.sol = r;
+  pintarSolicitudes();
+  pintarPanel();
+}
+
+function pintarSolicitudes() {
+  if (!est.sol) return;
+  const fe = $('#sfEstado').value;
+  const q = $('#sfBuscar').value.trim().toLowerCase();
+  const puedeResolver = est.usuario.rol !== 'SUPERVISOR';
+
+  const ls = est.sol.solicitudes.filter(function (x) {
+    if (fe && x.estado !== fe) return false;
+    if (q && (x.folio + ' ' + x.rut + ' ' + x.persona).toLowerCase().indexOf(q) === -1) return false;
+    return true;
+  });
+
+  const marbete = {
+    PENDIENTE:['var(--oro)','#7A611B','Pendiente'], PARCIAL:['var(--oro)','#7A611B','Parcial'],
+    ENTREGADA:['var(--verde)','var(--verde)','Entregada'], RECHAZADA:['var(--oxido)','var(--oxido)','Rechazada']
+  };
+
+  $('#tbSolicitudes').innerHTML = ls.length ? ls.map(function (x) {
+    const m = marbete[x.estado] || ['var(--regla)','var(--tenue)',x.estado];
+    const abierta = x.estado === 'PENDIENTE' || x.estado === 'PARCIAL';
+    return '<tr class="' + (abierta ? '' : 'inactiva') + '">' +
+      '<td class="ref">' + esc(x.folio) + '</td><td class="ref">' + esc(x.fecha) + '</td>' +
+      '<td>' + esc(x.persona) +
+        (x.alertas ? ' <span class="marbete" style="border-color:var(--oxido);color:var(--oxido)">' + x.alertas + ' alerta' + (x.alertas > 1 ? 's' : '') + '</span>' : '') + '</td>' +
+      '<td class="opc">' + esc(x.instalacion) + '</td>' +
+      '<td class="num opc">' + x.pedido + '</td>' +
+      '<td class="num">' + x.entregado + '</td>' +
+      '<td class="opc" style="font-size:11.5px">' + esc(x.solicitante) + '</td>' +
+      '<td><span class="marbete" style="border-color:' + m[0] + ';color:' + m[1] + '">' + m[2] + '</span></td>' +
+      '<td class="acc">' + (abierta && puedeResolver
+        ? '<button class="mini" data-ent="' + esc(x.folio) + '">Entregar</button>' +
+          '<button class="mini peligro" data-rch="' + esc(x.folio) + '">Rechazar</button>'
+        : '') + '</td></tr>';
+  }).join('') : '<tr><td colspan="9" class="vacio">No hay solicitudes que coincidan.</td></tr>';
+}
+
+['#sfEstado', '#sfBuscar'].forEach(function (s) {
+  $(s).addEventListener('input', pintarSolicitudes);
+});
+
+$('#tbSolicitudes').addEventListener('click', function (ev) {
+  const b = ev.target.closest('button');
+  if (!b) return;
+  if (b.dataset.ent) abrirEntrega(b.dataset.ent);
+  if (b.dataset.rch) {
+    $('#rcFolio').value = b.dataset.rch;
+    $('#rcSub').textContent = 'Solicitud ' + b.dataset.rch;
+    $('#fRechazo').reset(); $('#rcFolio').value = b.dataset.rch;
+    $('#veloRechazo').hidden = false;
+  }
+});
+
+$('#rcCancelar').addEventListener('click', function () { $('#veloRechazo').hidden = true; });
+$('#veloRechazo').addEventListener('click', function (ev) { if (ev.target === this) this.hidden = true; });
+
+$('#fRechazo').addEventListener('submit', async function (ev) {
+  ev.preventDefault();
+  const r = await api('rechazarSolicitud', { folio: $('#rcFolio').value, motivo: $('#rcMotivo').value });
+  if (!r.ok) return;
+  $('#veloRechazo').hidden = true;
+  aviso('Solicitud rechazada');
+  await cargarSolicitudes();
+});
+
+/* ---------- entrega ---------- */
+
+function abrirEntrega(folio) {
+  const x = est.sol.solicitudes.filter(function (s) { return s.folio === folio; })[0];
+  if (!x) return;
+  solActual = x;
+
+  $('#enTitulo').textContent = 'Entregar · ' + folio;
+  $('#enSub').textContent = x.persona + ' · ' + rutFormato(x.rut) + ' · ' + x.instalacion +
+    (x.talla_ropa || x.talla_calzado
+      ? ' · tallas registradas: ' + [x.talla_ropa ? 'ropa ' + x.talla_ropa : '',
+          x.talla_calzado ? 'calzado ' + x.talla_calzado : ''].filter(Boolean).join(', ')
+      : '');
+
+  const conAlerta = x.detalle.filter(function (d) { return d.alerta; });
+  $('#enAlertas').innerHTML = conAlerta.length
+    ? '<div class="nota" style="border-left-color:var(--oxido);background:#FBEFEC;color:#6B2A16">' +
+      '<b>Antecedente de desgaste.</b> ' + conAlerta.map(function (d) {
+        return d.material + ' se entregó hace ' + d.meses_ultima + ' meses';
+      }).join('; ') + '. Conviene verificar el estado del elemento anterior antes de reponer.</div>'
+    : '';
+
+  $('#tbEntrega').innerHTML = x.detalle.map(function (d) {
+    const pend = d.cantidad - d.entregado;
+    if (pend <= 0) {
+      return '<tr class="inactiva"><td>' + esc(d.material) + '</td><td class="num">0</td>' +
+        '<td colspan="3" style="font-size:11.5px;color:var(--tenue)">Ya entregado por completo</td></tr>';
+    }
+    const opciones = skusDisponibles(d.material_id, x);
+    return '<tr data-det="' + esc(d.id) + '">' +
+      '<td>' + esc(d.material) + '</td><td class="num">' + pend + '</td>' +
+      '<td>' + (opciones.html || '<span style="font-size:11.5px;color:var(--oxido)">Sin stock disponible</span>') + '</td>' +
+      '<td class="num"><input data-ecant type="number" min="0" step="1" value="' +
+        (opciones.hay ? Math.min(pend, opciones.max) : 0) + '" max="' + pend +
+        '" style="width:74px;text-align:right;font-family:var(--mono);border:1px solid var(--regla);padding:5px 7px"' +
+        (opciones.hay ? '' : ' disabled') + '></td>' +
+      '<td class="num" data-edisp>' + (opciones.hay ? opciones.max : 0) + '</td></tr>';
+  }).join('');
+
+  $('#veloEntrega').hidden = false;
+}
+
+/* Ofrece solo unidades con saldo, y deja preseleccionada la talla que la
+   persona tiene registrada. */
+function skusDisponibles(materialId, sol) {
+  const ls = ((est.exi && est.exi.lineas) || []).filter(function (L) {
+    return String(L.material_id) === String(materialId) && L.cantidad > 0 &&
+           L.estado !== 'USADO' && L.activo === 'SI';
+  });
+  if (!ls.length) return { html:'', hay:false, max:0 };
+
+  const preferida = ls.filter(function (L) {
+    return String(L.talla) === String(sol.talla_ropa) || String(L.talla) === String(sol.talla_calzado);
+  })[0];
+  const elegida = preferida || ls[0];
+
+  return {
+    hay: true, max: elegida.cantidad,
+    html: '<select data-esku style="width:100%;border:1px solid var(--regla);padding:5px;font-family:var(--mono);font-size:11.5px">' +
+      ls.map(function (L) {
+        return '<option value="' + esc(L.sku_id) + '" data-max="' + L.cantidad + '"' +
+          (L.sku_id === elegida.sku_id ? ' selected' : '') + '>' + esc(L.sku_id) +
+          ' · ' + L.cantidad + ' disp.' + (L.sku_id === (preferida || {}).sku_id ? ' ★' : '') + '</option>';
+      }).join('') + '</select>'
+  };
+}
+
+$('#tbEntrega').addEventListener('change', function (ev) {
+  if (!ev.target.matches('[data-esku]')) return;
+  const tr = ev.target.closest('tr');
+  const max = Number(ev.target.selectedOptions[0].dataset.max) || 0;
+  const inp = $('[data-ecant]', tr);
+  $('[data-edisp]', tr).textContent = max;
+  if (Number(inp.value) > max) inp.value = max;
+});
+
+$('#enCancelar').addEventListener('click', function () { $('#veloEntrega').hidden = true; });
+$('#veloEntrega').addEventListener('click', function (ev) { if (ev.target === this) this.hidden = true; });
+
+$('#bEntregar').addEventListener('click', async function () {
+  const entregas = [];
+  $$('#tbEntrega tr[data-det]').forEach(function (tr) {
+    const sel = $('[data-esku]', tr);
+    const cant = Number(($('[data-ecant]', tr) || {}).value) || 0;
+    if (sel && cant > 0) entregas.push({ det_id: tr.dataset.det, sku_id: sel.value, cantidad: cant });
+  });
+  if (!entregas.length) { aviso('Indica al menos una cantidad a entregar.', true); return; }
+
+  const b = this;
+  b.disabled = true; b.textContent = 'Registrando…';
+  const r = await api('entregar', { folio: solActual.folio, entregas: entregas });
+  b.disabled = false; b.textContent = 'Confirmar entrega';
+  if (!r.ok) return;
+
+  $('#veloEntrega').hidden = true;
+  aviso('Certificado ' + r.certificado + ' emitido' +
+    (r.correo === 'ENVIADO' ? ' y enviado' :
+     r.correo === 'ENCOLADO' ? ' · correo en cola' :
+     r.correo === 'SIN_DESTINATARIOS' ? ' · faltan correos en parámetros' : ''));
+
+  await cargarSolicitudes();
+  await cargarCertificados();
+  await cargarExistencias();
+  abrirCertificado(r.certificado);
+});
+
+/* ---------- certificados ---------- */
+
+async function cargarCertificados() {
+  if (est.usuario.rol === 'SUPERVISOR') return;
+  const r = await api('certificados', { desde: $('#ctDesde').value, hasta: $('#ctHasta').value });
+  if (!r.ok) return;
+  est.cert = r;
+
+  $('#tbCertificados').innerHTML = r.certificados.length ? r.certificados.map(function (c) {
+    const firma = c.estado_firma === 'FIRMADO'
+      ? '<span class="marbete m-ok">Firmado</span>'
+      : '<span class="marbete" style="border-color:' + (c.atrasado ? 'var(--oxido);color:var(--oxido)' : 'var(--oro);color:#7A611B') + '">' +
+        (c.atrasado ? 'Atrasado ' + c.dias + 'd' : 'Pendiente') + '</span>';
+    const correo = c.correo_estado === 'ENVIADO'
+      ? '<span style="font-size:11px;color:var(--tenue)">Enviado</span>'
+      : '<span style="font-size:11px;color:var(--oxido)">' + esc((c.correo_estado || '').toLowerCase()) + '</span>';
+    return '<tr><td class="ref">' + esc(c.folio) + '</td><td class="ref">' + esc(c.fecha) + '</td>' +
+      '<td>' + esc(c.persona) + '</td><td class="opc">' + esc(c.instalacion) + '</td>' +
+      '<td class="num opc">' + c.unidades + '</td>' +
+      '<td class="opc" style="font-size:11.5px">' + esc(c.operador) + '</td>' +
+      '<td>' + firma + '</td><td class="opc">' + correo + '</td>' +
+      '<td class="acc"><button class="mini" data-vercert="' + esc(c.folio) + '">Ver</button>' +
+      (c.estado_firma === 'PENDIENTE'
+        ? '<button class="mini" data-firma="' + esc(c.folio) + '">Firmado</button>' : '') + '</td></tr>';
+  }).join('') : '<tr><td colspan="9" class="vacio">No hay certificados en el período.</td></tr>';
+
+  const R = r.resumen;
+  $('#ctResumen').innerHTML = R.total + ' certificados · <b>' + R.sin_firma + '</b> sin firma devuelta' +
+    (R.atrasados ? ' · <b style="color:var(--oxido)">' + R.atrasados + ' atrasados</b>' : '') +
+    (R.correo_pendiente ? ' · ' + R.correo_pendiente + ' con correo en cola' : '');
+}
+
+$('#bCertFiltrar').addEventListener('click', cargarCertificados);
+
+$('#tbCertificados').addEventListener('click', async function (ev) {
+  const b = ev.target.closest('button');
+  if (!b) return;
+  if (b.dataset.vercert) abrirCertificado(b.dataset.vercert);
+  if (b.dataset.firma) {
+    if (!confirm('Confirmas que recibiste el certificado ' + b.dataset.firma + ' firmado por el trabajador?')) return;
+    const r = await api('marcarFirmado', { folio: b.dataset.firma });
+    if (!r.ok) return;
+    aviso('Certificado marcado como firmado');
+    await cargarCertificados();
+    await cargarExistencias();
+  }
+});
+
+async function abrirCertificado(folio) {
+  const v = window.open('', '_blank');
+  if (!v) { aviso('El navegador bloqueó la ventana. Permite las ventanas emergentes.', true); return; }
+  v.document.write('<p style="font-family:sans-serif;padding:20px">Generando certificado ' + folio + '…</p>');
+  const r = await api('certificadoHtml', { folio: folio });
+  if (!r.ok) { v.close(); return; }
+  v.document.open(); v.document.write(r.html); v.document.close();
+}
+
+$('#bCorreos').addEventListener('click', async function () {
+  const b = this;
+  b.disabled = true; b.textContent = 'Procesando…';
+  const r = await api('procesarCorreos');
+  b.disabled = false; b.textContent = 'Reintentar correos en cola';
+  if (!r.ok) return;
+  aviso(r.enviados + ' enviados · ' + r.pendientes + ' aún en cola');
+  await cargarCertificados();
+});
+
 /* ================= ARRANQUE ================= */
 ajustarFormMaterial();
 (function () {
@@ -2135,6 +2731,8 @@ ajustarFormMaterial();
   $('#coFecha').value = hoy;
   $('#iiFecha').value = hoy;
   agregarLinea();
+  agregarSolLinea();
+  $('#ctDesde').value = ''; $('#ctHasta').value = '';
 })();
 reanudar();
 </script>
