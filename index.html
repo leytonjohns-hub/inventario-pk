@@ -416,6 +416,52 @@ td.acc{white-space:nowrap; text-align:right; padding-right:0}
       </div>
     </section>
 
+    <!-- ---- DEVOLUCIONES ---- -->
+    <section data-vista="devoluciones">
+      <div class="bloque">
+        <div class="canal"><span class="folio">&sect; 100</span></div>
+        <div class="cuerpo">
+          <h2>Registrar devolución</h2>
+          <p class="bajada">Solo se puede devolver lo que la persona tiene en su poder según el kardex: entregado menos devuelto.</p>
+          <div class="filtros">
+            <div class="campo"><label for="dvPersona">Persona</label><select id="dvPersona"></select></div>
+            <div class="campo" style="max-width:220px"><label for="dvEstadoP">Mostrar</label>
+              <select id="dvEstadoP"><option value="">Activos y desvinculados</option>
+                <option value="Desvinculado">Solo desvinculados</option>
+                <option value="Activo">Solo activos</option></select></div>
+          </div>
+          <div id="dvPoder"></div>
+        </div>
+      </div>
+
+      <div class="bloque">
+        <div class="canal"><span class="folio">&sect; 101</span></div>
+        <div class="cuerpo">
+          <h2>Pendientes de restitución</h2>
+          <p class="bajada">Personas desvinculadas con elementos aún en su poder. Es el documento que se adjunta al finiquito y el que activa la autorización de descuento del Art. 58.</p>
+          <div class="tabla-env"><table>
+            <thead><tr><th>RUT</th><th>Persona</th><th class="opc">Cargo</th><th class="opc">Instalación</th>
+              <th class="num">Unidades</th><th class="num">Valor</th><th></th></tr></thead>
+            <tbody id="tbRestitucion"></tbody>
+          </table></div>
+          <p id="rsResumen" style="font-size:11.5px;color:var(--tenue);margin:12px 0 0"></p>
+        </div>
+      </div>
+
+      <div class="bloque">
+        <div class="canal"><span class="folio">&sect; 102</span></div>
+        <div class="cuerpo">
+          <h2>Unidades en recuperación</h2>
+          <p class="bajada">Prendas devueltas que necesitan lavado o reparación. No están disponibles para entrega hasta que las habilites.</p>
+          <div class="tabla-env"><table>
+            <thead><tr><th>Unidad</th><th>Elemento</th><th class="opc">Talla</th>
+              <th class="num opc">Meses de uso</th><th>Motivo</th><th></th></tr></thead>
+            <tbody id="tbCuarentena"></tbody>
+          </table></div>
+        </div>
+      </div>
+    </section>
+
     <!-- ---- COMPRAS ---- -->
     <section data-vista="compras">
       <div class="bloque">
@@ -473,7 +519,7 @@ td.acc{white-space:nowrap; text-align:right; padding-right:0}
           <div class="tabla-env"><table>
             <thead><tr><th>Folio</th><th>Fecha</th><th>Documento</th><th class="opc">Proveedor</th>
               <th class="num opc">Líneas</th><th class="num opc">Unidades</th><th class="num opc">Neto</th>
-              <th class="num">Total</th><th>Estado</th><th></th></tr></thead>
+              <th class="num">Total</th><th>Estado</th><th>Certificado</th><th></th></tr></thead>
             <tbody id="tbCompras"></tbody>
           </table></div>
           <p id="cResumen" style="font-size:11.5px;color:var(--tenue);margin:12px 0 0"></p>
@@ -765,6 +811,48 @@ td.acc{white-space:nowrap; text-align:right; padding-right:0}
       </div>
     </section>
 
+    <!-- ---- CARGA MASIVA ---- -->
+    <section data-vista="masiva">
+      <div class="nota" id="masNota"></div>
+
+      <div class="bloque">
+        <div class="canal"><span class="folio">&sect; 110</span></div>
+        <div class="cuerpo">
+          <h2>Plantilla</h2>
+          <p class="bajada">Descarga el archivo, hazlo completar en la oficina y súbelo. La hoja Referencias trae los valores válidos para copiar y pegar.</p>
+          <div class="filtros">
+            <div class="campo"><label for="maEntidad">Qué vas a cargar</label>
+              <select id="maEntidad">
+                <option value="PERSONAS">Dotación</option>
+                <option value="INSTALACIONES">Instalaciones</option>
+                <option value="CLIENTES">Empresas cliente</option>
+                <option value="PROVEEDORES">Proveedores</option>
+                <option value="MATERIALES">Materiales</option>
+              </select></div>
+            <div><button class="btn btn-s" type="button" id="bPlantilla">Descargar plantilla</button></div>
+          </div>
+          <div id="maCampos" style="margin-top:14px"></div>
+        </div>
+      </div>
+
+      <div class="bloque" id="bloqueSubir">
+        <div class="canal"><span class="folio">&sect; 111</span></div>
+        <div class="cuerpo">
+          <h2>Subir planilla completada</h2>
+          <p class="bajada">Nada se escribe hasta que revises la vista previa fila por fila.</p>
+          <div class="filtros">
+            <div class="campo"><label for="maArchivo">Archivo .xlsx</label>
+              <input id="maArchivo" type="file" accept=".xlsx,.xls"></div>
+          </div>
+          <div class="marcas">
+            <label class="marca-op"><input type="checkbox" id="maActualizar"> Actualizar los registros que ya existen</label>
+            <label class="marca-op"><input type="checkbox" id="maParcial"> Cargar solo las filas correctas y omitir las que tienen error</label>
+          </div>
+          <div id="maPrevia" style="margin-top:16px"></div>
+        </div>
+      </div>
+    </section>
+
     <!-- ---- USUARIOS ---- -->
     <section data-vista="usuarios">
       <div class="nota">
@@ -818,6 +906,61 @@ td.acc{white-space:nowrap; text-align:right; padding-right:0}
 
     <p class="mono" id="verPie" style="text-align:center;font-size:10.5px;color:var(--tenue);margin:34px 0 0"></p>
   </main>
+</div>
+
+<!-- ============ MODAL CERTIFICADOS DE CALIDAD ============ -->
+<div class="velo" id="veloCalidad" hidden>
+  <div class="modal" style="max-width:700px">
+    <h3 id="cqTitulo">Certificados de calidad</h3>
+    <p style="font-size:12.5px;color:var(--tenue);margin:0 0 14px" id="cqSub"></p>
+    <div id="cqFaltan"></div>
+    <div class="tabla-env"><table>
+      <thead><tr><th>Archivo</th><th class="opc">Material</th><th class="opc">Emisor</th>
+        <th class="opc">Norma</th><th>Vence</th><th></th></tr></thead>
+      <tbody id="tbCalidad"></tbody>
+    </table></div>
+
+    <p class="rotulo" style="margin:18px 0 8px">Adjuntar certificado</p>
+    <form id="fCalidad">
+      <input type="hidden" id="cqFolio">
+      <div class="rejilla">
+        <div class="campo"><label for="cqMaterial">Material que respalda</label>
+          <select id="cqMaterial"></select>
+          <span class="ayuda">Déjalo en blanco si cubre toda la compra</span></div>
+        <div class="campo"><label for="cqEmisor">Emisor</label><input id="cqEmisor" placeholder="Laboratorio o certificadora"></div>
+        <div class="campo"><label for="cqNumero">N.º de certificado</label><input id="cqNumero"></div>
+        <div class="campo"><label for="cqNorma">Norma</label><input id="cqNorma" list="lNormas" placeholder="NCh 772">
+          <datalist id="lNormas"><option value="NCh 772"><option value="NCh 461"><option value="NCh 1562">
+            <option value="NCh 1301"><option value="NCh 2431"></datalist></div>
+        <div class="campo"><label for="cqVence">Vence</label><input id="cqVence" type="date"></div>
+        <div class="campo"><label for="cqArchivo">Archivo</label>
+          <input id="cqArchivo" type="file" accept=".pdf,.jpg,.jpeg,.png">
+          <span class="ayuda">PDF o imagen · máximo 5 MB</span></div>
+      </div>
+      <div class="acciones">
+        <button class="btn btn-p" type="submit" id="bCalidadSubir">Adjuntar</button>
+        <button class="btn btn-s" type="button" id="cqCerrar">Cerrar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ MODAL HABILITAR ============ -->
+<div class="velo" id="veloHabilitar" hidden>
+  <div class="modal">
+    <h3>Habilitar unidad</h3>
+    <p style="font-size:12.5px;color:var(--tenue);margin:0 0 14px" id="hbSub"></p>
+    <form id="fHabilitar">
+      <input type="hidden" id="hbSku">
+      <div class="campo"><label for="hbObs">Qué se hizo</label>
+        <input id="hbObs" required minlength="5" placeholder="Lavado, cambio de cierre, costura">
+        <span class="ayuda">Queda registrado en la hoja de vida de la prenda.</span></div>
+      <div class="acciones">
+        <button class="btn btn-p" type="submit">Habilitar para entrega</button>
+        <button class="btn btn-s" type="button" id="hbCancelar">Cancelar</button>
+      </div>
+    </form>
+  </div>
 </div>
 
 <!-- ============ MODAL ENTREGA ============ -->
@@ -944,22 +1087,24 @@ td.acc{white-space:nowrap; text-align:right; padding-right:0}
 <script>
 'use strict';
 
-const VERSION = 'v3.0 · 28-07-2026';
+const VERSION = 'v5.0 · 28-07-2026';
 
 const API_URL  = 'https://script.google.com/macros/s/AKfycbzF3x9Yios2SX2F2EkRgdYcRMTiOZD6csPlCyfHJchMyAy5G9UAaTjmRqq_2x_D2HY/exec';
 const LOGO_URL = 'data:image/png;base64,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';
 
-const est = { token:'', usuario:null, cat:null, exi:null, sol:null, cert:null, historial:null, materialAbierto:'' };
+const est = { token:'', usuario:null, cat:null, exi:null, sol:null, cert:null, historial:null, poder:null, rest:null, compras:null, masiva:null, compraCalidad:null, materialAbierto:'' };
 
 const VISTAS = {
   panel:         { rotulo:'Panel',         roles:['ADMIN','OPERADOR','SUPERVISOR'] },
   existencias:   { rotulo:'Existencias',   roles:['ADMIN','OPERADOR'] },
   solicitudes:   { rotulo:'Solicitudes',   roles:['ADMIN','OPERADOR','SUPERVISOR'] },
+  devoluciones:  { rotulo:'Devoluciones',  roles:['ADMIN','OPERADOR'] },
   compras:       { rotulo:'Compras',       roles:['ADMIN','OPERADOR'] },
   materiales:    { rotulo:'Materiales',    roles:['ADMIN','OPERADOR'] },
   clientes:      { rotulo:'Empresas',      roles:['ADMIN','OPERADOR'] },
   instalaciones: { rotulo:'Instalaciones', roles:['ADMIN','OPERADOR'] },
   dotacion:      { rotulo:'Dotación',      roles:['ADMIN','OPERADOR','SUPERVISOR'] },
+  masiva:        { rotulo:'Carga masiva',  roles:['ADMIN','OPERADOR'] },
   validacion:    { rotulo:'Validación',    roles:['ADMIN'] },
   usuarios:      { rotulo:'Usuarios',      roles:['ADMIN'] }
 };
@@ -1075,6 +1220,13 @@ async function abrir() {
   $('#vAcceso').style.display = 'none';
   /* El supervisor solicita, no resuelve: no ve certificados ni stock. */
   $('#bloqueCert').hidden = est.usuario.rol === 'SUPERVISOR';
+  const esAdmin = est.usuario.rol === 'ADMIN';
+  $('#bloqueSubir').hidden = !esAdmin;
+  $('#masNota').innerHTML = esAdmin
+    ? 'La planilla circula por correo y su contenido no está verificado, así que solo el administrador la sube. ' +
+      'Nada se escribe hasta que revises la vista previa.'
+    : 'Descarga la plantilla, hazla completar en la oficina y envíasela al administrador para que la cargue. ' +
+      'La subida está reservada al perfil administrador.';
   $('#vApp').hidden = false;
   const n = est.usuario.nombre || est.usuario.usuario;
   const iniciales = n.split(/\s+/).map(function(p){return p.charAt(0);}).join('').slice(0,3).toUpperCase();
@@ -1132,6 +1284,8 @@ async function recargar() {
     await cargarExistencias();
     await cargarCompras();
     await cargarCertificados();
+    pintarSelectorDevolucion();
+    await cargarDevoluciones();
   }
   await cargarSolicitudes();
 }
@@ -1175,7 +1329,13 @@ function pintarPanel() {
     { n:R.ajustes,  r:'Ajustes en el historial', clase: R.ajustes ? 'aviso' : '' },
     { n:(est.sol && est.sol.pendientes) || 0, r:'Solicitudes por resolver', clase:'aviso', ir:'solicitudes' },
     { n:R.sin_firma || 0, r:'Certificados sin firma', clase:'grave', ir:'solicitudes' },
-    { n:R.correo_pendiente || 0, r:'Correos en cola', clase:'aviso', ir:'solicitudes' }
+    { n:R.correo_pendiente || 0, r:'Correos en cola', clase:'aviso', ir:'solicitudes' },
+    { n:(est.rest && est.rest.total_personas) || 0, r:'Sin restituir al salir', clase:'grave', ir:'devoluciones' },
+    { n:((est.exi && est.exi.lineas) || []).filter(function (L) { return L.condicion === 'CUARENTENA'; }).length,
+      r:'En recuperación', clase:'aviso', ir:'devoluciones' },
+    { n:R.cert_faltantes || 0, r:'Compras sin certificado', clase:'grave', ir:'compras' },
+    { n:R.cert_vencidos || 0, r:'Certificados vencidos', clase:'aviso', ir:'compras' },
+    { n:R.cert_regularizar || 0, r:'Certificados por regularizar', clase:'aviso', ir:'compras' }
   ].filter(function (x) { return !x.solo || est.usuario.rol === x.solo; });
 
   $('#indicadores').innerHTML = puertas.map(function (x) {
@@ -2103,10 +2263,12 @@ $('#fCompra').addEventListener('submit', async function (ev) {
 async function cargarCompras() {
   const r = await api('compras', { desde: $('#cfDesde').value, hasta: $('#cfHasta').value });
   if (!r.ok) return;
+  est.compras = r.compras;
+  est.certResumen = r.certificados;
 
   const tb = $('#tbCompras');
   if (!r.compras.length) {
-    tb.innerHTML = '<tr><td colspan="10" class="vacio">No hay compras registradas en el período.</td></tr>';
+    tb.innerHTML = '<tr><td colspan="12" class="vacio">No hay compras registradas en el período.</td></tr>';
   } else {
     tb.innerHTML = r.compras.map(function (c) {
       const p = proveedor(c.proveedor_id);
@@ -2123,20 +2285,34 @@ async function cargarCompras() {
         '<td>' + (anulada
           ? '<span class="marbete" style="border-color:var(--oxido);color:var(--oxido)">Anulada</span>'
           : '<span class="marbete m-ok">Vigente</span>') + '</td>' +
-        '<td class="acc">' + (anulada
-          ? '<span style="font-size:11px;color:var(--tenue)">' + esc(c.motivo_anulacion || '') + '</span>'
-          : '<button class="mini peligro" data-anu="' + esc(c.folio) + '">Anular</button>') + '</td></tr>';
+        '<td>' + (c.exige_cert
+          ? (c.faltan_cert && c.faltan_cert.length
+              ? '<span class="marbete" style="border-color:' + (c.regularizacion ? 'var(--oro);color:#7A611B' : 'var(--oxido);color:var(--oxido)') + '">' +
+                (c.regularizacion ? 'Regularizar' : 'Sin certificado') + '</span>'
+              : '<span class="marbete m-ok">Respaldada</span>')
+          : '<span style="font-size:11px;color:var(--tenue)">No exige</span>') + '</td>' +
+        '<td class="acc">' +
+          '<button class="mini" data-cq="' + esc(c.folio) + '">Certificados</button>' +
+          (anulada
+            ? ''
+            : '<button class="mini peligro" data-anu="' + esc(c.folio) + '">Anular</button>') + '</td></tr>';
     }).join('');
   }
 
   const R = r.resumen;
+  const C = r.certificados || {};
   $('#cResumen').innerHTML = R.documentos + ' documentos vigentes · ' + R.unidades +
-    ' unidades · neto <b>$' + pesos(R.neto) + '</b> · total <b>$' + pesos(R.total) + '</b>';
+    ' unidades · neto <b>$' + pesos(R.neto) + '</b> · total <b>$' + pesos(R.total) + '</b>' +
+    (C.faltantes ? ' · <b style="color:var(--oxido)">' + C.faltantes + ' sin certificado</b>' : '') +
+    (C.regularizar ? ' · ' + C.regularizar + ' por regularizar' : '') +
+    (C.vencidos ? ' · <b style="color:var(--oxido)">' + C.vencidos + ' certificados vencidos</b>' : '');
 }
 
 $('#bFiltrarCompras').addEventListener('click', cargarCompras);
 
 $('#tbCompras').addEventListener('click', function (ev) {
+  const cq = ev.target.closest('button[data-cq]');
+  if (cq) { abrirCalidad(cq.dataset.cq); return; }
   const b = ev.target.closest('button[data-anu]');
   if (!b) return;
   $('#anFolio').value = b.dataset.anu;
@@ -2597,15 +2773,18 @@ function abrirEntrega(folio) {
    persona tiene registrada. */
 function skusDisponibles(materialId, sol) {
   const ls = ((est.exi && est.exi.lineas) || []).filter(function (L) {
-    return String(L.material_id) === String(materialId) && L.cantidad > 0 &&
-           L.estado !== 'USADO' && L.activo === 'SI';
-  });
+    if (String(L.material_id) !== String(materialId) || L.cantidad <= 0 || L.activo !== 'SI') return false;
+    /* El usado solo se ofrece si ya pasó por recuperación. */
+    if (L.estado === 'USADO' && L.condicion !== 'APTA') return false;
+    return true;
+  }).sort(function (a, b) { return (a.estado === 'USADO' ? 1 : 0) - (b.estado === 'USADO' ? 1 : 0); });
   if (!ls.length) return { html:'', hay:false, max:0 };
 
-  const preferida = ls.filter(function (L) {
+  const nuevas = ls.filter(function (L) { return L.estado !== 'USADO'; });
+  const preferida = nuevas.filter(function (L) {
     return String(L.talla) === String(sol.talla_ropa) || String(L.talla) === String(sol.talla_calzado);
   })[0];
-  const elegida = preferida || ls[0];
+  const elegida = preferida || nuevas[0] || ls[0];
 
   return {
     hay: true, max: elegida.cantidad,
@@ -2613,7 +2792,8 @@ function skusDisponibles(materialId, sol) {
       ls.map(function (L) {
         return '<option value="' + esc(L.sku_id) + '" data-max="' + L.cantidad + '"' +
           (L.sku_id === elegida.sku_id ? ' selected' : '') + '>' + esc(L.sku_id) +
-          ' · ' + L.cantidad + ' disp.' + (L.sku_id === (preferida || {}).sku_id ? ' ★' : '') + '</option>';
+          ' · ' + L.cantidad + ' disp.' + (L.estado === 'USADO' ? ' · USADA' : '') +
+          (L.sku_id === (preferida || {}).sku_id ? ' ★' : '') + '</option>';
       }).join('') + '</select>'
   };
 }
@@ -2654,7 +2834,7 @@ $('#bEntregar').addEventListener('click', async function () {
   await cargarSolicitudes();
   await cargarCertificados();
   await cargarExistencias();
-  abrirCertificado(r.certificado);
+  abrirDocumento(r.certificado);
 });
 
 /* ---------- certificados ---------- */
@@ -2694,7 +2874,7 @@ $('#bCertFiltrar').addEventListener('click', cargarCertificados);
 $('#tbCertificados').addEventListener('click', async function (ev) {
   const b = ev.target.closest('button');
   if (!b) return;
-  if (b.dataset.vercert) abrirCertificado(b.dataset.vercert);
+  if (b.dataset.vercert) abrirDocumento(b.dataset.vercert);
   if (b.dataset.firma) {
     if (!confirm('Confirmas que recibiste el certificado ' + b.dataset.firma + ' firmado por el trabajador?')) return;
     const r = await api('marcarFirmado', { folio: b.dataset.firma });
@@ -2724,6 +2904,543 @@ $('#bCorreos').addEventListener('click', async function () {
   await cargarCertificados();
 });
 
+
+/* ==================================================================
+   FASE 4 — DEVOLUCIONES, REINGRESO Y RESTITUCIÓN
+   ================================================================== */
+
+const DESTINO_AYUDA = {
+  STOCK: 'Vuelve a existencias como unidad usada, con folio propio.',
+  CUARENTENA: 'Queda retenida hasta que se lave o repare. No se puede entregar.',
+  BAJA: 'Sale del inventario. Queda el registro de que volvió y de por qué no sirve.'
+};
+
+function pintarSelectorDevolucion() {
+  const fe = $('#dvEstadoP').value;
+  const ps = (est.cat.personas || []).filter(function (p) {
+    return !fe || p.estado === fe;
+  }).sort(function (a, b) {
+    if (a.estado !== b.estado) return a.estado === 'Desvinculado' ? -1 : 1;
+    return a.apellidos < b.apellidos ? -1 : 1;
+  });
+
+  const previo = $('#dvPersona').value;
+  $('#dvPersona').innerHTML = '<option value="">Seleccionar…</option>' + ps.map(function (p) {
+    const i = instalacion(p.instalacion_id);
+    return '<option value="' + esc(p.rut) + '">' + esc(p.apellidos + ', ' + p.nombre) +
+      ' · ' + esc(rutFormato(p.rut)) + (i ? ' · ' + esc(i.nombre) : '') +
+      (p.estado === 'Desvinculado' ? ' · DESVINCULADO' : '') + '</option>';
+  }).join('');
+  if (ps.some(function (p) { return String(p.rut) === previo; })) $('#dvPersona').value = previo;
+}
+
+$('#dvEstadoP').addEventListener('change', pintarSelectorDevolucion);
+
+$('#dvPersona').addEventListener('change', async function () {
+  const cont = $('#dvPoder');
+  if (!this.value) { cont.innerHTML = ''; return; }
+  cont.innerHTML = '<p style="font-size:12.5px;color:var(--tenue)">Consultando el kardex…</p>';
+
+  const r = await api('enPoder', { rut: this.value });
+  if (!r.ok) { cont.innerHTML = ''; return; }
+  est.poder = r;
+
+  if (!r.lineas.length) {
+    cont.innerHTML = '<p class="nota" style="margin:0">Esta persona no tiene elementos pendientes de devolución.</p>';
+    return;
+  }
+
+  cont.innerHTML =
+    '<p class="rotulo" style="margin:4px 0 8px">En su poder · ' + r.unidades + ' unidades por $' + pesos(r.valor) + '</p>' +
+    '<div class="tabla-env"><table><thead><tr>' +
+      '<th style="min-width:150px">Elemento</th><th style="min-width:170px">Entrega de origen</th>' +
+      '<th class="num" style="width:78px">Devolver</th><th style="min-width:150px">Destino</th>' +
+      '<th style="min-width:170px">Observación</th></tr></thead><tbody>' +
+    r.lineas.map(function (L) {
+      const custodia = L.naturaleza === 'CUSTODIA';
+      const sinReingreso = !custodia && L.reingreso !== 'SI';
+      return '<tr data-dv="' + esc(L.material_id) + '">' +
+        '<td><b>' + esc(L.material) + '</b><br><span style="font-size:11px;color:var(--tenue)">' +
+          'pendiente: ' + L.pendiente + (sinReingreso ? ' · no admite reingreso' : '') + '</span></td>' +
+        '<td><select data-dvorigen style="width:100%;border:1px solid var(--regla);padding:5px;font-family:var(--mono);font-size:11.5px">' +
+          L.origenes.map(function (o) {
+            return '<option value="' + esc(o.sku_id) + '" data-meses="' + o.meses + '">' +
+              esc(o.sku_id) + ' · ' + esc(o.fecha) + ' · ' + o.meses + ' m</option>';
+          }).join('') + '</select></td>' +
+        '<td class="num"><input data-dvcant type="number" min="0" max="' + L.pendiente + '" step="1" value="' +
+          L.pendiente + '" style="width:66px;text-align:right;font-family:var(--mono);border:1px solid var(--regla);padding:5px 7px"></td>' +
+        '<td><select data-dvdest style="width:100%;border:1px solid var(--regla);padding:5px;font-family:inherit;font-size:12px">' +
+          (sinReingreso ? '' : '<option value="STOCK">Apta · a stock</option>') +
+          (custodia ? '' : '<option value="CUARENTENA">Recuperable</option>') +
+          '<option value="BAJA"' + (sinReingreso ? ' selected' : '') + '>Baja</option>' +
+          '</select><span data-dvayuda style="display:block;font-size:10.5px;color:var(--tenue);margin-top:3px"></span></td>' +
+        '<td><input data-dvobs placeholder="Estado o motivo" style="width:100%;border:1px solid var(--regla);padding:5px 7px;font-family:inherit;font-size:12px"></td>' +
+      '</tr>';
+    }).join('') + '</tbody></table></div>' +
+    '<div class="acciones"><button class="btn btn-p" type="button" id="bDevolver">Registrar devolución</button></div>';
+
+  $$('#dvPoder tr[data-dv]').forEach(actualizarAyudaDestino);
+});
+
+function actualizarAyudaDestino(tr) {
+  const d = $('[data-dvdest]', tr);
+  if (d) $('[data-dvayuda]', tr).textContent = DESTINO_AYUDA[d.value] || '';
+}
+
+$('#dvPoder').addEventListener('change', function (ev) {
+  const tr = ev.target.closest('tr[data-dv]');
+  if (tr && ev.target.matches('[data-dvdest]')) actualizarAyudaDestino(tr);
+});
+
+$('#dvPoder').addEventListener('click', async function (ev) {
+  if (ev.target.id !== 'bDevolver') return;
+  const b = ev.target;
+
+  const lineas = [];
+  $$('#dvPoder tr[data-dv]').forEach(function (tr) {
+    const cant = Number($('[data-dvcant]', tr).value) || 0;
+    if (cant <= 0) return;
+    const sel = $('[data-dvorigen]', tr);
+    lineas.push({
+      material_id: tr.dataset.dv,
+      sku_origen: sel.value,
+      meses_uso: Number(sel.selectedOptions[0].dataset.meses) || 0,
+      cantidad: cant,
+      destino: $('[data-dvdest]', tr).value,
+      observacion: $('[data-dvobs]', tr).value
+    });
+  });
+
+  if (!lineas.length) { aviso('Indica al menos una cantidad a devolver.', true); return; }
+
+  b.disabled = true; b.textContent = 'Registrando…';
+  const r = await api('guardarDevolucion', { registro: { rut: $('#dvPersona').value, lineas: lineas } });
+  b.disabled = false; b.textContent = 'Registrar devolución';
+  if (!r.ok) return;
+
+  aviso('Acta ' + r.folio + ' emitida' + (r.etiquetas ? ' · ' + r.etiquetas + ' etiquetas por imprimir' : ''));
+  $('#dvPersona').dispatchEvent(new Event('change'));
+  await cargarDevoluciones();
+  await cargarExistencias();
+  await cargarCertificados();
+  abrirDocumento(r.folio);
+});
+
+/* ---------- pendientes de restitución ---------- */
+
+async function cargarDevoluciones() {
+  if (est.usuario.rol === 'SUPERVISOR') return;
+  const r = await api('pendientesRestitucion');
+  if (r.ok) {
+    est.rest = r;
+    $('#tbRestitucion').innerHTML = r.personas.length ? r.personas.map(function (x) {
+      return '<tr><td class="ref">' + esc(rutFormato(x.rut)) + '</td><td>' + esc(x.persona) + '</td>' +
+        '<td class="opc">' + esc(x.cargo) + '</td><td class="opc">' + esc(x.instalacion) + '</td>' +
+        '<td class="num">' + x.unidades + '</td>' +
+        '<td class="num" style="color:var(--oxido);font-weight:500">$' + pesos(x.valor) + '</td>' +
+        '<td class="acc"><button class="mini" data-acta="' + esc(x.rut) + '">Emitir acta</button></td></tr>';
+    }).join('') : '<tr><td colspan="7" class="vacio">Ninguna persona desvinculada tiene elementos pendientes.</td></tr>';
+
+    $('#rsResumen').innerHTML = r.total_personas
+      ? '<b>' + r.total_personas + '</b> persona' + (r.total_personas === 1 ? '' : 's') +
+        ' con <b>' + r.total_unidades + '</b> unidades sin restituir, por <b style="color:var(--oxido)">$' +
+        pesos(r.total_valor) + '</b> al último costo registrado.'
+      : 'Sin pendientes.';
+  }
+
+  pintarCuarentena();
+  pintarPanel();
+}
+
+$('#tbRestitucion').addEventListener('click', async function (ev) {
+  const b = ev.target.closest('button[data-acta]');
+  if (!b) return;
+  const r = await api('actaRestitucion', { rut: b.dataset.acta });
+  if (!r.ok) return;
+  aviso('Acta ' + r.folio + ' emitida por $' + pesos(r.valor));
+  await cargarCertificados();
+  abrirDocumento(r.folio);
+});
+
+/* ---------- cuarentena ---------- */
+
+function pintarCuarentena() {
+  const ls = ((est.exi && est.exi.lineas) || []).filter(function (L) {
+    return L.condicion === 'CUARENTENA';
+  });
+  $('#tbCuarentena').innerHTML = ls.length ? ls.map(function (L) {
+    return '<tr><td class="ref">' + esc(L.sku_id) + '</td><td>' + esc(L.material) + '</td>' +
+      '<td class="opc">' + esc(L.talla) + '</td>' +
+      '<td class="num opc">' + esc(L.meses_uso || '—') + '</td>' +
+      '<td style="font-size:11.5px">' + esc(L.observacion || '—') + '</td>' +
+      '<td class="acc"><button class="mini" data-hab="' + esc(L.sku_id) + '">Habilitar</button></td></tr>';
+  }).join('') : '<tr><td colspan="6" class="vacio">Ninguna unidad en recuperación.</td></tr>';
+}
+
+$('#tbCuarentena').addEventListener('click', function (ev) {
+  const b = ev.target.closest('button[data-hab]');
+  if (!b) return;
+  const L = ((est.exi && est.exi.lineas) || []).filter(function (x) { return x.sku_id === b.dataset.hab; })[0];
+  $('#hbSku').value = b.dataset.hab;
+  $('#hbSub').textContent = b.dataset.hab + (L ? ' · ' + L.material + ' · ' + (L.observacion || '') : '');
+  $('#fHabilitar').reset(); $('#hbSku').value = b.dataset.hab;
+  $('#veloHabilitar').hidden = false;
+});
+
+$('#hbCancelar').addEventListener('click', function () { $('#veloHabilitar').hidden = true; });
+$('#veloHabilitar').addEventListener('click', function (ev) { if (ev.target === this) this.hidden = true; });
+
+$('#fHabilitar').addEventListener('submit', async function (ev) {
+  ev.preventDefault();
+  const r = await api('habilitarUnidad', { sku_id: $('#hbSku').value, observacion: $('#hbObs').value });
+  if (!r.ok) return;
+  $('#veloHabilitar').hidden = true;
+  aviso('Unidad habilitada para entrega');
+  await cargarExistencias();
+  await cargarDevoluciones();
+});
+
+/* Un solo abridor para certificados, actas de devolución y de restitución. */
+async function abrirDocumento(folio) {
+  const v = window.open('', '_blank');
+  if (!v) { aviso('El navegador bloqueó la ventana. Permite las ventanas emergentes.', true); return; }
+  v.document.write('<p style="font-family:sans-serif;padding:20px">Generando ' + folio + '…</p>');
+  const r = await api('documentoHtml', { folio: folio });
+  if (!r.ok) { v.close(); return; }
+  v.document.open(); v.document.write(r.html); v.document.close();
+}
+
+
+/* ==================================================================
+   CARGA MASIVA Y CERTIFICADOS DE CALIDAD
+   ================================================================== */
+
+/* Las plantillas hablan en nombres, no en identificadores: quien las
+   completa en la oficina escribe "Planta Coquimbo", no INS-003. */
+const PLANTILLAS = {
+  PERSONAS: { hoja:'Dotación', archivo:'dotacion',
+    campos:[
+      ['RUT', 'Obligatorio. Con o sin puntos, con guion. Ej.: 12.345.678-9'],
+      ['Nombres', 'Obligatorio'],
+      ['Apellidos', 'Obligatorio'],
+      ['Cargo', 'Guardia, Supervisor o Administrativo'],
+      ['Instalación', 'Obligatorio. Debe existir en el sistema'],
+      ['Supervisor', 'Nombre del usuario supervisor, si corresponde'],
+      ['Correo', ''], ['Teléfono', ''],
+      ['Fecha de ingreso', 'Formato AAAA-MM-DD'],
+      ['Talla calzado', '36 a 46'], ['Talla ropa', 'XS a XXXL']
+    ]},
+  INSTALACIONES: { hoja:'Instalaciones', archivo:'instalaciones',
+    campos:[
+      ['Nombre', 'Obligatorio'],
+      ['Empresa cliente', 'Obligatorio. Debe existir en el sistema'],
+      ['Código', 'Código interno, opcional'],
+      ['Dirección', '']
+    ]},
+  CLIENTES: { hoja:'Empresas', archivo:'empresas-cliente',
+    campos:[
+      ['Razón social', 'Obligatorio'], ['RUT', 'Con dígito verificador'],
+      ['Tipo', 'Mandante o Interno'], ['Contrato', 'N.º o referencia del contrato o anexo'],
+      ['Contraparte', ''], ['Correo', '']
+    ]},
+  PROVEEDORES: { hoja:'Proveedores', archivo:'proveedores',
+    campos:[
+      ['Razón social', 'Obligatorio'], ['RUT', 'Con dígito verificador'],
+      ['Giro', ''], ['Contacto', ''], ['Correo', ''], ['Teléfono', '']
+    ]},
+  MATERIALES: { hoja:'Materiales', archivo:'materiales',
+    campos:[
+      ['Código', 'Obligatorio. 2 a 4 letras, sin repetir'],
+      ['Nombre', 'Obligatorio'],
+      ['Naturaleza', 'Obligatorio. Ver hoja Referencias'],
+      ['Categoría', 'Indumentaria, EPP, Insumo de oficina, etc.'],
+      ['Tipo', ''],
+      ['Temporada', 'Todo el año, Otoño/Invierno o Primavera/Verano'],
+      ['Escala de talla', 'Ver hoja Referencias. No aplica a bienes bajo custodia'],
+      ['Vida útil (meses)', 'Número. Por defecto 12'],
+      ['Stock mínimo', 'Número. Por defecto 2'],
+      ['Admite devolución', 'SI o NO'],
+      ['Vence', 'SI o NO'],
+      ['Exige certificado', 'SI o NO. Por defecto SI en EPP']
+    ]}
+};
+
+function referenciasPlantilla(entidad) {
+  const ref = [['Valores válidos para completar la planilla', ''], ['', '']];
+  const bloque = function (titulo, valores) {
+    ref.push([titulo, '']);
+    valores.forEach(function (v) { ref.push(['', v]); });
+    ref.push(['', '']);
+  };
+
+  if (entidad === 'PERSONAS') {
+    bloque('Instalaciones', (est.cat.instalaciones || [])
+      .filter(function (i) { return i.activo === 'SI'; })
+      .map(function (i) { return i.nombre; }));
+    bloque('Supervisores', (est.cat.supervisores || []).map(function (s) { return s.nombre; }));
+    bloque('Cargos', ['Guardia', 'Supervisor', 'Administrativo']);
+    bloque('Tallas de calzado', est.cat.escalas.CALZADO);
+    bloque('Tallas de ropa', est.cat.escalas.ROPA_LETRA);
+  } else if (entidad === 'INSTALACIONES') {
+    bloque('Empresas cliente', (est.cat.clientes || [])
+      .filter(function (c) { return c.activo === 'SI'; })
+      .map(function (c) { return c.razon_social; }));
+  } else if (entidad === 'CLIENTES') {
+    bloque('Tipo', ['Mandante', 'Interno']);
+  } else if (entidad === 'MATERIALES') {
+    bloque('Naturaleza', ['Dotación personal', 'Consumible', 'Bien bajo custodia']);
+    bloque('Escala de talla', ['Ropa por letra', 'Ropa por número', 'Calzado', 'Talla única']);
+    bloque('Temporada', ['Todo el año', 'Otoño/Invierno', 'Primavera/Verano']);
+    bloque('Categorías en uso', (function () {
+      const v = {};
+      (est.cat.materiales || []).forEach(function (m) { if (m.categoria) v[m.categoria] = true; });
+      return Object.keys(v).sort();
+    })());
+  }
+  return ref;
+}
+
+async function cargarSheetJS() {
+  if (window.XLSX) return true;
+  return new Promise(function (resolve) {
+    const s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+    s.onload = function () { resolve(true); };
+    s.onerror = function () { resolve(false); };
+    document.head.appendChild(s);
+  });
+}
+
+function pintarCamposPlantilla() {
+  const P = PLANTILLAS[$('#maEntidad').value];
+  $('#maCampos').innerHTML =
+    '<p class="rotulo" style="margin:0 0 8px">Columnas de la plantilla</p>' +
+    '<div class="tabla-env"><table><thead><tr><th>Columna</th><th>Cómo completarla</th></tr></thead><tbody>' +
+    P.campos.map(function (c) {
+      return '<tr><td><b>' + esc(c[0]) + '</b></td>' +
+        '<td style="font-size:11.5px;color:var(--tenue)">' + esc(c[1] || '—') + '</td></tr>';
+    }).join('') + '</tbody></table></div>';
+}
+$('#maEntidad').addEventListener('change', function () {
+  pintarCamposPlantilla();
+  $('#maPrevia').innerHTML = '';
+  $('#maArchivo').value = '';
+});
+
+$('#bPlantilla').addEventListener('click', async function () {
+  const b = this;
+  b.disabled = true; b.textContent = 'Preparando…';
+  const listo = await cargarSheetJS();
+  b.disabled = false; b.textContent = 'Descargar plantilla';
+  if (!listo) { aviso('No se pudo cargar el generador de Excel. Revisa la conexión.', true); return; }
+
+  const entidad = $('#maEntidad').value;
+  const P = PLANTILLAS[entidad];
+  const libro = XLSX.utils.book_new();
+
+  const datos = XLSX.utils.aoa_to_sheet([P.campos.map(function (c) { return c[0]; })]);
+  datos['!cols'] = P.campos.map(function (c) { return { wch: Math.max(c[0].length + 4, 16) }; });
+  XLSX.utils.book_append_sheet(libro, datos, P.hoja);
+
+  const ref = XLSX.utils.aoa_to_sheet(referenciasPlantilla(entidad));
+  ref['!cols'] = [{ wch: 28 }, { wch: 42 }];
+  XLSX.utils.book_append_sheet(libro, ref, 'Referencias');
+
+  XLSX.writeFile(libro, 'PK-' + P.archivo + '.xlsx');
+  aviso('Plantilla descargada');
+});
+
+/* ---------- subida y vista previa ---------- */
+
+$('#maArchivo').addEventListener('change', async function () {
+  const archivo = this.files && this.files[0];
+  if (!archivo) return;
+  $('#maPrevia').innerHTML = '<p style="font-size:12.5px;color:var(--tenue)">Leyendo la planilla…</p>';
+
+  const listo = await cargarSheetJS();
+  if (!listo) { aviso('No se pudo cargar el lector de Excel.', true); $('#maPrevia').innerHTML = ''; return; }
+
+  let filas;
+  try {
+    const buf = await archivo.arrayBuffer();
+    const libro = XLSX.read(buf, { type:'array', cellDates:true });
+    const hoja = libro.Sheets[libro.SheetNames[0]];
+    filas = XLSX.utils.sheet_to_json(hoja, { defval:'', raw:false });
+  } catch (e) {
+    aviso('No se pudo leer el archivo. ¿Es un .xlsx válido?', true);
+    $('#maPrevia').innerHTML = ''; return;
+  }
+
+  filas = filas.filter(function (f) {
+    return Object.keys(f).some(function (k) { return String(f[k]).trim() !== ''; });
+  });
+  if (!filas.length) { aviso('La planilla no trae filas con datos.', true); $('#maPrevia').innerHTML = ''; return; }
+
+  est.masiva = { filas: filas, entidad: $('#maEntidad').value };
+  await revisarMasiva();
+});
+
+async function revisarMasiva() {
+  const r = await api('cargaMasiva', {
+    entidad: est.masiva.entidad, filas: est.masiva.filas,
+    simular: true, actualizar: $('#maActualizar').checked
+  });
+  if (!r.ok) { $('#maPrevia').innerHTML = ''; return; }
+  pintarPrevia(r, false);
+}
+
+['#maActualizar'].forEach(function (s) {
+  $(s).addEventListener('change', function () { if (est.masiva) revisarMasiva(); });
+});
+
+function pintarPrevia(r, definitivo) {
+  const marca = {
+    NUEVA:['var(--verde)','var(--verde)','Nueva'], ACTUALIZA:['var(--oro)','#7A611B','Actualiza'],
+    OMITIDA:['var(--regla)','var(--tenue)','Ya existe'],
+    CARGADA:['var(--verde)','var(--verde)','Cargada'], ACTUALIZADA:['var(--verde)','var(--verde)','Actualizada']
+  };
+
+  $('#maPrevia').innerHTML =
+    '<p class="rotulo" style="margin:0 0 8px">' + (definitivo ? 'Resultado de la carga' : 'Vista previa') + '</p>' +
+    '<div class="tabla-env" style="max-height:44vh;overflow-y:auto"><table>' +
+    '<thead><tr><th class="num">Fila</th><th>Registro</th><th>Estado</th><th>Detalle</th></tr></thead><tbody>' +
+    r.resultados.map(function (x) {
+      const m = marca[x.accion] || ['var(--oxido)','var(--oxido)','Error'];
+      return '<tr class="' + (x.ok ? '' : 'inactiva') + '">' +
+        '<td class="num">' + x.fila + '</td>' +
+        '<td>' + esc(x.resumen || '—') + '</td>' +
+        '<td><span class="marbete" style="border-color:' + (x.ok ? m[0] : 'var(--oxido)') +
+          ';color:' + (x.ok ? m[1] : 'var(--oxido)') + '">' + (x.ok ? m[2] : 'Error') + '</span></td>' +
+        '<td style="font-size:11.5px;color:' + (x.ok ? 'var(--tenue)' : 'var(--oxido)') + '">' +
+          esc(x.error || '') + '</td></tr>';
+    }).join('') + '</tbody></table></div>' +
+    '<p style="font-size:12.5px;margin:12px 0 0">' +
+      '<b>' + (definitivo ? (r.cargadas || 0) + ' cargadas' : (r.validas || 0) + ' por cargar') + '</b>' +
+      ' · ' + (r.errores || 0) + ' con error · ' + (r.omitidas || 0) + ' ya existentes</p>' +
+    (definitivo
+      ? (r.lote ? '<div class="acciones"><button class="btn btn-p" type="button" data-lote="' + esc(r.lote) +
+          '">Aprobar el lote completo</button></div>' : '')
+      : '<div class="acciones"><button class="btn btn-p" type="button" id="bCargar">Confirmar carga</button></div>');
+}
+
+$('#maPrevia').addEventListener('click', async function (ev) {
+  if (ev.target.id === 'bCargar') {
+    const b = ev.target;
+    b.disabled = true; b.textContent = 'Cargando…';
+    const r = await api('cargaMasiva', {
+      entidad: est.masiva.entidad, filas: est.masiva.filas, simular: false,
+      actualizar: $('#maActualizar').checked, soloValidas: $('#maParcial').checked
+    });
+    b.disabled = false; b.textContent = 'Confirmar carga';
+    if (!r.ok) { if (r.resultados) pintarPrevia(r, false); return; }
+    aviso(r.cargadas + ' registros cargados · lote ' + r.lote);
+    pintarPrevia(r, true);
+    await recargar();
+    return;
+  }
+
+  const lote = ev.target.closest('button[data-lote]');
+  if (lote) {
+    const r = await api('validarLote', { lote: lote.dataset.lote });
+    if (!r.ok) return;
+    aviso(r.aprobados + ' registros aprobados');
+    await recargar();
+  }
+});
+
+/* ---------- certificados de calidad ---------- */
+
+function abrirCalidad(folio) {
+  const c = (est.compras || []).filter(function (x) { return x.folio === folio; })[0];
+  if (!c) return;
+  est.compraCalidad = c;
+
+  $('#cqFolio').value = folio;
+  $('#cqTitulo').textContent = 'Certificados de calidad · ' + folio;
+  $('#cqSub').textContent = c.tipo_doc + ' ' + c.numero_doc + ' · ' + c.fecha;
+
+  $('#cqFaltan').innerHTML = c.faltan_cert && c.faltan_cert.length
+    ? '<div class="nota" style="border-left-color:var(--oxido);background:#FBEFEC;color:#6B2A16;margin-bottom:14px">' +
+      '<b>Falta respaldo.</b> Sin certificado: ' + c.faltan_cert.map(esc).join(', ') + '.' +
+      (c.regularizacion ? ' Esta compra es anterior al control, así que cuenta como regularización.' : '') + '</div>'
+    : (c.exige_cert
+        ? '<div class="nota" style="border-left-color:var(--verde);background:#EDF3EB;color:#25441F;margin-bottom:14px">Respaldo completo.</div>'
+        : '<p style="font-size:12px;color:var(--tenue);margin:0 0 12px">Ningún material de esta compra exige certificado.</p>');
+
+  const mats = {};
+  (c.detalle || []).forEach(function (d) { mats[String(d.material_id)] = true; });
+  $('#cqMaterial').innerHTML = '<option value="">Toda la compra</option>' +
+    Object.keys(mats).map(function (id) {
+      const m = material(id);
+      return '<option value="' + esc(id) + '">' + esc(m ? m.nombre : id) +
+        (m && m.exige_certificado === 'SI' ? ' · exige' : '') + '</option>';
+    }).join('');
+
+  pintarCalidad(c.certificados || []);
+  $('#veloCalidad').hidden = false;
+}
+
+function pintarCalidad(lista) {
+  $('#tbCalidad').innerHTML = lista.length ? lista.map(function (x) {
+    const m = x.material_id ? material(x.material_id) : null;
+    return '<tr><td><a href="' + esc(x.url) + '" target="_blank" rel="noopener" style="color:var(--verde)">' +
+        esc(x.archivo) + '</a></td>' +
+      '<td class="opc">' + esc(m ? m.nombre : 'Toda la compra') + '</td>' +
+      '<td class="opc" style="font-size:11.5px">' + esc(x.emisor || '—') + '</td>' +
+      '<td class="opc" style="font-size:11.5px">' + esc(x.norma || '—') + '</td>' +
+      '<td>' + (x.vence
+        ? '<span class="ref"' + (x.vencido ? ' style="color:var(--oxido)"' : '') + '>' + esc(x.vence) +
+          (x.vencido ? ' · vencido' : '') + '</span>'
+        : '<span style="color:var(--tenue)">—</span>') + '</td>' +
+      '<td class="acc"><button class="mini peligro" data-cqdel="' + esc(x.id) + '">Quitar</button></td></tr>';
+  }).join('') : '<tr><td colspan="6" class="vacio">Sin certificados adjuntos.</td></tr>';
+}
+
+$('#cqCerrar').addEventListener('click', function () { $('#veloCalidad').hidden = true; });
+$('#veloCalidad').addEventListener('click', function (ev) { if (ev.target === this) this.hidden = true; });
+
+$('#tbCalidad').addEventListener('click', async function (ev) {
+  const b = ev.target.closest('button[data-cqdel]');
+  if (!b) return;
+  if (!confirm('Quitar este certificado? El archivo se envía a la papelera de Drive.')) return;
+  const r = await api('borrarCertCalidad', { id: b.dataset.cqdel });
+  if (!r.ok) return;
+  aviso('Certificado quitado');
+  await cargarCompras();
+  abrirCalidad($('#cqFolio').value);
+});
+
+$('#fCalidad').addEventListener('submit', async function (ev) {
+  ev.preventDefault();
+  const archivo = $('#cqArchivo').files && $('#cqArchivo').files[0];
+  if (!archivo) { aviso('Elige el archivo del certificado.', true); return; }
+  if (archivo.size > 5 * 1024 * 1024) { aviso('El archivo supera los 5 MB.', true); return; }
+
+  const b = $('#bCalidadSubir');
+  b.disabled = true; b.textContent = 'Subiendo…';
+
+  const base64 = await new Promise(function (resolve, reject) {
+    const fr = new FileReader();
+    fr.onload = function () { resolve(String(fr.result).split(',')[1]); };
+    fr.onerror = reject;
+    fr.readAsDataURL(archivo);
+  });
+
+  const r = await api('subirCertCalidad', {
+    folio_compra: $('#cqFolio').value, material_id: $('#cqMaterial').value,
+    archivo: archivo.name, mime: archivo.type || 'application/pdf', base64: base64,
+    emisor: $('#cqEmisor').value, numero: $('#cqNumero').value,
+    norma: $('#cqNorma').value, vence: $('#cqVence').value
+  });
+  b.disabled = false; b.textContent = 'Adjuntar';
+  if (!r.ok) return;
+
+  aviso('Certificado adjuntado');
+  $('#fCalidad').reset(); $('#cqFolio').value = est.compraCalidad.folio;
+  await cargarCompras();
+  abrirCalidad(est.compraCalidad.folio);
+});
+
 /* ================= ARRANQUE ================= */
 ajustarFormMaterial();
 (function () {
@@ -2733,6 +3450,7 @@ ajustarFormMaterial();
   agregarLinea();
   agregarSolLinea();
   $('#ctDesde').value = ''; $('#ctHasta').value = '';
+  pintarCamposPlantilla();
 })();
 reanudar();
 </script>
